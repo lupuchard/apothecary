@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://bibma3tmul8et"]
+
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="1_itedk"]
+[ext_resource type="Texture2D" uid="uid://bxsdd6eo4joxe" path="res://assets/theme/ornate.png" id="2_4rtm0"]
+[ext_resource type="Script" uid="uid://b5csyclku0v2x" path="res://source/Ui/SlowButton.cs" id="2_g6dfs"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e06cp"]
+content_margin_left = 7.0
+content_margin_top = 7.0
+content_margin_right = 4.0
+content_margin_bottom = 7.0
+texture = ExtResource("2_4rtm0")
+texture_margin_left = 9.0
+texture_margin_top = 7.0
+texture_margin_right = 9.0
+texture_margin_bottom = 7.0
+region_rect = Rect2(0, 0, 23, 15)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_itedk"]
+
+[node name="HoldButton" type="Button" unique_id=648291464]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_itedk")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_e06cp")
+script = ExtResource("2_g6dfs")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1622988221]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer" unique_id=253235900]
+unique_name_in_owner = true
+show_behind_parent = true
+layout_mode = 2
+size_flags_vertical = 1
+mouse_filter = 1
+theme_override_styles/background = SubResource("StyleBoxEmpty_itedk")
+max_value = 1.0
+show_percentage = false

@@ -1,0 +1,39 @@
+#  CSharp formatting rules:
+[*.cs]
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+csharp_extra_spaces = leave_all
+
+trim_trailing_whitespace = false
+insert_final_newline = true
+csharp_space_around_binary_operators = ignore
+csharp_space_around_declaration_statements = ignore
+
+# IDE1006: Naming Styles
+#dotnet_diagnostic.IDE1006.severity = none
+
+#dotnet_naming_rule.constant_fields_should_be_upper_case.severity = suggestion
+#dotnet_naming_rule.constant_fields_should_be_upper_case.symbols  = constant_fields
+#dotnet_naming_rule.constant_fields_should_be_upper_case.style    = upper_case_style
+#dotnet_naming_symbols.constant_fields.applicable_kinds   = field
+#dotnet_naming_symbols.constant_fields.required_modifiers = const
+#dotnet_naming_style.upper_case_style.capitalization = all_upper
+
+#dotnet_naming_symbols.field_methods.applicable_kinds = property,method,field,parameter
+#dotnet_naming_symbols.field_methods.applicable_accessibilities = *
+#dotnet_naming_style.snake_case.capitalization = all_lower
+#dotnet_naming_style.snake_case.word_separator = _
+#dotnet_naming_rule.fields_should_be_snake_case.symbols = field_methods
+#dotnet_naming_rule.fields_should_be_snake_case.style = snake_case
+#dotnet_naming_rule.fields_should_be_snake_case.severity = suggestion
+
+# IDE0130: Namespace does not match folder structure
+#dotnet_style_namespace_match_folder = false
+
+# IDE0047: Remove unnecessary parentheses
+#dotnet_diagnostic.IDE0047.severity = none
+
+# IDE0130: Namespace does not match folder structure
+dotnet_style_namespace_match_folder = false

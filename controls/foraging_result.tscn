@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://btdsoh5fj6pxl"]
+
+[ext_resource type="Texture2D" uid="uid://cn035f1i4e4qq" path="res://icon.svg" id="1_17qvk"]
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="1_yyv7y"]
+[ext_resource type="Script" uid="uid://b0wotfa173yne" path="res://source/Ui/ForagingResult.cs" id="2_v1los"]
+
+[node name="ForagingResult" type="Button" unique_id=2034048389]
+custom_minimum_size = Vector2(210, 48)
+offset_right = 8.0
+offset_bottom = 8.0
+theme = ExtResource("1_yyv7y")
+action_mode = 0
+script = ExtResource("2_v1los")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1681279650]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="HBoxContaier" type="HBoxContainer" parent="MarginContainer" unique_id=1309269533]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContaier" unique_id=1612747003]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("1_17qvk")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContaier" unique_id=1010863833]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Meadowsweet"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

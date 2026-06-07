@@ -1,0 +1,300 @@
+[gd_scene format=3 uid="uid://brvbjd6fxq22h"]
+
+[ext_resource type="Script" uid="uid://dc6mjdstvkg01" path="res://source/UiManager.cs" id="1_cho24"]
+[ext_resource type="Texture2D" uid="uid://dpv2hwhd5ib36" path="res://assets/world.PNG" id="1_rpg24"]
+[ext_resource type="Script" uid="uid://dxge7vqrotqws" path="res://source/PlayerCamera.cs" id="2_3vi8l"]
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="2_8rhti"]
+[ext_resource type="Script" uid="uid://t78t7gycprpe" path="res://source/Ui/RegionSelect.cs" id="2_21bcp"]
+[ext_resource type="Script" uid="uid://clfreyal0jefa" path="res://source/Ui/RegionLabel.cs" id="5_tpea4"]
+[ext_resource type="FontFile" uid="uid://qrqyo004juy3" path="res://assets/fonts/Font_Fantasy.ttf" id="6_56f15"]
+[ext_resource type="StyleBox" uid="uid://bmoaasi4rrv6x" path="res://assets/theme/EditPanel.tres" id="6_tpea4"]
+[ext_resource type="Script" uid="uid://d21n6c1vn0w5x" path="res://source/Ui/ForagingUi.cs" id="7_dlkme"]
+[ext_resource type="PackedScene" uid="uid://btdsoh5fj6pxl" path="res://controls/foraging_result.tscn" id="8_56f15"]
+[ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="11_im64q"]
+[ext_resource type="Script" uid="uid://cxwoeswknlk61" path="res://source/Ui/ClockUi.cs" id="12_k3d1t"]
+[ext_resource type="Texture2D" uid="uid://cfi71ffjc02k3" path="res://assets/close.png" id="12_sgv64"]
+[ext_resource type="Texture2D" uid="uid://cglyf0lhrvqsy" path="res://assets/clock.png" id="12_ytyno"]
+[ext_resource type="Texture2D" uid="uid://c6tgmpykfrww4" path="res://assets/close2.png" id="13_gaoim"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k3d1t"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sgv64"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_gaoim"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n73o2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cs1hs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_21bcp"]
+bg_color = Color(0.25, 0.25, 0.25, 0.57254905)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k3d1t"]
+atlas = ExtResource("12_ytyno")
+region = Rect2(0, 0, 128, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sgv64"]
+atlas = ExtResource("12_ytyno")
+region = Rect2(0, 64, 128, 64)
+
+[node name="Node2D" type="Node2D" unique_id=1328475761]
+script = ExtResource("1_cho24")
+
+[node name="Map" type="Sprite2D" parent="." unique_id=1413056173]
+unique_name_in_owner = true
+texture = ExtResource("1_rpg24")
+centered = false
+
+[node name="FrontYard" type="Area2D" parent="Map" unique_id=939981965]
+position = Vector2(1185, 506)
+script = ExtResource("2_21bcp")
+region_id = "front_yard"
+
+[node name="Polygon" type="CollisionPolygon2D" parent="Map/FrontYard" unique_id=1521660909]
+position = Vector2(-3.8146973e-05, 0.9999924)
+polygon = PackedVector2Array(219.90775, -136.33533, 219, 158, -28.092247, 162.66467, -28.092247, 238.66467, -173, 236, -232.09225, -140.33533)
+
+[node name="EastWoods" type="Area2D" parent="Map" unique_id=1894390791]
+position = Vector2(1694, 567)
+script = ExtResource("2_21bcp")
+region_id = "east_woods"
+
+[node name="Polygon" type="CollisionPolygon2D" parent="Map/EastWoods" unique_id=1451737717]
+position = Vector2(72.99996, -69.00001)
+polygon = PackedVector2Array(-329, -177, -84, -499, 339, -496, 419, -37, 66, 422, -316, 683, -326, 162)
+
+[node name="Backyard" type="Area2D" parent="Map" unique_id=1077855696]
+position = Vector2(1244, 1051)
+script = ExtResource("2_21bcp")
+region_id = "backyard"
+
+[node name="Polygon" type="CollisionPolygon2D" parent="Map/Backyard" unique_id=497308394]
+position = Vector2(-3.8146973e-05, 0.9999924)
+polygon = PackedVector2Array(101, -132, 101, -238, 182, -241, 188, 228, -197, 228, -197, -130)
+
+[node name="Creek" type="Area2D" parent="Map" unique_id=166773777]
+position = Vector2(1136, 1461)
+script = ExtResource("2_21bcp")
+region_id = "creek"
+
+[node name="Polygon" type="CollisionPolygon2D" parent="Map/Creek" unique_id=389280536]
+position = Vector2(-3.8146973e-05, 0.9999924)
+polygon = PackedVector2Array(305, -170, 314, -272, 790, -599, 876, -568, 313, 142, -872, 212, -883, 158, -415, 25, -84, -167)
+
+[node name="WestWoods" type="Area2D" parent="Map" unique_id=306409951]
+position = Vector2(577, 1070)
+script = ExtResource("2_21bcp")
+region_id = "west_woods"
+
+[node name="Polygon" type="CollisionPolygon2D" parent="Map/WestWoods" unique_id=848097977]
+position = Vector2(-3.8146973e-05, 0.9999924)
+polygon = PackedVector2Array(202.00006, -409, 391.00006, -31, 284.00006, 314, 156.00006, 388, -459.99994, 563, -477.99994, 62, -547.99994, -548)
+
+[node name="Road" type="Area2D" parent="Map" unique_id=1363432578]
+position = Vector2(628, 471)
+script = ExtResource("2_21bcp")
+region_id = "road"
+
+[node name="Polygon" type="CollisionPolygon2D" parent="Map/Road" unique_id=1868201629]
+position = Vector2(-3.8146973e-05, 0.9999924)
+polygon = PackedVector2Array(12.000061, -92, 338.00006, 1, 375.00006, 235, -14.999939, 85, -615.99994, -32, -602.99994, -186)
+
+[node name="Meadow" type="Area2D" parent="Map" unique_id=1488017498]
+position = Vector2(1010, 179)
+script = ExtResource("2_21bcp")
+region_id = "meadow"
+
+[node name="Polygon" type="CollisionPolygon2D" parent="Map/Meadow" unique_id=1882730065]
+polygon = PackedVector2Array(624, -169, 482, 41, 403, 178, -342, 195, -643, 140, -650, -171)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1514244865 node_paths=PackedStringArray("Map")]
+position = Vector2(1220, 804)
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+script = ExtResource("2_3vi8l")
+Map = NodePath("../Map")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2129669713]
+
+[node name="BackgroundExitButton" type="Button" parent="CanvasLayer" unique_id=180720526]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_k3d1t")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_sgv64")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_gaoim")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_n73o2")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_cs1hs")
+
+[node name="RegionLabels" type="Control" parent="CanvasLayer" unique_id=1856545341]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("2_8rhti")
+
+[node name="FrontYard" type="Label" parent="CanvasLayer/RegionLabels" unique_id=2023242644 node_paths=PackedStringArray("Follows")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 1118.0
+offset_top = 503.0
+offset_right = 1180.0
+offset_bottom = 524.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Front Yard"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("5_tpea4")
+Follows = NodePath("../../../Map/FrontYard/Polygon")
+
+[node name="ForagingUi" type="PanelContainer" parent="CanvasLayer" unique_id=782267389]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 240)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -120.0
+offset_right = 120.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_8rhti")
+theme_override_styles/panel = SubResource("StyleBoxFlat_21bcp")
+script = ExtResource("7_dlkme")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/ForagingUi" unique_id=863521086]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/ForagingUi/Panel" unique_id=1397319695]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer" unique_id=757564981]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer" unique_id=1579406136]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_56f15")
+text = "Front yard"
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer" unique_id=583223093]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("6_tpea4")
+
+[node name="ForagingResults" type="VBoxContainer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer" unique_id=1139911940]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ForagingResult" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ForagingResults" unique_id=1309269533 instance=ExtResource("8_56f15")]
+layout_mode = 2
+
+[node name="ForagingResult2" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ForagingResults" unique_id=2034048389 instance=ExtResource("8_56f15")]
+layout_mode = 2
+Index = 1
+
+[node name="ForagingResult3" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ForagingResults" unique_id=727933035 instance=ExtResource("8_56f15")]
+layout_mode = 2
+Index = 2
+
+[node name="ForageButton" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer" unique_id=648291464 instance=ExtResource("11_im64q")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "Forage
+(1 Action)"
+
+[node name="ForagesRemainingLabel" type="Label" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer" unique_id=2126031370]
+unique_name_in_owner = true
+layout_mode = 2
+text = "3/3 Remaining"
+horizontal_alignment = 1
+
+[node name="CloseButton" type="TextureButton" parent="CanvasLayer/ForagingUi/Panel" unique_id=1925599380]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 96.0
+offset_top = -112.0
+offset_right = 112.0
+offset_bottom = -96.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("12_sgv64")
+texture_hover = ExtResource("13_gaoim")
+
+[node name="Clock" type="Control" parent="CanvasLayer" unique_id=472514533]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("12_k3d1t")
+
+[node name="DialTexture" type="TextureRect" parent="CanvasLayer/Clock" unique_id=193524298]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("AtlasTexture_k3d1t")
+
+[node name="StepTexture" type="TextureRect" parent="CanvasLayer/Clock" unique_id=1477882730]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("AtlasTexture_sgv64")

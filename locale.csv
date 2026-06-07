@@ -1,0 +1,18 @@
+keys,en
+FRONT_YARD,Front yard
+BACKYARD,Backyard
+ROAD,Road
+MEADOW,Meadow
+EAST_WOODS,East woods
+WEST_WOODS,West woods
+CREEK,By the creek
+MEADOWSWEET,Meadowsweet
+WILD_LACEROOT,Wild laceroot
+MINTFLOWER,Mintflower
+FEVERFEW,Feverfew
+WHITE_CONEFLOWER,White coneflower
+CHAMOMILE,Chamomile
+FORAGES_REMAINING_LABEL,{0}/{1} Remaining
+NO_FORAGE_FOUND,Nothing found
+FORAGE_BUTTON_UNAVAILABLE,No more forage
+FORAGE_BUTTON_AVAILABLE,Forage\n(1 Action)
