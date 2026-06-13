@@ -7,7 +7,8 @@ public partial class BaseUi : Control {
 	
 	public override void _Ready() {
 		base._Ready();
-		CloseButton = GetNodeOrNull<BaseButton>("Panel/CloseButton");
+		
+		CloseButton = GetNodeOrNull<BaseButton>("CloseButton") ?? GetNodeOrNull<BaseButton>("Panel/CloseButton");
 	}
 	
 	public virtual void OpenUi() { }

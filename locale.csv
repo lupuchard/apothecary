@@ -1,4 +1,5 @@
 keys,en
+HOME,Home
 FRONT_YARD,Front yard
 BACKYARD,Backyard
 ROAD,Road
@@ -16,3 +17,10 @@ FORAGES_REMAINING_LABEL,{0}/{1} Remaining
 NO_FORAGE_FOUND,Nothing found
 FORAGE_BUTTON_UNAVAILABLE,No more forage
 FORAGE_BUTTON_AVAILABLE,Forage\n(1 Action)
+VISITOR,Visitor
+NO_VISITOR_TEXT,No visitors
+INFUSION,Infusion
+ONE_DAY,1 day
+X_DAYS,{0} days
+ONE_DAY_LEFT,1 day left
+X_DAYS_LEFT,{0} days left

@@ -3,9 +3,15 @@ using Godot;
 namespace Apothecary;
 
 public partial class RegionSelect : Area2D {
-	[Signal] public delegate void SelectedEventHandler(RegionModel region);
+	public enum Type {
+		Region,
+		Home
+	}
+	
+	[Signal] public delegate void SelectedEventHandler(Type type, RegionModel? region);
 	
 	[Export] public string? region_id { get; set; }
+	private Type type;
 	private RegionModel? region;
 	private RegionLabel? region_label;
 
@@ -20,10 +26,14 @@ public partial class RegionSelect : Area2D {
 			return;
 		}
 
-		region = Game.Instance.World.GetRegionModel(region_id);
-		if (region == null) {
-			GD.PushError("Region '" + region_id + "' not found: " + GetPath());
-			return;
+		if (region_id == "home") {
+			type = Type.Home;
+		} else {
+			region = Game.Instance.World.GetRegionModel(region_id);
+			if (region == null) {
+				GD.PushError("Region '" + region_id + "' not found: " + GetPath());
+				return;
+			}
 		}
 
 		var region_labels = GetNode<Control>("%RegionLabels");
@@ -43,7 +53,7 @@ public partial class RegionSelect : Area2D {
 
 	public override void _Input(InputEvent inputEvent) {
 		if (hovering && inputEvent is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left }) {
-			EmitSignalSelected(region);
+			EmitSignalSelected(type, region);
 		}
 	}
 

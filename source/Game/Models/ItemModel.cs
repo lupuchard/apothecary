@@ -5,6 +5,7 @@ namespace Apothecary;
 
 public class ItemModel {
 	public string Id { get; }
+	public int Index { get; set; } = 0;
 	public ImmutableArray<(Aspect, int)> Aspects { get; }
 
 	public RegionModel? WhereFound { get; }

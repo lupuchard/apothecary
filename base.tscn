@@ -15,6 +15,20 @@
 [ext_resource type="Texture2D" uid="uid://cfi71ffjc02k3" path="res://assets/close.png" id="12_sgv64"]
 [ext_resource type="Texture2D" uid="uid://cglyf0lhrvqsy" path="res://assets/clock.png" id="12_ytyno"]
 [ext_resource type="Texture2D" uid="uid://c6tgmpykfrww4" path="res://assets/close2.png" id="13_gaoim"]
+[ext_resource type="Script" uid="uid://8f3s54mmvyoh" path="res://source/Ui/HomeUi.cs" id="16_50rgw"]
+[ext_resource type="StyleBox" uid="uid://cl5k7bvj2roem" path="res://assets/theme/TabPanel.tres" id="16_v7taj"]
+[ext_resource type="Texture2D" uid="uid://bxsdd6eo4joxe" path="res://assets/theme/ornate.png" id="17_jym3p"]
+[ext_resource type="PackedScene" uid="uid://bfbxwbbjvq1n8" path="res://controls/item_slot.tscn" id="18_v7taj"]
+[ext_resource type="Script" uid="uid://dmt26pnee1ajo" path="res://source/Ui/VisitorsTabUi.cs" id="19_1uwki"]
+[ext_resource type="Script" uid="uid://deiqv6i3yicvy" path="res://source/Ui/InventoryUi.cs" id="19_4a7sh"]
+[ext_resource type="Script" uid="uid://bx5fmbtwmaqyg" path="res://source/Ui/CurrentVisitorUi.cs" id="20_7m1qc"]
+[ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="20_wudxj"]
+[ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="21_2btif"]
+[ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="22_mh4ky"]
+[ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="22_n0uqe"]
+[ext_resource type="Texture2D" uid="uid://f8vgd1htx0vj" path="res://assets/visitor/villager.png" id="23_n0uqe"]
+[ext_resource type="Script" uid="uid://co53vm3ckuw8f" path="res://source/Ui/RequestListUi.cs" id="26_x13uo"]
+[ext_resource type="PackedScene" uid="uid://5e63ly4cxv6m" path="res://controls/visitor_request.tscn" id="27_3vupj"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k3d1t"]
 
@@ -41,6 +55,45 @@ region = Rect2(0, 0, 128, 64)
 atlas = ExtResource("12_ytyno")
 region = Rect2(0, 64, 128, 64)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_50rgw"]
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("17_jym3p")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+region_rect = Rect2(32, 80, 16, 8)
+modulate_color = Color(1, 1, 1, 0.49803922)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4a7sh"]
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource("17_jym3p")
+texture_margin_left = 7.0
+texture_margin_top = 7.0
+texture_margin_right = 7.0
+texture_margin_bottom = 3.0
+expand_margin_top = 2.0
+expand_margin_bottom = 3.0
+region_rect = Rect2(16, 80, 16, 11)
+modulate_color = Color(1, 1, 1, 0.49803922)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4a7sh"]
+bg_color = Color(0.18, 0.18, 0.18, 0.49803922)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+expand_margin_left = 4.0
+expand_margin_top = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7m1qc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wudxj"]
+atlas = ExtResource("23_n0uqe")
+
 [node name="Node2D" type="Node2D" unique_id=1328475761]
 script = ExtResource("1_cho24")
 
@@ -48,6 +101,15 @@ script = ExtResource("1_cho24")
 unique_name_in_owner = true
 texture = ExtResource("1_rpg24")
 centered = false
+
+[node name="Home" type="Area2D" parent="Map" unique_id=667574143]
+position = Vector2(1220, 806)
+script = ExtResource("2_21bcp")
+region_id = "home"
+
+[node name="Polygon" type="CollisionPolygon2D" parent="Map/Home" unique_id=869474059]
+position = Vector2(-3.8146973e-05, 0.9999924)
+polygon = PackedVector2Array(117, -137, 119, 107, -179, 110, -180, -53, -52, -51, -49, -135)
 
 [node name="FrontYard" type="Area2D" parent="Map" unique_id=939981965]
 position = Vector2(1185, 506)
@@ -166,6 +228,7 @@ Follows = NodePath("../../../Map/FrontYard/Polygon")
 
 [node name="ForagingUi" type="PanelContainer" parent="CanvasLayer" unique_id=782267389]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(240, 240)
 anchors_preset = 8
 anchor_left = 0.5
@@ -298,3 +361,226 @@ offset_right = 64.0
 grow_horizontal = 2
 grow_vertical = 0
 texture = SubResource("AtlasTexture_sgv64")
+
+[node name="HomeUi" type="Control" parent="CanvasLayer" unique_id=369692100]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("16_50rgw")
+
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer/HomeUi" unique_id=729966492]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 199.0
+offset_top = 36.5
+offset_right = 913.0
+offset_bottom = 571.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_8rhti")
+theme_override_styles/panel = ExtResource("16_v7taj")
+theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_50rgw")
+theme_override_styles/tab_selected = SubResource("StyleBoxTexture_4a7sh")
+current_tab = 0
+tab_0/title = "VISITORS_TAB"
+
+[node name="VisitorsTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1123293159]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("19_1uwki")
+metadata/_tab_index = 0
+metadata/_tab_name = "VISITORS_TAB"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab" unique_id=604715445]
+layout_mode = 2
+
+[node name="Visitors" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer" unique_id=785956779]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CurrentVisitor" type="PanelContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors" unique_id=547822919]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = ExtResource("6_tpea4")
+script = ExtResource("20_7m1qc")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor" unique_id=771978267]
+show_behind_parent = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4a7sh")
+
+[node name="VisitorTitleLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1424344962]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 0.5
+offset_right = 350.0
+offset_bottom = 21.5
+theme_override_fonts/font = ExtResource("20_wudxj")
+text = "Visitor"
+horizontal_alignment = 1
+
+[node name="VisitorNameLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=942675841]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 9.5
+offset_right = 350.0
+offset_bottom = 41.5
+theme_override_fonts/font = ExtResource("6_56f15")
+text = "Visitor Name"
+horizontal_alignment = 1
+
+[node name="VisitorSpeechLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1709309218]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 39.5
+offset_right = 133.0
+offset_bottom = 190.5
+text = "Hello, I have a porblem. Do you have the cure most effective?"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="VisitorRequestLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=193649808]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 208.0
+offset_top = 90.5
+offset_right = 351.0
+offset_bottom = 107.5
+theme_override_fonts/font = ExtResource("20_wudxj")
+text = "Infusion"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="VisitorTimeLimitLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1376527061]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 208.0
+offset_top = 127.5
+offset_right = 351.0
+offset_bottom = 144.5
+theme_override_fonts/font = ExtResource("20_wudxj")
+text = "3 Days"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="VisitorRequirementsContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1692609529]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 207.0
+offset_top = 110.5
+offset_right = 351.0
+offset_bottom = 126.5
+theme_override_constants/separation = 1
+alignment = 1
+script = ExtResource("22_mh4ky")
+
+[node name="Label" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel/VisitorRequirementsContainer" unique_id=330469791]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel/VisitorRequirementsContainer" unique_id=781787645]
+layout_mode = 2
+texture = ExtResource("21_2btif")
+stretch_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel/VisitorRequirementsContainer" unique_id=1165692178]
+layout_mode = 2
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
+
+[node name="Label2" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel/VisitorRequirementsContainer" unique_id=440723650]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("20_wudxj")
+text = "0"
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel/VisitorRequirementsContainer" unique_id=1324983081]
+layout_mode = 2
+texture = ExtResource("22_n0uqe")
+stretch_mode = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor" unique_id=982613383]
+layout_mode = 2
+
+[node name="VisitorSprite" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/CenterContainer" unique_id=1741711720]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_wudxj")
+stretch_mode = 2
+
+[node name="VisitorNoneLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/CenterContainer" unique_id=1290832406]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "No current visitor"
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors" unique_id=353454649]
+layout_mode = 2
+
+[node name="CurrentRequests" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors" unique_id=168154605]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("26_x13uo")
+
+[node name="VisitorRequest" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentRequests" unique_id=1703583314 instance=ExtResource("27_3vupj")]
+layout_mode = 2
+
+[node name="Inventory" type="PanelContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer" unique_id=595742570]
+layout_mode = 2
+script = ExtResource("19_4a7sh")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory" unique_id=1899922783]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer" unique_id=726146888]
+custom_minimum_size = Vector2(308, 0)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer" unique_id=1469179148]
+layout_mode = 2
+
+[node name="ItemSlot" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=1420599151 instance=ExtResource("18_v7taj")]
+layout_mode = 2
+
+[node name="ItemSlot2" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=804242440 instance=ExtResource("18_v7taj")]
+layout_mode = 2
+
+[node name="ItemSlot3" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=613605373 instance=ExtResource("18_v7taj")]
+layout_mode = 2
+
+[node name="ItemSlot4" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=573819532 instance=ExtResource("18_v7taj")]
+layout_mode = 2
+
+[node name="ItemSlot5" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=1256239781 instance=ExtResource("18_v7taj")]
+layout_mode = 2
+
+[node name="ItemSlot6" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=22235740 instance=ExtResource("18_v7taj")]
+layout_mode = 2
+
+[node name="CloseButton" type="TextureButton" parent="CanvasLayer/HomeUi" unique_id=1149335718]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 888.0
+offset_top = 43.0
+offset_right = 904.0
+offset_bottom = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("12_sgv64")
+texture_hover = ExtResource("13_gaoim")

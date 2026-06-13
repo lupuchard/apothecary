@@ -1,15 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
 namespace Apothecary;
 
-public readonly record struct Item {
+public readonly struct Item : IEquatable<Item> {
 	public readonly ImmutableList<ItemModel> Raw;
 	public readonly ImmutableList<(Aspect, int)> Aspects;
-	public readonly ImmutableHashSet<ItemType> Type;
+	public readonly ItemType Type;
 
-	private Item(ImmutableList<ItemModel> raw, ImmutableList<(Aspect, int)> aspects, ImmutableHashSet<ItemType> type) {
+	private Item(ImmutableList<ItemModel> raw, ImmutableList<(Aspect, int)> aspects, ItemType type) {
 		Raw = raw;
 		Aspects = aspects;
 		Type = type;
@@ -17,15 +18,61 @@ public readonly record struct Item {
 
 	public Item(ItemModel item) {
 		Raw = [item];
-		Aspects = item.Aspects.ToImmutableList();
-		Type = [ItemType.Raw];
+		Aspects = [.. item.Aspects];
+		Type = ItemType.Raw;
+	}
+
+	public bool Equals(Item other) {
+		return Type == other.Type && Raw.SequenceEqual(other.Raw);
+	}
+
+	public override bool Equals(object? other) {
+		if (other is not Item item) {
+			return false;
+		}
+
+		return Type == item.Type && Raw.SequenceEqual(item.Raw);
+	}
+	
+	public static bool operator ==(Item lhs, Item rhs) {
+		return lhs.Equals(rhs);
+	}
+
+	public static bool operator !=(Item lhs, Item rhs) {
+		return !lhs.Equals(rhs);
+	}
+
+	public static int CompareIndexes(Item item1, Item item2) {
+		if (item1.Raw.Count != item2.Raw.Count) {
+			return item1.Raw.Count - item2.Raw.Count;
+		} else {
+			return CompareIndexes(item1.Raw, item2.Raw);
+		}
+	}
+
+	private static int CompareIndexes(ImmutableList<ItemModel> lhs, ImmutableList<ItemModel> rhs) {
+		if (lhs.IsEmpty) {
+			return 0;
+		} else if (lhs[0].Index == rhs[0].Index) {
+			return CompareIndexes(lhs.RemoveAt(0), rhs.RemoveAt(0));
+		} else {
+			return lhs[0].Index - rhs[0].Index;
+		}
+	}
+
+	public override int GetHashCode() {
+		return Raw.Aggregate(0x2D2816FE, (current, item) => current * 397);
+	}
+
+	public string GetName() {
+		return "TODO";
 	}
 	
 	public static Item Ground(Item item) {
 		return new Item(
 			item.Raw,
 			ModifyAspect(ModifyAspect(item.Aspects, 1, at: 0), -1, at: 1),
-			item.Type.Remove(ItemType.Raw).Add(ItemType.Ground)
+			(item.Type & ~ItemType.Raw) | ItemType.Ground
 		);
 	}
 
@@ -33,7 +80,7 @@ public readonly record struct Item {
 		return new Item(
 			item.Raw,
 			MutateAspect(item.Aspects, at: -1),
-			item.Type.Remove(ItemType.Raw).Add(ItemType.Roasted)
+			(item.Type & ~ItemType.Raw) | ItemType.Roasted
 		);
 	}
 
@@ -45,7 +92,7 @@ public readonly record struct Item {
 		return new Item(
 			[.. items.SelectMany(item => item.Raw)],
 			aspects,
-			[ItemType.Infusion]
+			ItemType.Infusion
 		);
 	}
 	
