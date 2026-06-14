@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://4ln4d4xohp61"]
+
+[ext_resource type="Script" uid="uid://deiqv6i3yicvy" path="res://source/Ui/InventoryUi.cs" id="1_db5no"]
+[ext_resource type="Texture2D" uid="uid://ce28jhf8f7pnw" path="res://assets/item/chamomile.png" id="2_fptlh"]
+[ext_resource type="PackedScene" uid="uid://bfbxwbbjvq1n8" path="res://controls/inventory_slot.tscn" id="3_b6yqk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_db5no"]
+size = Vector2(25, 25)
+
+[node name="Inventory" type="PanelContainer" unique_id=219114048]
+script = ExtResource("1_db5no")
+
+[node name="DragIndicator" type="Area2D" parent="." unique_id=935240553]
+collision_layer = 8
+collision_mask = 0
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DragIndicator" unique_id=1195092168]
+position = Vector2(24, 24)
+shape = SubResource("RectangleShape2D_db5no")
+
+[node name="Sprite" type="Sprite2D" parent="DragIndicator" unique_id=641499463]
+position = Vector2(24, 24)
+texture = ExtResource("2_fptlh")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="." unique_id=1197155653]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="InventoryContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=1412563836]
+custom_minimum_size = Vector2(308, 0)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/InventoryContainer" unique_id=1413426272]
+layout_mode = 2
+
+[node name="ItemSlot" parent="ScrollContainer/InventoryContainer/HBoxContainer" unique_id=1510528001 instance=ExtResource("3_b6yqk")]
+layout_mode = 2
+
+[node name="ItemSlot2" parent="ScrollContainer/InventoryContainer/HBoxContainer" unique_id=379815687 instance=ExtResource("3_b6yqk")]
+layout_mode = 2
+
+[node name="ItemSlot3" parent="ScrollContainer/InventoryContainer/HBoxContainer" unique_id=572187479 instance=ExtResource("3_b6yqk")]
+layout_mode = 2
+
+[node name="ItemSlot4" parent="ScrollContainer/InventoryContainer/HBoxContainer" unique_id=730963416 instance=ExtResource("3_b6yqk")]
+layout_mode = 2
+
+[node name="ItemSlot5" parent="ScrollContainer/InventoryContainer/HBoxContainer" unique_id=1533388443 instance=ExtResource("3_b6yqk")]
+layout_mode = 2
+
+[node name="ItemSlot6" parent="ScrollContainer/InventoryContainer/HBoxContainer" unique_id=1736666719 instance=ExtResource("3_b6yqk")]
+layout_mode = 2

@@ -18,9 +18,7 @@
 [ext_resource type="Script" uid="uid://8f3s54mmvyoh" path="res://source/Ui/HomeUi.cs" id="16_50rgw"]
 [ext_resource type="StyleBox" uid="uid://cl5k7bvj2roem" path="res://assets/theme/TabPanel.tres" id="16_v7taj"]
 [ext_resource type="Texture2D" uid="uid://bxsdd6eo4joxe" path="res://assets/theme/ornate.png" id="17_jym3p"]
-[ext_resource type="PackedScene" uid="uid://bfbxwbbjvq1n8" path="res://controls/item_slot.tscn" id="18_v7taj"]
 [ext_resource type="Script" uid="uid://dmt26pnee1ajo" path="res://source/Ui/VisitorsTabUi.cs" id="19_1uwki"]
-[ext_resource type="Script" uid="uid://deiqv6i3yicvy" path="res://source/Ui/InventoryUi.cs" id="19_4a7sh"]
 [ext_resource type="Script" uid="uid://bx5fmbtwmaqyg" path="res://source/Ui/CurrentVisitorUi.cs" id="20_7m1qc"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="20_wudxj"]
 [ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="21_2btif"]
@@ -29,6 +27,12 @@
 [ext_resource type="Texture2D" uid="uid://f8vgd1htx0vj" path="res://assets/visitor/villager.png" id="23_n0uqe"]
 [ext_resource type="Script" uid="uid://co53vm3ckuw8f" path="res://source/Ui/RequestListUi.cs" id="26_x13uo"]
 [ext_resource type="PackedScene" uid="uid://5e63ly4cxv6m" path="res://controls/visitor_request.tscn" id="27_3vupj"]
+[ext_resource type="PackedScene" uid="uid://4ln4d4xohp61" path="res://controls/inventory.tscn" id="28_mh4ky"]
+[ext_resource type="Script" uid="uid://btnxykkj54aa4" path="res://source/Ui/InfusionUi.cs" id="29_2bbbl"]
+[ext_resource type="Script" uid="uid://bwm46sdoi0m4f" path="res://source/Ui/KitchenTabUi.cs" id="29_d5d72"]
+[ext_resource type="Texture2D" uid="uid://cqylvjhpjdsig" path="res://assets/arrow.png" id="30_3vupj"]
+[ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="31_18b1w"]
+[ext_resource type="PackedScene" uid="uid://bxwulsjuonadl" path="res://controls/output_slot.tscn" id="33_18b1w"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k3d1t"]
 
@@ -78,6 +82,9 @@ expand_margin_bottom = 3.0
 region_rect = Rect2(16, 80, 16, 11)
 modulate_color = Color(1, 1, 1, 0.49803922)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_wudxj"]
+atlas = ExtResource("23_n0uqe")
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4a7sh"]
 bg_color = Color(0.18, 0.18, 0.18, 0.49803922)
 corner_radius_top_left = 3
@@ -90,9 +97,6 @@ expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7m1qc"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wudxj"]
-atlas = ExtResource("23_n0uqe")
 
 [node name="Node2D" type="Node2D" unique_id=1328475761]
 script = ExtResource("1_cho24")
@@ -389,11 +393,13 @@ theme = ExtResource("2_8rhti")
 theme_override_styles/panel = ExtResource("16_v7taj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_50rgw")
 theme_override_styles/tab_selected = SubResource("StyleBoxTexture_4a7sh")
-current_tab = 0
+current_tab = 1
 tab_0/title = "VISITORS_TAB"
+tab_1/title = "KITCHEN_TAB"
 
 [node name="VisitorsTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1123293159]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 script = ExtResource("19_1uwki")
 metadata/_tab_index = 0
@@ -407,10 +413,26 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="CurrentVisitor" type="PanelContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors" unique_id=547822919]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/panel = ExtResource("6_tpea4")
 script = ExtResource("20_7m1qc")
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor" unique_id=982613383]
+layout_mode = 2
+
+[node name="VisitorSprite" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/CenterContainer" unique_id=1741711720]
+unique_name_in_owner = true
+layout_mode = 2
+texture = SubResource("AtlasTexture_wudxj")
+stretch_mode = 2
+
+[node name="VisitorNoneLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/CenterContainer" unique_id=1290832406]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "No current visitor"
 
 [node name="Panel" type="Panel" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor" unique_id=771978267]
 show_behind_parent = true
@@ -510,25 +532,39 @@ layout_mode = 2
 texture = ExtResource("22_n0uqe")
 stretch_mode = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor" unique_id=982613383]
-layout_mode = 2
-
-[node name="VisitorSprite" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/CenterContainer" unique_id=1741711720]
+[node name="VisitorAcceptButton" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1714227321 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
-layout_mode = 2
-texture = SubResource("AtlasTexture_wudxj")
-stretch_mode = 2
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 195.0
+offset_top = 174.5
+offset_right = 246.0
+offset_bottom = 209.5
+grow_horizontal = 1
+grow_vertical = 1
+text = "ACCEPT"
 
-[node name="VisitorNoneLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/CenterContainer" unique_id=1290832406]
+[node name="VisitorRejectButton" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1489500017 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
-visible = false
-layout_mode = 2
-text = "No current visitor"
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 104.0
+offset_top = 174.5
+offset_right = 153.0
+offset_bottom = 209.5
+grow_horizontal = 1
+grow_vertical = 1
+text = "REJECT"
 
 [node name="HSeparator" type="HSeparator" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors" unique_id=353454649]
 layout_mode = 2
 
 [node name="CurrentRequests" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors" unique_id=168154605]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("26_x13uo")
@@ -536,37 +572,141 @@ script = ExtResource("26_x13uo")
 [node name="VisitorRequest" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentRequests" unique_id=1703583314 instance=ExtResource("27_3vupj")]
 layout_mode = 2
 
-[node name="Inventory" type="PanelContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer" unique_id=595742570]
-layout_mode = 2
-script = ExtResource("19_4a7sh")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory" unique_id=1899922783]
-layout_mode = 2
-horizontal_scroll_mode = 0
-
-[node name="InventoryContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer" unique_id=726146888]
-custom_minimum_size = Vector2(308, 0)
+[node name="Inventory" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer" unique_id=219114048 instance=ExtResource("28_mh4ky")]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer" unique_id=1469179148]
+[node name="KitchenTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=360496213]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("29_d5d72")
+metadata/_tab_index = 1
+metadata/_tab_name = "KITCHEN_TAB"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab" unique_id=1446027389]
 layout_mode = 2
 
-[node name="ItemSlot" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=1420599151 instance=ExtResource("18_v7taj")]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer" unique_id=357013283]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="InfusionControl" type="Panel" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer" unique_id=2087661226]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+script = ExtResource("29_2bbbl")
+
+[node name="HoldButton" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=806835530 instance=ExtResource("11_im64q")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 158.0
+offset_right = 208.0
+offset_bottom = 35.0
+grow_horizontal = 1
+grow_vertical = 1
+text = "Infuse"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=1185824473]
+layout_mode = 0
+offset_top = 35.0
+offset_right = 364.0
+offset_bottom = 83.0
+alignment = 1
+
+[node name="InputSlot1" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=1510528001 instance=ExtResource("31_18b1w")]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ItemSlot2" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=804242440 instance=ExtResource("18_v7taj")]
+[node name="InputSlot2" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=485582453 instance=ExtResource("31_18b1w")]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ItemSlot3" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=613605373 instance=ExtResource("18_v7taj")]
+[node name="InputSlot3" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=960739610 instance=ExtResource("31_18b1w")]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ItemSlot4" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=573819532 instance=ExtResource("18_v7taj")]
+[node name="Arrow" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=812494708]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+texture = ExtResource("30_3vupj")
+stretch_mode = 3
+
+[node name="OutputSlot" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=1806058791 instance=ExtResource("33_18b1w")]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ItemSlot5" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=1256239781 instance=ExtResource("18_v7taj")]
-layout_mode = 2
+[node name="InputAspects" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=1380578562]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 90.0
+offset_right = 195.0
+offset_bottom = 106.0
+theme_override_constants/separation = 1
+alignment = 1
+script = ExtResource("22_mh4ky")
 
-[node name="ItemSlot6" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Inventory/ScrollContainer/InventoryContainer/HBoxContainer" unique_id=22235740 instance=ExtResource("18_v7taj")]
+[node name="Label" type="Label" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=1333339491]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=466271478]
+layout_mode = 2
+texture = ExtResource("21_2btif")
+stretch_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=1549921677]
+layout_mode = 2
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
+
+[node name="Label2" type="Label" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=771702664]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("20_wudxj")
+text = "0"
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=1126520441]
+layout_mode = 2
+texture = ExtResource("22_n0uqe")
+stretch_mode = 2
+
+[node name="OutputAspects" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=1084089667]
+layout_mode = 0
+offset_left = 222.0
+offset_top = 90.0
+offset_right = 366.0
+offset_bottom = 106.0
+theme_override_constants/separation = 1
+alignment = 1
+script = ExtResource("22_mh4ky")
+
+[node name="Label" type="Label" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=456135322]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=1379643564]
+layout_mode = 2
+texture = ExtResource("21_2btif")
+stretch_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=1083432407]
+layout_mode = 2
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
+
+[node name="Label2" type="Label" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=990499954]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("20_wudxj")
+text = "0"
+
+[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=1035962847]
+layout_mode = 2
+texture = ExtResource("22_n0uqe")
+stretch_mode = 2
+
+[node name="Inventory" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer" unique_id=1473971935 instance=ExtResource("28_mh4ky")]
 layout_mode = 2
 
 [node name="CloseButton" type="TextureButton" parent="CanvasLayer/HomeUi" unique_id=1149335718]

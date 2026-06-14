@@ -1,10 +1,12 @@
 using Godot;
 namespace Apothecary;
 
-public partial class ItemSlot : Button {
-	public int Index { get; set; }
-	private TextureRect? texture_rect;
-	private Label? amount_label;
+public abstract partial class ItemSlot : Button {
+	public abstract Item? Item { get; }
+	public abstract int Amount { get; }
+
+	protected TextureRect? texture_rect;
+	protected Label? amount_label;
 
 	public override void _Ready() {
 		base._Ready();
@@ -12,17 +14,9 @@ public partial class ItemSlot : Button {
 		amount_label = GetNode<Label>("AmountLabel");
 		Update();
 	}
-	
-	public void Update() {
-		var inventory = Game.Instance.GetInventory();
-		if (Index >= inventory.Count) {
-			Hide();
-		} else {
-			Show();
-			
-			var (item, amount) = inventory[Index];
-			amount_label?.Text = amount > 1 ? ("x" + amount) : "";
-			texture_rect?.Texture = item.Raw[0].Sprite; // TODO
-		}
+
+	public virtual void Update() {
+		amount_label?.Text = Amount > 1 ? ("x" + Amount) : "";
+		texture_rect?.Texture = Item?.GetSprite();
 	}
 }

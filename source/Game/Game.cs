@@ -54,6 +54,8 @@ public partial class Game : RefCounted {
 		for (var i = 0; i < (int)Resource.COUNT; i++) {
 			resources.Add(0);
 		}
+		
+		MakeNewVisitor();
 	}
 	
 	public void PassTime() {
@@ -228,16 +230,20 @@ public partial class Game : RefCounted {
 	}
 
 	private void UpdateVisitors() {
-		foreach (var visitor in visitors) {
+		foreach (var visitor in current_requests) {
 			visitor.RemainingDays -= 1;
 		}
-		visitors = [.. visitors.Where(v => v.RemainingDays <= 0)];
+		current_requests = [.. current_requests.Where(v => v.RemainingDays <= 0)];
 		VisitorAtDoor = null;
 
 		if (rando.RandDouble() < VISITOR_CHANCE) {
-			var model = rando.Pick(World.Requests);
-			VisitorAtDoor = new Visitor(model, ref rando);
+			MakeNewVisitor();
 		}
+	}
+
+	private void MakeNewVisitor() {
+		var model = rando.Pick(World.Requests);
+		VisitorAtDoor = new Visitor(model, ref rando);
 	}
 
 	public (string?, Reward?) GiveVisitor(Visitor visitor, Item cure) {
@@ -257,7 +263,14 @@ public partial class Game : RefCounted {
 		return (null, new Reward([(Resource.Coins, visitor.Request.Reward + quality)]));
 	}
 
-	public void RejectVisitor() {
+	public void AcceptRequest() {
+		if (VisitorAtDoor != null) {
+			current_requests.Add(VisitorAtDoor);
+			VisitorAtDoor = null;
+		}
+	}
+
+	public void RejectRequest() {
 		VisitorAtDoor = null;
 	}
 
@@ -316,7 +329,7 @@ public partial class Game : RefCounted {
 		var migraineRequest = new RequestModel("migraine", villager, migraineText, [(bloom, 1), (spice, 0)], 2);
 
 		var foodPoisoningText = """
-			[I shouldn't have eaten {0}. % that raw shellfish|those leftovers|than salami off the floor]
+			[I shouldn't have eaten {0}. % that raw shellfish|those leftovers|that salami off the floor]
 		""";
 		var foodPoisoningRequest = new RequestModel("food_poisoning", villager, foodPoisoningText, [(spice, 1), (gelus, 0)], 2);
 

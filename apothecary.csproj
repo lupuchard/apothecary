@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
     <LangVersion>14</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="script_templates\empty.cs" />
+    <None Include="script_templates\empty.cs" />
+  </ItemGroup>
 </Project>

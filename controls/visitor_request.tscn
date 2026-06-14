@@ -7,7 +7,8 @@
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="3_mjb0w"]
 [ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="4_7q0y6"]
 [ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="5_bl1kf"]
-[ext_resource type="PackedScene" uid="uid://bfbxwbbjvq1n8" path="res://controls/item_slot.tscn" id="6_7l2k1"]
+[ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="6_7q0y6"]
+[ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="9_7q0y6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mh4ky"]
 atlas = ExtResource("2_nuyv0")
@@ -58,6 +59,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 1
 alignment = 1
+script = ExtResource("6_7q0y6")
 
 [node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/RequirementsUi" unique_id=232318188]
 layout_mode = 2
@@ -90,6 +92,6 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_mjb0w")
 text = "2 days left"
 
-[node name="DestinationSlot" parent="HBoxContainer" unique_id=1510528001 instance=ExtResource("6_7l2k1")]
+[node name="DestinationSlot" parent="HBoxContainer" unique_id=1510528001 instance=ExtResource("9_7q0y6")]
 unique_name_in_owner = true
 layout_mode = 2

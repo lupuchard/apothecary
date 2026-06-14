@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Godot;
 
 namespace Apothecary;
 
@@ -67,6 +68,10 @@ public readonly struct Item : IEquatable<Item> {
 	public string GetName() {
 		return "TODO";
 	}
+
+	public Texture2D GetSprite() {
+		return Raw[0].Sprite; // TODO
+	}
 	
 	public static Item Ground(Item item) {
 		return new Item(
@@ -85,7 +90,7 @@ public readonly struct Item : IEquatable<Item> {
 	}
 
 	public static Item Infusion(IList<Item> items) {
-		var aspects = items.Aggregate<Item, ImmutableList<(Aspect, int)>>([], (aspects, item) => CombineAspects(item.Aspects, aspects));
+		var aspects = CombineAspects(items.Select(item => item.Aspects));
 		for (var i = aspects.Count - 1; i >= 0; i--) {
 			aspects = ModifyAspect(aspects, -1, at: i);
 		}
@@ -116,6 +121,10 @@ public readonly struct Item : IEquatable<Item> {
 			}
 		}
 		return aspects;
+	}
+
+	public static ImmutableList<(Aspect, int)> CombineAspects(IEnumerable<ImmutableList<(Aspect, int)>> aspects) {
+		return aspects.Aggregate<ImmutableList<(Aspect, int)>, ImmutableList<(Aspect, int)>>([], CombineAspects);
 	}
 
 	private static ImmutableList<(Aspect, int)> CombineAspects(ImmutableList<(Aspect, int)> aspects1, ImmutableList<(Aspect, int)> aspects2) {

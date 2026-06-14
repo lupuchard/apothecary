@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://bxwulsjuonadl"]
+
+[ext_resource type="Script" uid="uid://dmsvnhfnxsq6c" path="res://source/Ui/OutputSlot.cs" id="1_hvdym"]
+[ext_resource type="Texture2D" uid="uid://c0wuwku0nlslj" path="res://assets/item/feverfew.png" id="2_car2y"]
+[ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="3_tr3nk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cs1hs"]
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3xeia"]
+bg_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="OutputSlot" type="Button" unique_id=1510528001]
+custom_minimum_size = Vector2(48, 48)
+theme_override_styles/normal = SubResource("StyleBoxFlat_cs1hs")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_3xeia")
+script = ExtResource("1_hvdym")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=993104]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_car2y")
+
+[node name="AmountLabel" type="Label" parent="." unique_id=735008177]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 21.0
+offset_top = -6.5
+offset_right = 61.0
+offset_bottom = 14.5
+theme_override_fonts/font = ExtResource("3_tr3nk")
+text = "x2"
+horizontal_alignment = 1
+vertical_alignment = 1
