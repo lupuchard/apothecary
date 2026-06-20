@@ -8,6 +8,7 @@ public partial class KitchenTabUi : MarginContainer {
 	public override void _Ready() {
 		inventory = GetNode<InventoryUi>("HBoxContainer/Inventory");
 		infusion = GetNode<InfusionUi>("%InfusionControl");
+		infusion.InfusionCreated += Update;
 	}
 
 	private void OnAccept() {

@@ -53,9 +53,10 @@ public partial class ForagingUi : BaseUi {
 
 		if (!results_remaining && forage_button != null) {
 			forage_button.Show();
-			forage_button.Disabled = Region.Remaining <= 0;
+			var end_of_day = Game.Instance.TimeOfDay >= Game.END_OF_DAY;
+			forage_button.Disabled = Region.Remaining <= 0 || end_of_day;
 			if (forage_button.Disabled) {
-				forage_button.Text = Tr("FORAGE_BUTTON_UNAVAILABLE");
+				forage_button.Text = Tr(end_of_day ? "FORAGE_BUTTON_END_OF_DAY" : "FORAGE_BUTTON_UNAVAILABLE");
 			} else {
 				forage_button.Text = Tr("FORAGE_BUTTON_AVAILABLE");
 			}

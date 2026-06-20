@@ -66,11 +66,23 @@ public readonly struct Item : IEquatable<Item> {
 	}
 
 	public string GetName() {
-		return "TODO";
+		if (Is(ItemType.Infusion)) {
+			return "INFUSION";
+		} else {
+			return Raw[0].Id.ToUpperInvariant();
+		}
 	}
 
 	public Texture2D GetSprite() {
-		return Raw[0].Sprite; // TODO
+		if (Is(ItemType.Infusion)) {
+			return ResourceLoader.Load<Texture2D>("res://assets/item/infusion.png");
+		} else {
+			return Raw[0].Sprite;
+		}
+	}
+
+	public bool Is(ItemType type) {
+		return (Type & type) != 0;
 	}
 	
 	public static Item Ground(Item item) {

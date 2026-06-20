@@ -8,13 +8,19 @@ public class ItemModel {
 	public int Index { get; set; } = 0;
 	public ImmutableArray<(Aspect, int)> Aspects { get; }
 
-	public RegionModel? WhereFound { get; }
-	public ItemFindCondition? WhenFound { get; }
+	public RegionModel WhereFound { get; }
+	public ItemFindCondition WhenFound { get; }
 	public Rarity Rarity { get; }
 	
 	public Texture2D Sprite { get; }
 
-	public ItemModel(string id, ImmutableArray<(Aspect, int)> aspects, RegionModel? where_found = null, ItemFindCondition? when_found = null, Rarity rarity = Rarity.Common) {
+	public ItemModel(
+		string id, 
+		ImmutableArray<(Aspect, int)> aspects, 
+		RegionModel where_found, 
+		ItemFindCondition when_found = ItemFindCondition.None, 
+		Rarity rarity = Rarity.Common
+	) {
 		Id = id;
 		Aspects = aspects;
 		WhereFound = where_found;

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4plsms8ccnvp"
-path="res://.godot/imported/ornament2.png-eae916ea00a7709f03268407c8770c98.ctex"
+uid="uid://dymtsnuhmhly3"
+path="res://.godot/imported/infusion.png-130e045b03b4295a35b8d3742d319fdc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/fonts/Darinia/ornaments/ornament2.png"
-dest_files=["res://.godot/imported/ornament2.png-eae916ea00a7709f03268407c8770c98.ctex"]
+source_file="res://assets/item/infusion.png"
+dest_files=["res://.godot/imported/infusion.png-130e045b03b4295a35b8d3742d319fdc.ctex"]
 
 [params]
 

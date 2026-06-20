@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dpysbeqt5mvya"
-path="res://.godot/imported/Darinia.ttf-114ece56b3b3d6f6be36a2c4775ebf8e.fontdata"
+uid="uid://qrqyo004juy3"
+path="res://.godot/imported/Font_Fantasy.ttf-3c035ebefdeb79c8ae2d0f341037eedd.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/Darinia/Darinia.ttf"
-dest_files=["res://.godot/imported/Darinia.ttf-114ece56b3b3d6f6be36a2c4775ebf8e.fontdata"]
+source_file="res://assets/theme/Font_Fantasy.ttf"
+dest_files=["res://.godot/imported/Font_Fantasy.ttf-3c035ebefdeb79c8ae2d0f341037eedd.fontdata"]
 
 [params]
 

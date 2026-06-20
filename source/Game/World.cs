@@ -6,7 +6,7 @@ using System.Linq;
 namespace Apothecary;
 
 public class World {
-	public ImmutableArray<RegionModel> Locations { get; }
+	public ImmutableArray<RegionModel> Regions { get; }
 	private ReadOnlyDictionary<string, RegionModel> LocationIdMap { get; }
 	public ReadOnlyDictionary<RegionModel, HashSet<RegionModel>> Adjacencies { get; }
 
@@ -20,14 +20,14 @@ public class World {
 	private ReadOnlyDictionary<string, RequestModel> RequestIdMap { get; }
 
 	public World(
-		ImmutableArray<RegionModel> locations,
+		ImmutableArray<RegionModel> regions,
 		ReadOnlyDictionary<RegionModel, HashSet<RegionModel>> adjacencies,
 		ImmutableArray<Aspect> aspects,
 		ImmutableArray<ItemModel> items,
 		ImmutableArray<RequestModel> requests
 	) {
-		Locations = locations;
-		LocationIdMap = locations.ToDictionary(x => x.Id).AsReadOnly();
+		Regions = regions;
+		LocationIdMap = regions.ToDictionary(x => x.Id).AsReadOnly();
 		Adjacencies = adjacencies;
 
 		Aspects = aspects;

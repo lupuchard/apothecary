@@ -14,7 +14,7 @@ public partial class Game : RefCounted {
 	[Signal] public delegate void TimeChangedEventHandler();
 	
 	private const int MAX_FORAGE_RESULTS = 3;
-	private const int END_OF_DAY = 6;
+	public const int END_OF_DAY = 6;
 	private const int DAYS_IN_SEASON = 36;
 	private const float VISITOR_CHANCE = 0.4f;
 
@@ -29,10 +29,10 @@ public partial class Game : RefCounted {
 	private readonly Dictionary<(long, RegionModel), List<ItemModel>> foraging_possibilities_cache = [];
 	private List<ItemModel?> current_foraging_results = [];
 
-	private readonly List<Region> locations = [];
-	private readonly Dictionary<string, Region> location_lookup = [];
+	private readonly List<Region> regions = [];
+	private readonly Dictionary<string, Region> region_lookup = [];
 
-	private readonly Dictionary<Item, (Item, int)> inventory = [];
+	private readonly Dictionary<Item, int> inventory = [];
 	private List<(Item, int)>? sorted_inventory = [];
 	private Aspect? inventory_aspect_filter = null;
 	private ItemType? inventory_type_filter = null;
@@ -43,12 +43,31 @@ public partial class Game : RefCounted {
 	private List<Visitor> current_requests = [];
 	public IReadOnlyList<Visitor> CurrentRequests => current_requests;
 
+	public Journal Journal { get; private set; } = new();
+	private readonly Dictionary<UnlockRequirementType, List<RegionModel>> region_unlocks = [];
+
 	private readonly List<int> resources = [];
 
 	public Game() {
-		foreach (var region in World.Locations) {
-			locations.Add(new Region(region));
-			location_lookup.Add(region.Id, locations.Last());
+		for (var i = 1; i < (int)UnlockRequirementType.COUNT; i++) {
+			region_unlocks.Add((UnlockRequirementType)i, []);
+		}
+		
+		foreach (var region in World.Regions) {
+			var new_region = new Region(region);
+			regions.Add(new_region);
+			region_lookup.Add(region.Id, new_region);
+
+			if (region.UnlockRequirement.Type == UnlockRequirementType.None) {
+				new_region.Unlocked = true;
+			} else {
+				region_unlocks[region.UnlockRequirement.Type].Add(region);
+			}
+		}
+		
+		for (var i = 1; i < (int)UnlockRequirementType.COUNT; i++) {
+			var type = (UnlockRequirementType)i;
+			region_unlocks[type] = [..region_unlocks[type].OrderBy(x => x.UnlockRequirement.Amount)];
 		}
 
 		for (var i = 0; i < (int)Resource.COUNT; i++) {
@@ -56,6 +75,7 @@ public partial class Game : RefCounted {
 		}
 		
 		MakeNewVisitor();
+		Journal.Confirmation += (_) => OnJournalConfirmation();
 	}
 	
 	public void PassTime() {
@@ -77,7 +97,7 @@ public partial class Game : RefCounted {
 			}
 		}
 
-		foreach (var location in locations) {
+		foreach (var location in regions) {
 			location.DailyRecovery(ref rando);
 		}
 
@@ -107,18 +127,33 @@ public partial class Game : RefCounted {
 	public void AcquireForagingResult(int index) {
 		if (index < current_foraging_results.Count && current_foraging_results[index] is { } item_model) {
 			var item = new Item(item_model);
-			ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(inventory, item, out var exists);
-			if (!exists) value.Item1 = item;
-			value.Item2 += 1;
-
+			AcquireItem(item);
 			current_foraging_results[index] = null;
-			sorted_inventory = null;
 		}
+	}
+
+	public void AcquireItem(Item item, int amount = 1) {
+		ref var cur_amount = ref CollectionsMarshal.GetValueRefOrAddDefault(inventory, item, out _);
+		//if (!exists) value.Item2 = item;
+		cur_amount += amount;
+		sorted_inventory = null;
+		Journal.Discover(item.Raw[0]);
+	}
+
+	public void RemoveItem(Item item, int amount = 1) {
+		ref var cur_amount = ref CollectionsMarshal.GetValueRefOrNullRef(inventory, item);
+		if (cur_amount <= amount) {
+			inventory.Remove(item);
+		} else {
+			cur_amount -= amount;
+		}
+
+		sorted_inventory = null;
 	}
 
 	public List<(Item, int)> GetInventory() {
 		if (sorted_inventory == null) {
-			sorted_inventory = [.. inventory.Values];
+			sorted_inventory = [.. inventory.Select(x => (x.Key, x.Value))];
 			sorted_inventory.Sort(GetInventoryComparer());
 		}
 
@@ -135,7 +170,7 @@ public partial class Game : RefCounted {
 	}
 
 	public Region? GetLocation(string region_id) {
-		return location_lookup.GetValueOrDefault(region_id);
+		return region_lookup.GetValueOrDefault(region_id);
 	}
 
 	private List<ItemModel> GetForagingResults(RegionModel location) {
@@ -186,9 +221,7 @@ public partial class Game : RefCounted {
 
 		possibilities = [];
 		foreach (var item in World.Items) {
-			if (item.WhereFound == null) continue;
-
-			if (item.WhenFound != null && (forage_key.conditions & (long)item.WhenFound) == 0) {
+			if (item.WhenFound != ItemFindCondition.None && (forage_key.conditions & (long)item.WhenFound) == 0) {
 				continue;
 			}
 
@@ -248,7 +281,7 @@ public partial class Game : RefCounted {
 
 	public (string?, Reward?) GiveVisitor(Visitor visitor, Item cure) {
 		if (!inventory.ContainsKey(cure)) return (Tr("VISITOR_NO_ITEM"), null);
-		if ((cure.Type & ItemType.Infusion) == 0) return (Tr("VISITOR_NOT_INFUSION"), null);
+		if (!cure.Is(ItemType.Infusion)) return (Tr("VISITOR_NOT_INFUSION"), null);
 
 		var prevAspect = int.MaxValue;
 		var quality = 0;
@@ -274,6 +307,19 @@ public partial class Game : RefCounted {
 		VisitorAtDoor = null;
 	}
 
+	public List<RegionModel> GetUnlocksWith(UnlockRequirement requirement, int from) {
+		return region_unlocks[requirement.Type].Where(
+			region => region.UnlockRequirement.Amount <= requirement.Amount && region.UnlockRequirement.Amount >= from
+		).ToList();
+	}
+
+	private void OnJournalConfirmation() {
+		var unlocked = GetUnlocksWith(UnlockRequirement.ConfirmedJournalEntries(Journal.TotalConfirmed), Journal.TotalConfirmed - 2);
+		foreach (var region in unlocked) {
+			region_lookup[region.Id].Unlocked = true;
+		}
+	}
+
 	private static World CreateWorld() {
 		Aspect? bloom, caust = null, spice = null, vigor = null, umber = null, gelus = null;
 		bloom = new Aspect("bloom", Aspect.SpringGreen, () => caust!);
@@ -283,13 +329,13 @@ public partial class Game : RefCounted {
 		umber = new Aspect("umber", Aspect.Violet, () => gelus!);
 		gelus = new Aspect("gelus", Aspect.Azure, () => bloom!);
 
-		var frontYard = new RegionModel("front_yard", 2, 0.25);
-		var backyard = new RegionModel("backyard", 2, 0.25);
-		var road = new RegionModel("road", 3, 0.5);
-		var meadow = new RegionModel("meadow", 5, 0.5);
-		var eastWoods = new RegionModel("east_woods", 5, 0.5);
-		var westWoods = new RegionModel("west_woods", 5, 0.5);
-		var creek = new RegionModel("creek", 4, 0.5);
+		var frontYard = new RegionModel("front_yard", 2, 0.25, UnlockRequirement.None);
+		var backyard = new RegionModel("backyard", 2, 0.25, UnlockRequirement.FulfilledRequests(1));
+		var road = new RegionModel("road", 3, 0.5, UnlockRequirement.FulfilledRequests(1));
+		var meadow = new RegionModel("meadow", 5, 0.5, UnlockRequirement.FulfilledRequests(1));
+		var eastWoods = new RegionModel("east_woods", 5, 0.5, UnlockRequirement.ConfirmedJournalEntries(3));
+		var westWoods = new RegionModel("west_woods", 5, 0.5, UnlockRequirement.ConfirmedJournalEntries(6));
+		var creek = new RegionModel("creek", 4, 0.5, UnlockRequirement.ConfirmedJournalEntries(9));
 
 		var adjacencies = new Dictionary<RegionModel, HashSet<RegionModel>> {
 			{ frontYard, [road, meadow, eastWoods, backyard] },
@@ -302,12 +348,12 @@ public partial class Game : RefCounted {
 		};
 
 		ImmutableArray<ItemModel> items = [
-			new ItemModel("meadowsweet", [(bloom, 1), (vigor, 1)], creek),
-			new ItemModel("wild_laceroot", [(caust, 1), (spice, 1), (umber, 1)], eastWoods, ItemFindCondition.Morning),
-			new ItemModel("mintflower", [(gelus, 1), (spice, 1), (bloom, 1)], westWoods),
-			new ItemModel("feverfew", [(bloom, 2), (gelus, 1)], backyard, rarity: Rarity.Rare),
-			new ItemModel("white_coneflower", [(bloom, 1), (gelus, 1)], meadow, ItemFindCondition.Afternoon),
-			new ItemModel("chamomile", [(umber, 2), (gelus, 1), (bloom, 1)], meadow, rarity: Rarity.Rare)
+			new("meadowsweet", [(bloom, 1), (vigor, 1)], creek),
+			new("wild_laceroot", [(caust, 1), (spice, 1), (umber, 1)], eastWoods, ItemFindCondition.Morning),
+			new("mintflower", [(gelus, 1), (spice, 1), (bloom, 1)], westWoods),
+			new("feverfew", [(bloom, 2), (gelus, 1)], backyard, rarity: Rarity.Rare),
+			new("white_coneflower", [(bloom, 1), (gelus, 1)], meadow, ItemFindCondition.Afternoon),
+			new("chamomile", [(umber, 2), (gelus, 1), (bloom, 1)], meadow, rarity: Rarity.Rare)
 		];
 
 		// https://www.st-george-squadron.com/sgs/wiki/index.php/18th_century_names

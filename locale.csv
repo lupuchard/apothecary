@@ -1,12 +1,19 @@
 keys,en
 HOME,Home
 FRONT_YARD,Front yard
+FRONT_YARD_UNKNOWN,Front yard
 BACKYARD,Backyard
+BACKYARD_UNKNOWN,Backyard
 ROAD,Road
+ROAD_UNKNOWN,Road
 MEADOW,Meadow
+MEADOW_UNKNOWN,Meadow
 EAST_WOODS,East woods
+EAST_WOODS_UNKNOWN,Undiscovered (east)
 WEST_WOODS,West woods
+WEST_WOODS,Undiscovered (west)
 CREEK,By the creek
+CREEK_UNKNOWN,Undiscovered (south)
 MEADOWSWEET,Meadowsweet
 WILD_LACEROOT,Wild laceroot
 MINTFLOWER,Mintflower
@@ -17,14 +24,36 @@ FORAGES_REMAINING_LABEL,{0}/{1} Remaining
 NO_FORAGE_FOUND,Nothing found
 FORAGE_BUTTON_UNAVAILABLE,No more forage
 FORAGE_BUTTON_AVAILABLE,Forage\n(1 Action)
+FORAGE_BUTTON_END_OF_DAY,It's getting late...
 VISITORS_TAB,Visitors
 KITCHEN_TAB,Kitchen
+JOURNAL_TAB,Journal
+BEDROOM_TAB,Bedroom
 VISITOR,Visitor
 NO_VISITOR_TEXT,No visitors
 INFUSION,Infusion
+INFUSE,Infuse
 ONE_DAY,1 day
 X_DAYS,{0} days
 ONE_DAY_LEFT,1 day left
 X_DAYS_LEFT,{0} days left
 ACCEPT,Accept
 REJECT,Reject
+WHERE,Where
+WHEN,When
+RARITY,Rarity
+UNDISCOVERED_ITEM,Undiscovered item
+X_OF_Y,{0} of {1}
+COMMON,Common
+RARE,Rare
+SCARCE,Scarce
+ANY_TIME,Any time
+MORNING,Morning
+AFTERNOON,Afternoon
+NIGHT,Night
+AFTER_RAINING,After rain
+IN_MOONLIGHT,In moonlight
+EUREKA,Eureka!
+OK,Ok
+VERIFIED_POPUP_TEXT,Locked in:\n{0}\nAll aspects will now be shown for these ingredients. {1}
+ACCESS_UNLOCK,You can now access the {0}.

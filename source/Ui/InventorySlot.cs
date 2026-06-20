@@ -33,7 +33,7 @@ public partial class InventorySlot : ItemSlot {
 			Update();
 		}
 	}
-	public InputSlot? ReferencedBy {
+	public ItemSlot? ReferencedBy {
 		get;
 		set {
 			field = value;

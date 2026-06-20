@@ -1,19 +1,23 @@
 using Godot;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Apothecary;
 
 public partial class InventoryUi : PanelContainer {
+	[Export] public Node? WhereInputNodes;
+
 	private const int WIDTH = 6;
 	private VBoxContainer? container;
 	private readonly List<HBoxContainer> rows = [];
 	private readonly List<InventorySlot> slots = [];
+	private List<InputSlot> input_slots = [];
 
 	private PackedScene? inventory_slot_scene;
 	private Area2D? drag_indicator;
 	private Sprite2D? drag_indicator_sprite;
 	private InputSlot? drag_snap_target;
-	private ItemSlot? drag_snap_target_prev_item;
+	private InventorySlot? drag_snap_target_prev_item;
 	private InventorySlot? dragging;
 
 	public override void _Ready() {
@@ -32,19 +36,26 @@ public partial class InventoryUi : PanelContainer {
 		rows.Add(first_row);
 		container.AddChild(first_row);
 
-		var input_item_slots = GetTree().GetNodesInGroup("input_item_slot");
-		foreach (var node in input_item_slots) {
-			if (node is InputSlot slot) {
-				if (slot.IsNodeReady()) {
-					SetUpSlot(slot);
-				} else {
-					node.Ready += () => SetUpSlot(slot);
-				}
+		input_slots = WhereInputNodes?.FindChildren("*", "InputSlot").Cast<InputSlot>().ToList() ?? [];
+		foreach (var slot in input_slots) {
+			if (slot.IsNodeReady()) {
+				SetUpSlot(slot);
+			} else {
+				slot.Ready += () => SetUpSlot(slot);
 			}
 		}
 	}
 
 	private void SetUpSlot(InputSlot slot) {
+		slot.ButtonDown += () => {
+			if (slot.Referencing != null) {
+				drag_snap_target = slot;
+				drag_indicator?.GlobalPosition = slot.GlobalPosition;
+				StartDrag(slot.Referencing);
+				
+			}
+		};
+
 		slot.CollisionArea!.AreaEntered += (area) => {
 			if (area == drag_indicator) {
 				SnapDrag(slot);
@@ -57,12 +68,15 @@ public partial class InventoryUi : PanelContainer {
 		};
 	}
 
-	public override void _Input(InputEvent inputEvent) {
-		if (inputEvent is InputEventMouseMotion mouseEvent && dragging != null) {
+	public override void _Input(InputEvent input_event) {
+		if (input_event is InputEventMouseMotion mouseEvent && dragging != null) {
 			drag_indicator?.Position += mouseEvent.Relative;
+		} else if (input_event is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false } && dragging != null) {
+			EndDrag();
 		}
 	}
 
+	// To reproduce, drag one item into input slot, drag another item into input slot, then try to drag the first item from it's input slot
 	public void StartDrag(InventorySlot slot) {
 		var inventory = Game.Instance.GetInventory();
 		if (slot.Index >= inventory.Count) return;
@@ -71,18 +85,21 @@ public partial class InventoryUi : PanelContainer {
 
 		drag_indicator?.Show();
 		drag_indicator_sprite?.Texture = inventory[slot.Index].Item1.GetSprite();
-		drag_indicator?.GlobalPosition = slot.GlobalPosition;
+		//drag_indicator?.GlobalPosition = slot.GlobalPosition;
 		dragging = slot;
 		dragging.Dragging = true;
 	}
 
 	private void SnapDrag(InputSlot slot) {
-		if (drag_snap_target != null) {
+		if (slot.Referencing == dragging) {
+			return;
+		}
+		if (drag_snap_target != null && drag_snap_target != slot) {
 			EndSnapDrag(drag_snap_target);
 		}
 		drag_snap_target_prev_item = slot.Referencing;
 		slot.Referencing = dragging;
-		if (dragging?.ReferencedBy is InputSlot input_slot) {
+		if (dragging?.ReferencedBy is InputSlot input_slot && input_slot != slot) {
 			input_slot.Referencing = null;
 		}
 		dragging?.ReferencedBy = slot;
@@ -99,18 +116,14 @@ public partial class InventoryUi : PanelContainer {
 		}
 	}
 
-	private void EndDrag(ItemSlot slot) {
-		if (dragging == slot) {
-			if (drag_snap_target_prev_item is InventorySlot inventory_slot) {
-				inventory_slot.ReferencedBy = null;
-			}
-			drag_snap_target_prev_item = null;
-			drag_snap_target = null;
-			drag_indicator?.Hide();
-			dragging.Dragging = false;
-			dragging = null;
-			drag_indicator_sprite?.Show();
-		}
+	private void EndDrag() {
+		drag_snap_target_prev_item?.ReferencedBy = null;
+		drag_snap_target_prev_item = null;
+		drag_snap_target = null;
+		drag_indicator?.Hide();
+		dragging?.Dragging = false;
+		dragging = null;
+		drag_indicator_sprite?.Show();
 	}
 
 	public void Update() {
@@ -128,8 +141,10 @@ public partial class InventoryUi : PanelContainer {
 
 			var new_slot = (InventorySlot)inventory_slot_scene!.Instantiate();
 			new_slot.Index = slots.Count;
-			new_slot.ButtonDown += () => StartDrag(new_slot);
-			new_slot.ButtonUp += () => EndDrag(new_slot);
+			new_slot.ButtonDown += () => {
+				StartDrag(new_slot);
+				drag_indicator?.GlobalPosition = new_slot.GlobalPosition;
+			};
 			last_row.AddChild(new_slot);
 			slots.Add(new_slot);
 		}
@@ -145,17 +160,12 @@ public partial class InventoryUi : PanelContainer {
 		}
 
 		if (dragging != null) {
-			EndDrag(dragging);
+			EndDrag();
 		}
 
-		var input_item_slots = GetTree().GetNodesInGroup("input_item_slot");
-		foreach (var node in input_item_slots) {
-			if (node is InputSlot slot) {
-				if (slot.Referencing is InventorySlot inventory_slot) {
-					inventory_slot.ReferencedBy = null;
-					slot.Referencing = null;
-				}
-			}
+		foreach (var slot in input_slots) {
+			slot.Referencing?.ReferencedBy = null;
+			slot.Referencing = null;
 		}
 	}
 }

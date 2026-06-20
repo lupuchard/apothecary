@@ -4,6 +4,8 @@ using System.Linq;
 namespace Apothecary;
 
 public partial class InfusionUi : Panel {
+	[Signal] public delegate void InfusionCreatedEventHandler();
+	
 	private SlowButton? button;
 	private List<InputSlot> input_slots = [];
 	private OutputSlot? output_slot;
@@ -22,9 +24,11 @@ public partial class InfusionUi : Panel {
 		foreach (var slot in input_slots) {
 			slot.ItemUpdated += Update;
 		}
-		
+
 		input_aspects = GetNode<AspectListUi>("InputAspects");
 		output_aspects = GetNode<AspectListUi>("OutputAspects");
+
+		button.PressFinished += DoInfusion;
 	}
 
 	public void Update() {
@@ -38,11 +42,33 @@ public partial class InfusionUi : Panel {
 			input_aspects?.Update([]);
 			output_aspects?.Update([]);
 			output_slot?.Output = null;
+			button?.Disabled = true;
 		} else {
-			input_aspects?.Update(Item.CombineAspects(inputs.Select(item => item.Aspects)));
 			var output = Item.Infusion(inputs);
+
+			var combined_aspects = Item.CombineAspects(inputs.Select(item => item.Aspects));
+			input_aspects?.Update(Game.Instance.Journal.GetShownAspects(output.Raw, combined_aspects));
 			output_slot?.Output = output;
-			output_aspects?.Update(output.Aspects);
+			output_aspects?.Update(Game.Instance.Journal.GetShownAspects(output.Raw, output.Aspects));
+			button?.Disabled = output.Aspects.Count == 0;
 		}
+	}
+
+	private void DoInfusion() {
+		var items = input_slots.Where(slot => slot.Item != null).Select(slot => (slot.Item!.Value, slot.Amount)).ToList();
+		foreach (var (item, amount) in items) {
+			Game.Instance.RemoveItem(item, amount);
+		}
+
+		if (output_slot?.Output != null) {
+			Game.Instance.AcquireItem(output_slot.Output.Value, output_slot.OutputAmount);
+		}
+
+		foreach (var slot in input_slots) {
+			slot.Referencing?.ReferencedBy = null;
+			slot.Referencing = null;
+		}
+		
+		EmitSignalInfusionCreated();
 	}
 }

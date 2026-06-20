@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 namespace Apothecary;
 
@@ -60,7 +61,7 @@ public partial class CurrentVisitorUi : PanelContainer {
 			sprite?.Texture = visitor.Request.Type.Sprite;
 			
 			requirements_container?.Show();
-			requirements_container?.Update(visitor.Request.Aspects);
+			requirements_container?.Update([..visitor.Request.Aspects.Cast<(Aspect?, int)>()]);
 			
 			AcceptButton?.Show();
 			RejectButton?.Show();

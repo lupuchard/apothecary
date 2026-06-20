@@ -3,12 +3,14 @@ using System.Collections.Generic;
 
 namespace Apothecary;
 
+[GlobalClass]
 public partial class AspectListUi : HBoxContainer {
 	private static readonly StyleBox empty_style_box = new StyleBoxEmpty();
+	private static readonly Texture2D unknown_aspect_icon = ResourceLoader.Load<Texture2D>("res://assets/aspect/unknown.png");
 	private readonly List<Label> amount_labels = [];
 	private readonly List<TextureRect> sprites = [];
 	private readonly List<VSeparator> separators = [];
-	
+
 	public override void _Ready() {
 		foreach (var child in GetChildren()) {
 			RemoveChild(child);
@@ -19,7 +21,7 @@ public partial class AspectListUi : HBoxContainer {
 		AddLabelAndSprite();
 	}
 
-	public void Update(IList<(Aspect, int)> aspects) {
+	public void Update(IList<(Aspect?, int)> aspects) {
 		while (sprites.Count < aspects.Count) {
 			AddSeparator();
 			AddLabelAndSprite();
@@ -29,8 +31,13 @@ public partial class AspectListUi : HBoxContainer {
 		foreach (var (aspect, count) in aspects) {
 			amount_labels[i].Text = $"{count}";
 			amount_labels[i].Show();
-			sprites[i].Texture = aspect.Sprite;
-			sprites[i].Modulate = aspect.Color;
+			if (aspect == null) {
+				sprites[i].Texture = unknown_aspect_icon;
+				sprites[i].Modulate = Colors.White;
+			} else {
+				sprites[i].Texture = aspect.Sprite;
+				sprites[i].Modulate = aspect.Color;
+			}
 			sprites[i].Show();
 			if (i > 0) separators[i - 1].Show();
 			i++;
@@ -52,13 +59,11 @@ public partial class AspectListUi : HBoxContainer {
 	}
 
 	private void AddLabelAndSprite() {
-		var new_label = new Label();
-		new_label.ThemeTypeVariation = "LabelSmall";
+		var new_label = new Label { ThemeTypeVariation = "LabelSmall" };
 		amount_labels.Add(new_label);
 		AddChild(new_label);
 
-		var new_sprite = new TextureRect();
-		new_sprite.StretchMode = TextureRect.StretchModeEnum.Keep;
+		var new_sprite = new TextureRect { StretchMode = TextureRect.StretchModeEnum.Keep };
 		sprites.Add(new_sprite);
 		AddChild(new_sprite);
 	}

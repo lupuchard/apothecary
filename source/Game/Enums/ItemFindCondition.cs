@@ -14,3 +14,17 @@ public enum ItemFindCondition {
 
 	InMoonlight = 0x100,
 }
+
+public static class ItemFindConditionExtensions {
+	public static string TrString(this ItemFindCondition condition) {
+		return condition switch {
+			ItemFindCondition.None => "ANY_TIME",
+			ItemFindCondition.Morning => "MORNING",
+			ItemFindCondition.Afternoon => "AFTERNOON",
+			ItemFindCondition.Night => "NIGHT",
+			ItemFindCondition.AfterRaining => "AFTER_RAINING",
+			ItemFindCondition.InMoonlight => "IN_MOONLIGHT",
+			_ => throw new ArgumentOutOfRangeException(nameof(condition), condition, null)
+		};
+	}
+}

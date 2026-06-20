@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://dq1res6vuuu0s"]
+
+[ext_resource type="Texture2D" uid="uid://cn035f1i4e4qq" path="res://icon.svg" id="1_lfuf4"]
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="1_wlxyl"]
+[ext_resource type="Script" uid="uid://bebhriuhsiqfq" path="res://source/Ui/JournalEntryUi.cs" id="2_u23ui"]
+[ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="2_wlxyl"]
+[ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="3_u23ui"]
+[ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="4_vmb3e"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u23ui"]
+bg_color = Color(0.3, 0.3, 0.3, 0.3019608)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="JournalEntry" type="Panel" unique_id=1894610393]
+custom_minimum_size = Vector2(0, 100)
+offset_right = 350.0
+offset_bottom = 100.0
+size_flags_horizontal = 3
+theme = ExtResource("1_wlxyl")
+script = ExtResource("2_u23ui")
+
+[node name="BasicInfo" type="VBoxContainer" parent="." unique_id=701278457]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 14.5
+offset_right = 184.0
+offset_bottom = 84.5
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="BasicInfo" unique_id=1521074145]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u23ui")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BasicInfo/PanelContainer" unique_id=57761133]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="BasicInfo/PanelContainer/HBoxContainer" unique_id=1358396123]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("1_lfuf4")
+expand_mode = 1
+
+[node name="NameLabel" type="Label" parent="BasicInfo/PanelContainer/HBoxContainer" unique_id=869955986]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 48)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Meadowsweet"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="AspectList" type="HBoxContainer" parent="BasicInfo" unique_id=1827267658]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+script = ExtResource("2_wlxyl")
+metadata/_custom_type_script = "uid://b7boy6xi4bamt"
+
+[node name="TextureRect" type="TextureRect" parent="BasicInfo/AspectList" unique_id=1599999380]
+layout_mode = 2
+texture = ExtResource("3_u23ui")
+stretch_mode = 2
+
+[node name="JournalInfo" type="GridContainer" parent="." unique_id=166422393]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 10.5
+offset_right = 341.0
+offset_bottom = 89.5
+size_flags_horizontal = 3
+theme_override_constants/v_separation = -1
+columns = 2
+
+[node name="WhereLabel" type="Label" parent="JournalInfo" unique_id=530328249]
+layout_mode = 2
+text = "WHERE"
+
+[node name="WhereOption" type="OptionButton" parent="JournalInfo" unique_id=1558864683]
+custom_minimum_size = Vector2(105, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_vmb3e")
+item_count = 1
+popup/item_0/text = "Location 1"
+popup/item_0/id = 0
+
+[node name="WhenLabel" type="Label" parent="JournalInfo" unique_id=738780864]
+layout_mode = 2
+text = "WHEN"
+
+[node name="WhenOption" type="OptionButton" parent="JournalInfo" unique_id=1148998479]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_vmb3e")
+item_count = 1
+popup/item_0/text = "Condition 1"
+popup/item_0/id = 0
+
+[node name="RarityLabel" type="Label" parent="JournalInfo" unique_id=1913983036]
+layout_mode = 2
+text = "RARITY"
+
+[node name="RarityOption" type="OptionButton" parent="JournalInfo" unique_id=2038270155]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_vmb3e")
+item_count = 3
+popup/item_0/text = "COMMON"
+popup/item_0/id = 0
+popup/item_1/text = "RARE"
+popup/item_1/id = 1
+popup/item_2/text = "SCARCE"
+popup/item_2/id = 2

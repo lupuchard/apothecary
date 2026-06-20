@@ -5,8 +5,9 @@
 [ext_resource type="Script" uid="uid://dxge7vqrotqws" path="res://source/PlayerCamera.cs" id="2_3vi8l"]
 [ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="2_8rhti"]
 [ext_resource type="Script" uid="uid://t78t7gycprpe" path="res://source/Ui/RegionSelect.cs" id="2_21bcp"]
+[ext_resource type="Shader" uid="uid://byujqec7qsle4" path="res://hidden.gdshader" id="4_0xwag"]
 [ext_resource type="Script" uid="uid://clfreyal0jefa" path="res://source/Ui/RegionLabel.cs" id="5_tpea4"]
-[ext_resource type="FontFile" uid="uid://qrqyo004juy3" path="res://assets/fonts/Font_Fantasy.ttf" id="6_56f15"]
+[ext_resource type="FontFile" uid="uid://qrqyo004juy3" path="res://assets/theme/Font_Fantasy.ttf" id="6_56f15"]
 [ext_resource type="StyleBox" uid="uid://bmoaasi4rrv6x" path="res://assets/theme/EditPanel.tres" id="6_tpea4"]
 [ext_resource type="Script" uid="uid://d21n6c1vn0w5x" path="res://source/Ui/ForagingUi.cs" id="7_dlkme"]
 [ext_resource type="PackedScene" uid="uid://btdsoh5fj6pxl" path="res://controls/foraging_result.tscn" id="8_56f15"]
@@ -33,6 +34,32 @@
 [ext_resource type="Texture2D" uid="uid://cqylvjhpjdsig" path="res://assets/arrow.png" id="30_3vupj"]
 [ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="31_18b1w"]
 [ext_resource type="PackedScene" uid="uid://bxwulsjuonadl" path="res://controls/output_slot.tscn" id="33_18b1w"]
+[ext_resource type="PackedScene" uid="uid://dq1res6vuuu0s" path="res://controls/journal_entry.tscn" id="34_aggb6"]
+[ext_resource type="Script" uid="uid://dt7allqwblld8" path="res://source/Ui/JournalTabUi.cs" id="34_f7hpq"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xwag"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0xwag"]
+shader = ExtResource("4_0xwag")
+shader_parameter/NOISE_PATTERN = SubResource("NoiseTexture2D_0xwag")
+shader_parameter/octaves = 3
+shader_parameter/starting_amplitude = 0.5
+shader_parameter/starting_frequency = 1.0
+shader_parameter/shift = 0.0
+shader_parameter/white_cutoff = 0.8650000410875
+shader_parameter/velocity = Vector2(0.003, 0.003)
+shader_parameter/fog_color = Vector4(0.4, 0.4, 0.5, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uvlxr"]
+
+[sub_resource type="Gradient" id="Gradient_uvlxr"]
+offsets = PackedFloat32Array(0.5135135, 1)
+colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 0.84313726)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_kaldw"]
+gradient = SubResource("Gradient_uvlxr")
+fill_from = Vector2(0.5, 1)
+fill_to = Vector2(0.5, 0)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k3d1t"]
 
@@ -97,6 +124,9 @@ expand_margin_right = 4.0
 expand_margin_bottom = 4.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7m1qc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f7hpq"]
+bg_color = Color(0.24, 0.24, 0.24, 0.7411765)
 
 [node name="Node2D" type="Node2D" unique_id=1328475761]
 script = ExtResource("1_cho24")
@@ -177,6 +207,38 @@ region_id = "meadow"
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/Meadow" unique_id=1882730065]
 polygon = PackedVector2Array(624, -169, 482, 41, 403, 178, -342, 195, -643, 140, -650, -171)
 
+[node name="BackBufferCopy" type="BackBufferCopy" parent="Map" unique_id=1314231055]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=350520938]
+material = SubResource("ShaderMaterial_0xwag")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 2240.0
+offset_bottom = 1680.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FogViewport" type="SubViewport" parent="SubViewportContainer" unique_id=48867441]
+unique_name_in_owner = true
+handle_input_locally = false
+size = Vector2i(2240, 1680)
+render_target_update_mode = 4
+
+[node name="Hidden" type="Polygon2D" parent="SubViewportContainer/FogViewport" unique_id=1322150839]
+material = SubResource("ShaderMaterial_uvlxr")
+position = Vector2(1765, 503)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-329, -177, -84, -499, 339, -496, 419, -37, 66, 422, -316, 683, -326, 162)
+
+[node name="Line2D" type="Line2D" parent="SubViewportContainer/FogViewport" unique_id=1189878964]
+position = Vector2(1772, 491)
+points = PackedVector2Array(-329, -177, -84, -499, 339, -496, 419, -37, 66, 422, -316, 683, -326, 162)
+closed = true
+width = 128.0
+texture = SubResource("GradientTexture2D_kaldw")
+texture_mode = 1
+
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1514244865 node_paths=PackedStringArray("Map")]
 position = Vector2(1220, 804)
 position_smoothing_enabled = true
@@ -232,7 +294,6 @@ Follows = NodePath("../../../Map/FrontYard/Polygon")
 
 [node name="ForagingUi" type="PanelContainer" parent="CanvasLayer" unique_id=782267389]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(240, 240)
 anchors_preset = 8
 anchor_left = 0.5
@@ -304,6 +365,7 @@ text = "Forage
 
 [node name="ForagesRemainingLabel" type="Label" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer" unique_id=2126031370]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "3/3 Remaining"
 horizontal_alignment = 1
@@ -393,9 +455,11 @@ theme = ExtResource("2_8rhti")
 theme_override_styles/panel = ExtResource("16_v7taj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_50rgw")
 theme_override_styles/tab_selected = SubResource("StyleBoxTexture_4a7sh")
-current_tab = 1
+current_tab = 3
 tab_0/title = "VISITORS_TAB"
 tab_1/title = "KITCHEN_TAB"
+tab_2/title = "JOURNAL_TAB"
+tab_3/title = "BEDROOM_TAB"
 
 [node name="VisitorsTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1123293159]
 unique_name_in_owner = true
@@ -572,11 +636,13 @@ script = ExtResource("26_x13uo")
 [node name="VisitorRequest" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentRequests" unique_id=1703583314 instance=ExtResource("27_3vupj")]
 layout_mode = 2
 
-[node name="Inventory" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer" unique_id=219114048 instance=ExtResource("28_mh4ky")]
+[node name="Inventory" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer" unique_id=219114048 node_paths=PackedStringArray("WhereInputNodes") instance=ExtResource("28_mh4ky")]
 layout_mode = 2
+WhereInputNodes = NodePath("../..")
 
 [node name="KitchenTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=360496213]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 script = ExtResource("29_d5d72")
 metadata/_tab_index = 1
@@ -605,7 +671,7 @@ offset_right = 208.0
 offset_bottom = 35.0
 grow_horizontal = 1
 grow_vertical = 1
-text = "Infuse"
+text = "INFUSE"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=1185824473]
 layout_mode = 0
@@ -706,8 +772,146 @@ layout_mode = 2
 texture = ExtResource("22_n0uqe")
 stretch_mode = 2
 
-[node name="Inventory" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer" unique_id=1473971935 instance=ExtResource("28_mh4ky")]
+[node name="Inventory" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer" unique_id=1473971935 node_paths=PackedStringArray("WhereInputNodes") instance=ExtResource("28_mh4ky")]
 layout_mode = 2
+WhereInputNodes = NodePath("../..")
+
+[node name="JournalTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1911984868]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("34_f7hpq")
+metadata/_tab_index = 2
+metadata/_tab_name = "JOURNAL_TAB"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab" unique_id=837641680]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer" unique_id=1054939844]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_56f15")
+text = "Journal"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer" unique_id=1248368050]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+
+[node name="JournalEntry" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/GridContainer" unique_id=1894610393 instance=ExtResource("34_aggb6")]
+layout_mode = 2
+
+[node name="JournalEntry2" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/GridContainer" unique_id=1475173198 instance=ExtResource("34_aggb6")]
+layout_mode = 2
+
+[node name="JournalEntry3" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/GridContainer" unique_id=2053561487 instance=ExtResource("34_aggb6")]
+layout_mode = 2
+
+[node name="JournalEntry4" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/GridContainer" unique_id=1207635888 instance=ExtResource("34_aggb6")]
+layout_mode = 2
+
+[node name="JournalEntry5" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/GridContainer" unique_id=542973326 instance=ExtResource("34_aggb6")]
+layout_mode = 2
+
+[node name="JournalEntry6" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/GridContainer" unique_id=2122960985 instance=ExtResource("34_aggb6")]
+layout_mode = 2
+
+[node name="JournalEntry7" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/GridContainer" unique_id=1007524399 instance=ExtResource("34_aggb6")]
+layout_mode = 2
+
+[node name="JournalEntry8" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/GridContainer" unique_id=1746192540 instance=ExtResource("34_aggb6")]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer" unique_id=1881964223]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="JournalPrevPageButton" type="TextureButton" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/HBoxContainer" unique_id=1885975554]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("30_3vupj")
+stretch_mode = 3
+flip_h = true
+
+[node name="JournalPageLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/HBoxContainer" unique_id=1392663468]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_56f15")
+text = "2 of 3"
+
+[node name="JournalNextPageButton" type="TextureButton" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer/HBoxContainer" unique_id=540649782]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("30_3vupj")
+stretch_mode = 3
+
+[node name="VerifiedPopup" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab" unique_id=1240356482]
+visible = false
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VerifiedPopup" unique_id=1426729602]
+custom_minimum_size = Vector2(250, 270)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f7hpq")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VerifiedPopup/PanelContainer" unique_id=1268452895]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VerifiedPopup/PanelContainer/Panel" unique_id=164621049]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VerifiedPopup/PanelContainer/Panel/MarginContainer" unique_id=872795038]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VerifiedPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=1484389242]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_56f15")
+text = "EUREKA"
+horizontal_alignment = 1
+
+[node name="VerifiedPopupLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VerifiedPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=810308576]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 1
+text = "Locked in:
+- Meadowsweet
+- Mintflower
+- Wind laceroot
+
+All aspects will now be shown for these ingredients. You can now access the west woods."
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="VerifiedPopupButton" type="Button" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VerifiedPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=1117151827]
+unique_name_in_owner = true
+layout_mode = 2
+text = "OK"
+
+[node name="BedroomTab" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1007219983]
+layout_mode = 2
+metadata/_tab_index = 3
+metadata/_tab_name = "BEDROOM_TAB"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab" unique_id=1783002094]
+layout_mode = 2
+
+[node name="SleepLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab/VBoxContainer" unique_id=2074200720]
+layout_mode = 2
+text = "Too early to sleep"
+
+[node name="SleepButton" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab/VBoxContainer" unique_id=719614990 instance=ExtResource("11_im64q")]
+layout_mode = 2
+text = "Go to sleep"
 
 [node name="CloseButton" type="TextureButton" parent="CanvasLayer/HomeUi" unique_id=1149335718]
 layout_mode = 1
