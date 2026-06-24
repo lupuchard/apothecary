@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://4ln4d4xohp61"]
 
-[ext_resource type="Script" uid="uid://deiqv6i3yicvy" path="res://source/Ui/InventoryUi.cs" id="1_db5no"]
+[ext_resource type="Script" uid="uid://deiqv6i3yicvy" path="res://source/Ui/Inventory/InventoryUi.cs" id="1_db5no"]
 [ext_resource type="Texture2D" uid="uid://ce28jhf8f7pnw" path="res://assets/item/chamomile.png" id="2_fptlh"]
 [ext_resource type="PackedScene" uid="uid://bfbxwbbjvq1n8" path="res://controls/inventory_slot.tscn" id="3_b6yqk"]
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="4_eogcl"]
+[ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="5_fhqqj"]
+[ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="6_uui5b"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_db5no"]
 size = Vector2(25, 25)
@@ -11,6 +14,7 @@ size = Vector2(25, 25)
 script = ExtResource("1_db5no")
 
 [node name="DragIndicator" type="Area2D" parent="." unique_id=935240553]
+z_index = 1
 collision_layer = 8
 collision_mask = 0
 monitoring = false
@@ -51,3 +55,26 @@ layout_mode = 2
 
 [node name="ItemSlot6" parent="ScrollContainer/InventoryContainer/HBoxContainer" unique_id=1736666719 instance=ExtResource("3_b6yqk")]
 layout_mode = 2
+
+[node name="HoverInfo" type="Node2D" parent="." unique_id=1789106688]
+position = Vector2(29, 57)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HoverInfo" unique_id=638172036]
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 102.0
+offset_bottom = 37.0
+mouse_filter = 2
+theme = ExtResource("4_eogcl")
+
+[node name="NameLabel" type="Label" parent="HoverInfo/VBoxContainer" unique_id=1823611936]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_fhqqj")
+text = "Special Flower"
+
+[node name="AspectList" type="HBoxContainer" parent="HoverInfo/VBoxContainer" unique_id=1022292681]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("6_uui5b")
+metadata/_custom_type_script = "uid://b7boy6xi4bamt"

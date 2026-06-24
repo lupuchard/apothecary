@@ -8,6 +8,7 @@ public partial class UiManager : Node2D {
 	private Button? background_exit_button;
 	private ForagingUi? foraging_ui;
 	private HomeUi? home_ui;
+	private BaseButton? home_icon;
 
 	private readonly List<RegionSelect> region_selects = [];
 	private BaseUi? current_ui;
@@ -24,6 +25,8 @@ public partial class UiManager : Node2D {
 		home_ui = GetNode<HomeUi>("%HomeUi");
 		home_ui.CloseButton?.Pressed += CloseUi;
 		home_ui.Hide();
+		home_icon = GetNode<BaseButton>("%HomeIcon");
+		home_icon.Pressed += () => OpenUi(home_ui);
 		
 		map = GetNode<Node2D>("%Map");
 
@@ -39,7 +42,7 @@ public partial class UiManager : Node2D {
 		if (current_ui != null) return;
 		
 		if (type == RegionSelect.Type.Region && region != null && foraging_ui != null) {
-			foraging_ui.Region = Game.Instance.GetLocation(region.Id);
+			foraging_ui.Region = Game.Instance.GetRegion(region.Id);
 			OpenUi(foraging_ui);
 		} else if (type == RegionSelect.Type.Home && home_ui != null) {
 			home_ui.Update();

@@ -63,9 +63,9 @@ public partial class Journal : RefCounted {
 
 		if (items.All(IsConfirmed)) {
 			return [.. aspects.Cast<(Aspect?, int)>()];
-		} else if (items.Count == 1) {
+		} else if (items.All(item => item.Aspects.FirstOrDefault().Item1 == aspects[0].Item1)) {
 			return [.. aspects.Take(1).Cast<(Aspect?, int)>().Concat(aspects.Skip(1).Select(x => ((Aspect?)null, x.Item2)))];
-		} else  {
+		} else {
 			return [.. aspects.Select(x => ((Aspect?)null, x.Item2))];
 		}
 	}

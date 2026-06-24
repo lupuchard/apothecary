@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Linq;
 using Godot;
 
@@ -14,7 +15,7 @@ public partial class ForagingUi : BaseUi {
 	}
 
 	private Label? title_label;
-	private ForagingResult[] foraging_results_controls = [];
+	public ImmutableArray<ForagingResult> ForagingResultsControls { get; private set; } = [];
 	private SlowButton? forage_button;
 	private Label? forages_remaining_label;
 
@@ -22,8 +23,8 @@ public partial class ForagingUi : BaseUi {
 		base._Ready();
 		
 		title_label = GetNode<Label>("%TitleLabel");
-		foraging_results_controls = [..GetNode<Control>("%ForagingResults").GetChildren().OfType<ForagingResult>()];
-		foreach (var control in foraging_results_controls) {
+		ForagingResultsControls = [..GetNode<Control>("%ForagingResults").GetChildren().OfType<ForagingResult>()];
+		foreach (var control in ForagingResultsControls) {
 			control.Pressed += Update;
 		}
 		forages_remaining_label = GetNode<Label>("%ForagesRemainingLabel");
@@ -42,7 +43,7 @@ public partial class ForagingUi : BaseUi {
 
 		var results_remaining = false;
 		var current_foraging_results = Game.Instance.CurrentForagingResults();
-		foreach (var control in foraging_results_controls) {
+		foreach (var control in ForagingResultsControls) {
 			if (control.Index < current_foraging_results.Count && current_foraging_results[control.Index] != null) {
 				control.Enable(current_foraging_results[control.Index]);
 				results_remaining = true;
@@ -74,7 +75,7 @@ public partial class ForagingUi : BaseUi {
 	}
 
 	public override void CloseUi() {
-		foreach (var result in foraging_results_controls) {
+		foreach (var result in ForagingResultsControls) {
 			if (!result.Disabled) {
 				result.OnPressed();
 			}
@@ -91,7 +92,7 @@ public partial class ForagingUi : BaseUi {
 		var foraging_results = Game.Instance.CurrentForagingResults();
 		Update();
 		if (foraging_results.Count == 0) {
-			foraging_results_controls[1].Enable(null);
+			ForagingResultsControls[1].Enable(null);
 		}
 	}
 }

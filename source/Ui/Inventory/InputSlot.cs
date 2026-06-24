@@ -15,6 +15,8 @@ public partial class InputSlot : ItemSlot {
 	} = 1;
 	public override int Amount => InputAmount;
 
+	public ItemType? ItemType { get; set; }
+
 	public InventorySlot? Referencing {
 		get;
 		set {
@@ -28,7 +30,7 @@ public partial class InputSlot : ItemSlot {
 	public Area2D? CollisionArea { get; private set; }
 
 	public override void _EnterTree() {
-		AddToGroup("input_item_slot");
+		AddToGroup("new_input_slot");
 	}
 
 	public override void _Ready() {

@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="5_bl1kf"]
 [ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="6_7q0y6"]
 [ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="9_7q0y6"]
+[ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="10_bl1kf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mh4ky"]
 atlas = ExtResource("2_nuyv0")
@@ -20,16 +21,19 @@ theme = ExtResource("1_mjb0w")
 theme_override_styles/panel = ExtResource("1_xk3xw")
 script = ExtResource("2_mjb0w")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=530789809]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1439755749]
 layout_mode = 2
 
-[node name="Sprite" type="TextureRect" parent="HBoxContainer" unique_id=1229137287]
+[node name="InfoRow" type="HBoxContainer" parent="VBoxContainer" unique_id=530789809]
+layout_mode = 2
+
+[node name="Sprite" type="TextureRect" parent="VBoxContainer/InfoRow" unique_id=1229137287]
 unique_name_in_owner = true
 layout_mode = 2
 texture = SubResource("AtlasTexture_mh4ky")
 stretch_mode = 2
 
-[node name="NameLabel" type="Label" parent="HBoxContainer" unique_id=675485815]
+[node name="NameLabel" type="Label" parent="VBoxContainer/InfoRow" unique_id=675485815]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -37,14 +41,14 @@ size_flags_horizontal = 3
 text = "Visitor Name"
 autowrap_mode = 2
 
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer" unique_id=1977340560]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/InfoRow" unique_id=1977340560]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=996191768]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/InfoRow" unique_id=996191768]
 layout_mode = 2
 alignment = 1
 
-[node name="RequestLabel" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=6100430]
+[node name="RequestLabel" type="Label" parent="VBoxContainer/InfoRow/VBoxContainer" unique_id=6100430]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -54,44 +58,65 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="RequirementsUi" type="HBoxContainer" parent="HBoxContainer/VBoxContainer" unique_id=167482521]
+[node name="RequirementsUi" type="HBoxContainer" parent="VBoxContainer/InfoRow/VBoxContainer" unique_id=167482521]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 1
 alignment = 1
 script = ExtResource("6_7q0y6")
 
-[node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/RequirementsUi" unique_id=232318188]
+[node name="Label" type="Label" parent="VBoxContainer/InfoRow/VBoxContainer/RequirementsUi" unique_id=232318188]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_mjb0w")
 text = "1"
 
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer/RequirementsUi" unique_id=1540682183]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/InfoRow/VBoxContainer/RequirementsUi" unique_id=1540682183]
 layout_mode = 2
 texture = ExtResource("4_7q0y6")
 stretch_mode = 2
 
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer/VBoxContainer/RequirementsUi" unique_id=1892173336]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/InfoRow/VBoxContainer/RequirementsUi" unique_id=1892173336]
 layout_mode = 2
 theme_override_constants/separation = 5
 theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
 
-[node name="Label2" type="Label" parent="HBoxContainer/VBoxContainer/RequirementsUi" unique_id=1955349567]
+[node name="Label2" type="Label" parent="VBoxContainer/InfoRow/VBoxContainer/RequirementsUi" unique_id=1955349567]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_mjb0w")
 text = "0"
 
-[node name="TextureRect3" type="TextureRect" parent="HBoxContainer/VBoxContainer/RequirementsUi" unique_id=735345144]
+[node name="TextureRect3" type="TextureRect" parent="VBoxContainer/InfoRow/VBoxContainer/RequirementsUi" unique_id=735345144]
 layout_mode = 2
 texture = ExtResource("5_bl1kf")
 stretch_mode = 2
 
-[node name="TimeLeftLabel" type="Label" parent="HBoxContainer" unique_id=312127438]
+[node name="TimeLeftLabel" type="Label" parent="VBoxContainer/InfoRow" unique_id=312127438]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_mjb0w")
 text = "2 days left"
 
-[node name="DestinationSlot" parent="HBoxContainer" unique_id=1510528001 instance=ExtResource("9_7q0y6")]
+[node name="DestinationSlot" parent="VBoxContainer/InfoRow" unique_id=1510528001 instance=ExtResource("9_7q0y6")]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="CompleteRequestRow" type="HBoxContainer" parent="VBoxContainer" unique_id=219364510]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TreatmentQualityLabel" type="Label" parent="VBoxContainer/CompleteRequestRow" unique_id=1778807763]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_mjb0w")
+text = "This will be at least an adequate treatment."
+
+[node name="Space" type="Control" parent="VBoxContainer/CompleteRequestRow" unique_id=1592350465]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GiveButton" parent="VBoxContainer/CompleteRequestRow" unique_id=648291464 instance=ExtResource("10_bl1kf")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_type_variation = &"SmallButton"
+text = "Give"

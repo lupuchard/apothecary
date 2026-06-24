@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bbrg82kndigne"]
+
+[ext_resource type="Script" uid="uid://bj3gmwsxr3mif" path="res://source/Ui/ResourceUi.cs" id="1_3t7on"]
+[ext_resource type="Texture2D" uid="uid://ck4ivn8gnsuu0" path="res://assets/resources/coins.png" id="1_gd3qc"]
+
+[node name="ResourceInfo" type="HBoxContainer" unique_id=1831485150]
+alignment = 2
+script = ExtResource("1_3t7on")
+
+[node name="CountLabel" type="Label" parent="." unique_id=775519484]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+text = "1"
+
+[node name="Sprite" type="TextureRect" parent="." unique_id=1323262216]
+layout_mode = 2
+texture = ExtResource("1_gd3qc")

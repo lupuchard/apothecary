@@ -36,6 +36,11 @@
 [ext_resource type="PackedScene" uid="uid://bxwulsjuonadl" path="res://controls/output_slot.tscn" id="33_18b1w"]
 [ext_resource type="PackedScene" uid="uid://dq1res6vuuu0s" path="res://controls/journal_entry.tscn" id="34_aggb6"]
 [ext_resource type="Script" uid="uid://dt7allqwblld8" path="res://source/Ui/JournalTabUi.cs" id="34_f7hpq"]
+[ext_resource type="PackedScene" uid="uid://bbrg82kndigne" path="res://controls/resource_info.tscn" id="37_5pcrg"]
+[ext_resource type="Texture2D" uid="uid://c2x2ca4jatoof" path="res://assets/house.png" id="37_kaldw"]
+[ext_resource type="Texture2D" uid="uid://ddik8f6lxe51d" path="res://assets/bag.png" id="37_uvlxr"]
+[ext_resource type="Script" uid="uid://bgg5oc2br6nw" path="res://source/Ui/HomeIconUi.cs" id="38_1dlgw"]
+[ext_resource type="Texture2D" uid="uid://jtxsnhd2a25m" path="res://assets/resources/reputation.png" id="38_fe1od"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xwag"]
 
@@ -49,17 +54,6 @@ shader_parameter/shift = 0.0
 shader_parameter/white_cutoff = 0.8650000410875
 shader_parameter/velocity = Vector2(0.003, 0.003)
 shader_parameter/fog_color = Vector4(0.4, 0.4, 0.5, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_uvlxr"]
-
-[sub_resource type="Gradient" id="Gradient_uvlxr"]
-offsets = PackedFloat32Array(0.5135135, 1)
-colors = PackedColorArray(0, 0, 0, 1, 1, 1, 1, 0.84313726)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_kaldw"]
-gradient = SubResource("Gradient_uvlxr")
-fill_from = Vector2(0.5, 1)
-fill_to = Vector2(0.5, 0)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k3d1t"]
 
@@ -128,6 +122,12 @@ expand_margin_bottom = 4.0
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f7hpq"]
 bg_color = Color(0.24, 0.24, 0.24, 0.7411765)
 
+[sub_resource type="Curve2D" id="Curve2D_uvlxr"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 425, -350, 110.16277, -88.4027, -110.16277, 88.4027, 163, -243, 0, 0, 0, 0, 0, 0)
+}
+point_count = 3
+
 [node name="Node2D" type="Node2D" unique_id=1328475761]
 script = ExtResource("1_cho24")
 
@@ -154,60 +154,64 @@ region_id = "front_yard"
 position = Vector2(-3.8146973e-05, 0.9999924)
 polygon = PackedVector2Array(219.90775, -136.33533, 219, 158, -28.092247, 162.66467, -28.092247, 238.66467, -173, 236, -232.09225, -140.33533)
 
-[node name="EastWoods" type="Area2D" parent="Map" unique_id=1894390791]
+[node name="EastWoods" type="Area2D" parent="Map" unique_id=1894390791 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(1694, 567)
 script = ExtResource("2_21bcp")
 region_id = "east_woods"
+fog_poly = NodePath("../../SubViewportContainer/FogViewport/EastWoods")
 
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/EastWoods" unique_id=1451737717]
 position = Vector2(72.99996, -69.00001)
 polygon = PackedVector2Array(-329, -177, -84, -499, 339, -496, 419, -37, 66, 422, -316, 683, -326, 162)
 
-[node name="Backyard" type="Area2D" parent="Map" unique_id=1077855696]
+[node name="Backyard" type="Area2D" parent="Map" unique_id=1077855696 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(1244, 1051)
 script = ExtResource("2_21bcp")
 region_id = "backyard"
+fog_poly = NodePath("../../SubViewportContainer/FogViewport/Backyard")
 
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/Backyard" unique_id=497308394]
 position = Vector2(-3.8146973e-05, 0.9999924)
 polygon = PackedVector2Array(101, -132, 101, -238, 182, -241, 188, 228, -197, 228, -197, -130)
 
-[node name="Creek" type="Area2D" parent="Map" unique_id=166773777]
+[node name="Creek" type="Area2D" parent="Map" unique_id=166773777 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(1136, 1461)
 script = ExtResource("2_21bcp")
 region_id = "creek"
+fog_poly = NodePath("../../SubViewportContainer/FogViewport/Creek")
 
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/Creek" unique_id=389280536]
 position = Vector2(-3.8146973e-05, 0.9999924)
 polygon = PackedVector2Array(305, -170, 314, -272, 790, -599, 876, -568, 313, 142, -872, 212, -883, 158, -415, 25, -84, -167)
 
-[node name="WestWoods" type="Area2D" parent="Map" unique_id=306409951]
+[node name="WestWoods" type="Area2D" parent="Map" unique_id=306409951 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(577, 1070)
 script = ExtResource("2_21bcp")
 region_id = "west_woods"
+fog_poly = NodePath("../../SubViewportContainer/FogViewport/WestWoods")
 
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/WestWoods" unique_id=848097977]
 position = Vector2(-3.8146973e-05, 0.9999924)
 polygon = PackedVector2Array(202.00006, -409, 391.00006, -31, 284.00006, 314, 156.00006, 388, -459.99994, 563, -477.99994, 62, -547.99994, -548)
 
-[node name="Road" type="Area2D" parent="Map" unique_id=1363432578]
+[node name="Road" type="Area2D" parent="Map" unique_id=1363432578 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(628, 471)
 script = ExtResource("2_21bcp")
 region_id = "road"
+fog_poly = NodePath("../../SubViewportContainer/FogViewport/Road")
 
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/Road" unique_id=1868201629]
 position = Vector2(-3.8146973e-05, 0.9999924)
 polygon = PackedVector2Array(12.000061, -92, 338.00006, 1, 375.00006, 235, -14.999939, 85, -615.99994, -32, -602.99994, -186)
 
-[node name="Meadow" type="Area2D" parent="Map" unique_id=1488017498]
+[node name="Meadow" type="Area2D" parent="Map" unique_id=1488017498 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(1010, 179)
 script = ExtResource("2_21bcp")
 region_id = "meadow"
+fog_poly = NodePath("../../SubViewportContainer/FogViewport/Meadow")
 
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/Meadow" unique_id=1882730065]
 polygon = PackedVector2Array(624, -169, 482, 41, 403, 178, -342, 195, -643, 140, -650, -171)
-
-[node name="BackBufferCopy" type="BackBufferCopy" parent="Map" unique_id=1314231055]
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=350520938]
 material = SubResource("ShaderMaterial_0xwag")
@@ -218,6 +222,7 @@ offset_right = 2240.0
 offset_bottom = 1680.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_lock_ = true
 
 [node name="FogViewport" type="SubViewport" parent="SubViewportContainer" unique_id=48867441]
 unique_name_in_owner = true
@@ -225,19 +230,48 @@ handle_input_locally = false
 size = Vector2i(2240, 1680)
 render_target_update_mode = 4
 
-[node name="Hidden" type="Polygon2D" parent="SubViewportContainer/FogViewport" unique_id=1322150839]
-material = SubResource("ShaderMaterial_uvlxr")
+[node name="ColorRect" type="ColorRect" parent="SubViewportContainer/FogViewport" unique_id=1885765805]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EastWoods" type="Polygon2D" parent="SubViewportContainer/FogViewport" unique_id=1322150839]
 position = Vector2(1765, 503)
 color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(-329, -177, -84, -499, 339, -496, 419, -37, 66, 422, -316, 683, -326, 162)
+polygon = PackedVector2Array(-329, -177, -84, -499, 339, -496, 419, -37, 263, 433, -22, 722, -203, 709, -299, 586, -331, 369, -342, 174)
 
-[node name="Line2D" type="Line2D" parent="SubViewportContainer/FogViewport" unique_id=1189878964]
-position = Vector2(1772, 491)
-points = PackedVector2Array(-329, -177, -84, -499, 339, -496, 419, -37, 66, 422, -316, 683, -326, 162)
-closed = true
-width = 128.0
-texture = SubResource("GradientTexture2D_kaldw")
-texture_mode = 1
+[node name="Backyard" type="Polygon2D" parent="SubViewportContainer/FogViewport" unique_id=1831178762]
+visible = false
+position = Vector2(1243, 1056)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-81, -87, 72, -112, 191, -173, 255, 62, 188, 228, -17, 318, -280, 283, -306, 73, -200, -88)
+
+[node name="Creek" type="Polygon2D" parent="SubViewportContainer/FogViewport" unique_id=741217106]
+visible = false
+position = Vector2(1509, 946)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-42, 362, 228, 48, 602, -393, 739, -346, 740, 738, -1511, 738, -1513, 612, -990, 521, -460, 468)
+
+[node name="WestWoods" type="Polygon2D" parent="SubViewportContainer/FogViewport" unique_id=632707547]
+visible = false
+position = Vector2(580, 1068)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(125, -417, 355, -304, 387, -31, 368, 290, 143, 444, -389, 592, -513, 543, -578, 93, -571, -499, -460, -578)
+
+[node name="Road" type="Polygon2D" parent="SubViewportContainer/FogViewport" unique_id=1809243079]
+visible = false
+position = Vector2(580, 1068)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(304, -712, 335, -490, 349, -304, -568, -511, -573, -818)
+
+[node name="Meadow" type="Polygon2D" parent="SubViewportContainer/FogViewport" unique_id=1694381656]
+visible = false
+position = Vector2(1126, 639)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(667, -639, 479, -415, 314, -317, -187, -322, -298, -246, -1019, -296, -1126, -361, -1127, -639)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1514244865 node_paths=PackedStringArray("Map")]
 position = Vector2(1220, 804)
@@ -365,7 +399,6 @@ text = "Forage
 
 [node name="ForagesRemainingLabel" type="Label" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer" unique_id=2126031370]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 text = "3/3 Remaining"
 horizontal_alignment = 1
@@ -434,6 +467,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = ExtResource("2_8rhti")
 script = ExtResource("16_50rgw")
 
 [node name="TabContainer" type="TabContainer" parent="CanvasLayer/HomeUi" unique_id=729966492]
@@ -451,11 +485,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("2_8rhti")
 theme_override_styles/panel = ExtResource("16_v7taj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_50rgw")
 theme_override_styles/tab_selected = SubResource("StyleBoxTexture_4a7sh")
-current_tab = 3
+current_tab = 0
 tab_0/title = "VISITORS_TAB"
 tab_1/title = "KITCHEN_TAB"
 tab_2/title = "JOURNAL_TAB"
@@ -463,7 +496,6 @@ tab_3/title = "BEDROOM_TAB"
 
 [node name="VisitorsTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1123293159]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 script = ExtResource("19_1uwki")
 metadata/_tab_index = 0
@@ -898,6 +930,7 @@ layout_mode = 2
 text = "OK"
 
 [node name="BedroomTab" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1007219983]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 metadata/_tab_name = "BEDROOM_TAB"
@@ -928,3 +961,58 @@ grow_horizontal = 2
 grow_vertical = 2
 texture_normal = ExtResource("12_sgv64")
 texture_hover = ExtResource("13_gaoim")
+
+[node name="ResourceList" type="VBoxContainer" parent="CanvasLayer/HomeUi" unique_id=599064955]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 98.0
+offset_top = 87.0
+offset_right = 215.0
+offset_bottom = 582.0
+
+[node name="ResourceInfo" parent="CanvasLayer/HomeUi/ResourceList" unique_id=1831485150 instance=ExtResource("37_5pcrg")]
+layout_mode = 2
+
+[node name="ResourceInfo2" type="HBoxContainer" parent="CanvasLayer/HomeUi/ResourceList" unique_id=226888749]
+layout_mode = 2
+alignment = 2
+
+[node name="ResourceCount" type="Label" parent="CanvasLayer/HomeUi/ResourceList/ResourceInfo2" unique_id=1362041150]
+layout_mode = 2
+text = "12"
+
+[node name="ResourceSprite" type="TextureRect" parent="CanvasLayer/HomeUi/ResourceList/ResourceInfo2" unique_id=1335934970]
+layout_mode = 2
+texture = ExtResource("38_fe1od")
+
+[node name="HomeIcon" type="TextureButton" parent="CanvasLayer" unique_id=871859052]
+unique_name_in_owner = true
+offset_left = 3.0
+offset_top = 579.0
+offset_right = 67.0
+offset_bottom = 643.0
+texture_normal = ExtResource("37_kaldw")
+script = ExtResource("38_1dlgw")
+
+[node name="BagMask" type="ColorRect" parent="CanvasLayer/HomeIcon" unique_id=1185159765]
+clip_children = 1
+layout_mode = 0
+offset_left = 40.0
+offset_top = 19.0
+offset_right = 90.0
+offset_bottom = 59.0
+
+[node name="BagSprite" type="Sprite2D" parent="CanvasLayer/HomeIcon/BagMask" unique_id=1516112860]
+position = Vector2(35, 19)
+texture = ExtResource("37_uvlxr")
+
+[node name="BagStart" type="Marker2D" parent="CanvasLayer/HomeIcon" unique_id=1201444257]
+position = Vector2(32, 40)
+
+[node name="ItemPathEnd" type="Marker2D" parent="CanvasLayer/HomeIcon" unique_id=1116211]
+position = Vector2(64, 24)
+
+[node name="AcquireItemPath" type="Path2D" parent="CanvasLayer/HomeIcon/ItemPathEnd" unique_id=1510049028]
+unique_name_in_owner = true
+position = Vector2(7, 17)
+curve = SubResource("Curve2D_uvlxr")

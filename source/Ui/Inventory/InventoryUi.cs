@@ -20,6 +20,11 @@ public partial class InventoryUi : PanelContainer {
 	private InventorySlot? drag_snap_target_prev_item;
 	private InventorySlot? dragging;
 
+	private Node2D? hover_info;
+	private Label? hover_info_name;
+	private AspectListUi? hover_info_aspects;
+	private InventorySlot? hovering = null;
+
 	public override void _Ready() {
 		base._Ready();
 		inventory_slot_scene = ResourceLoader.Load<PackedScene>("res://controls/inventory_slot.tscn");
@@ -28,6 +33,11 @@ public partial class InventoryUi : PanelContainer {
 		drag_indicator_sprite = GetNode<Sprite2D>("DragIndicator/Sprite");
 		drag_indicator.Hide();
 
+		hover_info = GetNode<Node2D>("HoverInfo");
+		hover_info_name = GetNode<Label>("%NameLabel");
+		hover_info_aspects = GetNode<AspectListUi>("%AspectList");
+		hover_info.Hide();
+
 		while (container.GetChildCount() > 0) {
 			container.RemoveChild(container.GetChild(0));
 		}
@@ -35,13 +45,17 @@ public partial class InventoryUi : PanelContainer {
 		var first_row = new HBoxContainer();
 		rows.Add(first_row);
 		container.AddChild(first_row);
+	}
 
-		input_slots = WhereInputNodes?.FindChildren("*", "InputSlot").Cast<InputSlot>().ToList() ?? [];
-		foreach (var slot in input_slots) {
-			if (slot.IsNodeReady()) {
-				SetUpSlot(slot);
-			} else {
-				slot.Ready += () => SetUpSlot(slot);
+	private void CheckForNewInputSlots() {
+		foreach (var child in GetTree().GetNodesInGroup("new_input_slot")) {
+			if (WhereInputNodes?.IsAncestorOf(child) == true && child is InputSlot input_slot) {
+				if (input_slot.IsNodeReady()) {
+					SetUpSlot(input_slot);
+				} else {
+					input_slot.Ready += () => SetUpSlot(input_slot);
+				}
+				input_slot.RemoveFromGroup("new_input_slot");
 			}
 		}
 	}
@@ -69,14 +83,19 @@ public partial class InventoryUi : PanelContainer {
 	}
 
 	public override void _Input(InputEvent input_event) {
-		if (input_event is InputEventMouseMotion mouseEvent && dragging != null) {
-			drag_indicator?.Position += mouseEvent.Relative;
+		if (input_event is InputEventMouseMotion mouseEvent) {
+			if (dragging != null) {
+				drag_indicator?.Position += mouseEvent.Relative;
+			}
+
+			if (hovering != null) {
+				hover_info?.GlobalPosition = mouseEvent.GetGlobalPosition();
+			}
 		} else if (input_event is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: false } && dragging != null) {
 			EndDrag();
 		}
 	}
 
-	// To reproduce, drag one item into input slot, drag another item into input slot, then try to drag the first item from it's input slot
 	public void StartDrag(InventorySlot slot) {
 		var inventory = Game.Instance.GetInventory();
 		if (slot.Index >= inventory.Count) return;
@@ -85,15 +104,20 @@ public partial class InventoryUi : PanelContainer {
 
 		drag_indicator?.Show();
 		drag_indicator_sprite?.Texture = inventory[slot.Index].Item1.GetSprite();
-		//drag_indicator?.GlobalPosition = slot.GlobalPosition;
 		dragging = slot;
 		dragging.Dragging = true;
+		hovering = null;
+		hover_info?.Hide();
 	}
 
 	private void SnapDrag(InputSlot slot) {
 		if (slot.Referencing == dragging) {
 			return;
 		}
+		if (slot.ItemType != null && (dragging?.Item?.Type & slot.ItemType) == 0) {
+			return;
+		}
+		
 		if (drag_snap_target != null && drag_snap_target != slot) {
 			EndSnapDrag(drag_snap_target);
 		}
@@ -126,8 +150,25 @@ public partial class InventoryUi : PanelContainer {
 		drag_indicator_sprite?.Show();
 	}
 
+	private void StartHover(InventorySlot slot) {
+		if (dragging != null || slot.Item is not Item item) return;
+		hover_info?.Show();
+		hover_info_name?.Text = item.GetName();
+		hover_info_aspects?.Update(Game.Instance.Journal.GetShownAspects(item.Raw, item.Aspects));
+		hovering = slot;
+	}
+
+	private void EndHover(InventorySlot slot) {
+		if (hovering == slot) {
+			hover_info?.Hide();
+			hovering = null;
+		}
+	}
+
 	public void Update() {
 		if (container == null) return;
+
+		CheckForNewInputSlots();
 		
 		var inventory = Game.Instance.GetInventory();
 		while (slots.Count < inventory.Count) {
@@ -145,6 +186,8 @@ public partial class InventoryUi : PanelContainer {
 				StartDrag(new_slot);
 				drag_indicator?.GlobalPosition = new_slot.GlobalPosition;
 			};
+			new_slot.MouseEntered += () => StartHover(new_slot);
+			new_slot.MouseExited += () => EndHover(new_slot);
 			last_row.AddChild(new_slot);
 			slots.Add(new_slot);
 		}

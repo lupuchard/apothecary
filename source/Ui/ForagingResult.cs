@@ -2,6 +2,7 @@ using Godot;
 namespace Apothecary;
 
 public partial class ForagingResult : Button {
+	[Signal] public delegate void AcquireEventHandler(TextureRect sprite);
 	[Export] public int Index { get; set; }
 	private Control? Child;
 	private TextureRect? TextureRect;
@@ -17,6 +18,7 @@ public partial class ForagingResult : Button {
 
 	public void OnPressed() {
 		Game.Instance.AcquireForagingResult(Index);
+		EmitSignalAcquire(TextureRect);
 		Disable();
 	}
 

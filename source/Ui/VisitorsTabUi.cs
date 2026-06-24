@@ -26,9 +26,9 @@ public partial class VisitorsTabUi : Control {
 	}
 
 	public void Update() {
-		inventory?.Update();
 		current_visitor?.Update();
 		request_list?.Update();
+		inventory?.Update();
 	}
 	
 	public void CloseUi() {

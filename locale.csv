@@ -11,7 +11,7 @@ MEADOW_UNKNOWN,Meadow
 EAST_WOODS,East woods
 EAST_WOODS_UNKNOWN,Undiscovered (east)
 WEST_WOODS,West woods
-WEST_WOODS,Undiscovered (west)
+WEST_WOODS_UNKNOWN,Undiscovered (west)
 CREEK,By the creek
 CREEK_UNKNOWN,Undiscovered (south)
 MEADOWSWEET,Meadowsweet
@@ -57,3 +57,12 @@ EUREKA,Eureka!
 OK,Ok
 VERIFIED_POPUP_TEXT,Locked in:\n{0}\nAll aspects will now be shown for these ingredients. {1}
 ACCESS_UNLOCK,You can now access the {0}.
+INADEQUATE_TREATMENT,This is an inadequate treatment.
+AT_LEAST_INADEQUATE_TREATMENT,This might not be an adequate treatment.
+ADEQUATE_TREATMENT,This is an adequate treatment.
+AT_LEAST_ADEQUATE_TREATMENT,This is at least an adequate treatment.
+GOOD_TREATMENT,This is a good treatment.
+AT_LEAST_GOOD_TREATMENT,This is a good or better treatment.
+VERY_GOOD_TREATMENT,This is a very good treatment.
+AT_LEAST_VERY_GOOD_TREATMENT,This is a very good or excellent treatment.
+EXCELLENT_TREATMENT,This is an excellent treatment.

@@ -23,6 +23,7 @@ public partial class RequestListUi : VBoxContainer {
 			var new_control = (RequestUi)visitor_request_scene!.Instantiate();
 			request_controls.Add(new_control);
 			AddChild(new_control);
+			new_control.Given += Update;
 		}
 		
 		var i = 0;

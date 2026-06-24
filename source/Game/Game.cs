@@ -12,6 +12,8 @@ public partial class Game : RefCounted {
 	public static Game Instance { get; private set; } = new();
 	
 	[Signal] public delegate void TimeChangedEventHandler();
+	[Signal] public delegate void RegionUnlockedEventHandler(string region_id);
+	[Signal] public delegate void ResourceUpdatedEventHandler(Resource resource);
 	
 	private const int MAX_FORAGE_RESULTS = 3;
 	public const int END_OF_DAY = 6;
@@ -74,8 +76,23 @@ public partial class Game : RefCounted {
 			resources.Add(0);
 		}
 		
-		MakeNewVisitor();
+		MakeNewVisitor(World.GetRequest("pain"));
 		Journal.Confirmation += (_) => OnJournalConfirmation();
+	}
+
+	public int GetResource(Resource resource) {
+		return resources[(int)resource];
+	}
+
+	public void ModifyResource(Resource resource, int amount) {
+		resources[(int)resource] += amount;
+		EmitSignalResourceUpdated(resource);
+	}
+
+	public void GetReward(Reward reward) {
+		foreach (var (resource, amount) in reward.Rewards) {
+			ModifyResource(resource, amount);
+		}
 	}
 	
 	public void PassTime() {
@@ -115,7 +132,7 @@ public partial class Game : RefCounted {
 			return;
 		}
 
-		var region = GetLocation(location.Id);
+		var region = GetRegion(location.Id);
 		if (region?.Remaining > 0) {
 			region.ConsumeForage();
 			current_foraging_results = [..GetForagingResults(location).Cast<ItemModel?>()];
@@ -169,7 +186,7 @@ public partial class Game : RefCounted {
 		};
 	}
 
-	public Region? GetLocation(string region_id) {
+	public Region? GetRegion(string region_id) {
 		return region_lookup.GetValueOrDefault(region_id);
 	}
 
@@ -274,26 +291,36 @@ public partial class Game : RefCounted {
 		}
 	}
 
-	private void MakeNewVisitor() {
-		var model = rando.Pick(World.Requests);
+	private void MakeNewVisitor(RequestModel? request_type = null) {
+		var model = request_type ?? rando.Pick(World.Requests);
 		VisitorAtDoor = new Visitor(model, ref rando);
 	}
 
-	public (string?, Reward?) GiveVisitor(Visitor visitor, Item cure) {
-		if (!inventory.ContainsKey(cure)) return (Tr("VISITOR_NO_ITEM"), null);
-		if (!cure.Is(ItemType.Infusion)) return (Tr("VISITOR_NOT_INFUSION"), null);
+	public Reward? GiveVisitor(Visitor visitor, Item treatment) {
+		if (!inventory.ContainsKey(treatment)) return null;
+		if (!treatment.Is(ItemType.Infusion)) return null;
 
+		var quality = CalculateTreatmentQuality(visitor, treatment.Aspects);
+		var rewards = visitor.Request.Type.Reward.Select(res => (res, visitor.Request.Reward));
+		var tip = visitor.Request.Type.Tip.Select(res => (res, quality));
+		var reward = new Reward(rewards.Concat(tip));
+		GetReward(reward);
+		current_requests.Remove(visitor);
+		RemoveItem(treatment);
+		return reward;
+	}
+
+	public static int CalculateTreatmentQuality(Visitor visitor, IList<(Aspect, int)> aspects) {
 		var prevAspect = int.MaxValue;
 		var quality = 0;
 		foreach (var (aspect, amount) in visitor.Request.Aspects) {
-			var aspectQuality = cure.Aspects.FirstOrDefault(x => x.Item1 == aspect).Item2 - amount;
-			if (aspectQuality < 0) return (Tr("VISITOR_WRONG_ASPECT"), null);
+			var aspectQuality = aspects.FirstOrDefault(x => x.Item1 == aspect).Item2 - amount;
+			if (aspectQuality < 0) return -1;
 			prevAspect = Math.Min(prevAspect, aspectQuality);
 			quality += prevAspect;
 		}
 
-		resources[(int)Resource.Coins] += visitor.Request.Reward + quality;
-		return (null, new Reward([(Resource.Coins, visitor.Request.Reward + quality)]));
+		return quality;
 	}
 
 	public void AcceptRequest() {
@@ -317,6 +344,7 @@ public partial class Game : RefCounted {
 		var unlocked = GetUnlocksWith(UnlockRequirement.ConfirmedJournalEntries(Journal.TotalConfirmed), Journal.TotalConfirmed - 2);
 		foreach (var region in unlocked) {
 			region_lookup[region.Id].Unlocked = true;
+			EmitSignalRegionUnlocked(region.Id);
 		}
 	}
 
@@ -349,10 +377,10 @@ public partial class Game : RefCounted {
 
 		ImmutableArray<ItemModel> items = [
 			new("meadowsweet", [(bloom, 1), (vigor, 1)], creek),
-			new("wild_laceroot", [(caust, 1), (spice, 1), (umber, 1)], eastWoods, ItemFindCondition.Morning),
-			new("mintflower", [(gelus, 1), (spice, 1), (bloom, 1)], westWoods),
+			new("wild_laceroot", [(caust, 1), (spice, 1), (umber, 1)], eastWoods, ItemFindCondition.Afternoon),
+			new("mintflower", [(bloom, 1), (gelus, 1), (spice, 1)], eastWoods),
 			new("feverfew", [(bloom, 2), (gelus, 1)], backyard, rarity: Rarity.Rare),
-			new("white_coneflower", [(bloom, 1), (gelus, 1)], meadow, ItemFindCondition.Afternoon),
+			new("white_coneflower", [(bloom, 1), (gelus, 1)], meadow, ItemFindCondition.Morning),
 			new("chamomile", [(umber, 2), (gelus, 1), (bloom, 1)], meadow, rarity: Rarity.Rare)
 		];
 
@@ -360,24 +388,26 @@ public partial class Game : RefCounted {
 		var villager = new VisitorType(
 			"villager",
 			["Abraham", "Adam", "Adrian", "Alexander", "Allen", "Ambrose", "Andrew", "Anthony", "Arthur", "Avery", "Barnaby", "Bartholomew", "Benedict", "Bernard", "Brian", "Bryan", "Caleb", "Charles", "Christopher", "Cuthbert", "Daniel", "David", "Edmund", "Edward", "Emmerson", "Frances", "Francis", "Fulke", "Geoffrey", "George", "Gerard", "Gilbert", "Giles", "Gregory", "Henry", "Hugh", "Humphrey", "Isaac", "James", "Jerome", "Johan", "John", "Jonathan", "Joseph", "Judd", "Julian", "Lancelot", "Lawrance", "Lawrence", "Leonard", "Luke", "Mark", "Martin", "Mathias", "Matthew", "Metcalfe", "Michael", "Miles", "Nathaniel", "Nicholas", "Oliver", "Oswyn", "Peter", "Philip", "Phillip", "Piers", "Raiph", "Ralph", "Reynold", "Richard", "Robert", "Roger", "Rowland", "Samuel", "Silas", "Simon", "Solomon", "Stephen", "Tamer", "Thomas", "Tobias", "Toby", "Valentine", "Walter", "William", "Addeline", "Agnes", "Alice", "Amelia", "Amy", "Ann", "Anne", "Audrey", "Augusta", "Avis", "Barbara", "Beatrice", "Blanche", "Bridget", "Carolina", "Caroline", "Catherine", "Cecily", "Charity", "Charlotte", "Christian", "Christina", "Clemence", "Constance", "Deborah", "Denise", "Dorothea", "Dorothy", "Edith", "Eleanor", "Elinor", "Eliza", "Elizabeth", "Ellen", "Ellener", "Ellin", "Elliner", "Emma", "Florence", "Fortune", "Frances", "Frideswide", "Gillian", "Grace", "Hannah", "Helen", "Isabel", "Isabell", "Jan", "Jane", "Janet", "Jennet", "Joan", "Josian", "Joyce", "Judith", "Julian", "Katherine", "Lettice", "Louisa", "Lucy", "Mabel", "Margaret", "Margery", "Maria", "Marie", "Marion", "Martha", "Mary", "Matilda", "Maud", "Mildred", "Millicent", "Parnell", "Phebe", "Philippa", "Rachel", "Rebecca", "Rose", "Ruth", "Sarah", "Sophia", "Susanna", "Sybil", "Thomasin", "Maud", "Mildred", "Millicent", "Parnell", "Phebe", "Philippa", "Rachel", "Rebecca", "Rose", "Ruth", "Sarah", "Sarah", "Sophia", "Susanna", "Susanna", "Sybil", "Thomasin", "Ursula", "Wilmot", "Winifred"],
-			["Abell", "Ackworth", "Adams", "Addicock", "Alban", "Aldebourne", "Alfray", "Alicock", "Allard", "Allen", "Allington", "Amberden", "Amcotts", "Amondsham", "Andrews", "Annesley", "Ansty", "Archer", "Ardall", "Ardern", "Argentein", "Arnold", "Arthur", "Asger", "Ashby", "Ashcombe", "Ashenhurst", "Ashton", "Askew", "Asplin", "Astley", "Atherton", "Atkinson", "Atlee", "Attilburgh", "Aubrey", "Audeley", "Audlington", "Ayde", "Ayleward", "Aylmer", "Aynesworth", "Babham", "Babington", "Badby", "Bailey", "Baker", "Balam", "Baldwin", "Ballard", "Ballett", "Bammard", "Barber", "Bardolf", "Barefoot", "Barker", "Barnes", "Barre", "Barrentine", "Barrett", "Barstaple", "Bartelot", "Barton", "Basset", "Bathurst"]
+			["Abell", "Ackworth", "Adams", "Addicock", "Alban", "Aldebourne", "Alfray", "Alicock", "Allard", "Allen", "Allington", "Amberden", "Amcotts", "Amondsham", "Andrews", "Annesley", "Ansty", "Archer", "Ardall", "Ardern", "Argentein", "Arnold", "Arthur", "Asger", "Ashby", "Ashcombe", "Ashenhurst", "Ashton", "Askew", "Asplin", "Astley", "Atherton", "Atkinson", "Atlee", "Attilburgh", "Aubrey", "Audeley", "Audlington", "Ayde", "Ayleward", "Aylmer", "Aynesworth", "Babham", "Babington", "Badby", "Bailey", "Baker", "Balam", "Baldwin", "Ballard", "Ballett", "Bammard", "Barber", "Bardolf", "Barefoot", "Barker", "Barnes", "Barre", "Barrentine", "Barrett", "Barstaple", "Bartelot", "Barton", "Basset", "Bathurst"],
+			[Resource.Coins, Resource.Reputation],
+			[Resource.Coins, Resource.Reputation]
 		);
 
 		var painText = """
 			[I'd like something to help with my {0}.|I have {0}.|Do you have something for {0}? % arthritis|leg pain|cramping]
 			[I stubbed my toe.][I think I've sprained something.]
 		""";
-		var painRequest = new RequestModel("pain", villager, painText, [(bloom, 1), (umber, 0)], 2);
+		var painRequest = new RequestModel("pain", villager, painText, [(bloom, 1), (umber, 0)], 1);
 
 		var migraineText = """
 			[Migraine.][My headache hasn't gone away.][I've been having {0} migraines. % terrible|awful]
 		""";
-		var migraineRequest = new RequestModel("migraine", villager, migraineText, [(bloom, 1), (spice, 0)], 2);
+		var migraineRequest = new RequestModel("migraine", villager, migraineText, [(bloom, 1), (spice, 0)], 1);
 
 		var foodPoisoningText = """
 			[I shouldn't have eaten {0}. % that raw shellfish|those leftovers|that salami off the floor]
 		""";
-		var foodPoisoningRequest = new RequestModel("food_poisoning", villager, foodPoisoningText, [(spice, 1), (gelus, 0)], 2);
+		var foodPoisoningRequest = new RequestModel("food_poisoning", villager, foodPoisoningText, [(spice, 1), (gelus, 0)], 1);
 
 		return new World(
 			[frontYard, backyard, road, meadow, eastWoods, westWoods, creek],
