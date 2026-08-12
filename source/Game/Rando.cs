@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Numerics;
+using MessagePack;
 
 namespace Apothecary;
 
-public struct Rando {
-	private ulong s0;
-	private ulong s1;
-	private ulong s2;
-	private ulong s3;
+[MessagePackObject(AllowPrivate=true)]
+public partial struct Rando {
+	[Key(0)] private ulong s0;
+	[Key(1)] private ulong s1;
+	[Key(2)] private ulong s2;
+	[Key(3)] private ulong s3;
 
 	public Rando(ulong seed) {
 		var z = seed;

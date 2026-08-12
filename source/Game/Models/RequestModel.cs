@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using MessagePack;
+using MessagePack.Formatters;
+
 namespace Apothecary;
 
+[MessagePackFormatter(typeof(RequestModelFormatter))]
 public class RequestModel {
 	private readonly struct TextGen(string[] base_texts, Dictionary<int, string[]> fillers) {
 		public readonly string[] base_texts = base_texts;
@@ -14,6 +18,8 @@ public class RequestModel {
 	private readonly List<TextGen> text_gens = [];
 	public ImmutableList<(Aspect, int)> Aspects { get; }
 	public int Reward { get; }
+	
+	private static readonly RequestModel UnknownRequestModel = new("unknown", VisitorType.UnknownVisitorType, "", [], 0);
 
 	public RequestModel(string id, VisitorType type, string text_gen, ImmutableList<(Aspect, int)> aspects, int reward) {
 		Id = id;
@@ -39,5 +45,24 @@ public class RequestModel {
 			text = text.Replace("{" + key + "}", rando.Pick(values));
 		}
 		return text;
+	}
+	
+	public class RequestModelFormatter : IMessagePackFormatter<RequestModel?> {
+		public void Serialize(ref MessagePackWriter writer, RequestModel? value, MessagePackSerializerOptions options) {
+			if (value == null) {
+				writer.WriteNil();
+			} else {
+				options.Resolver.GetFormatterWithVerify<string>().Serialize(ref writer, value.Id, options);
+			}
+		}
+
+		public RequestModel? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) {
+			if (reader.IsNil) {
+				return null;
+			} else {
+				var id = options.Resolver.GetFormatterWithVerify<string>().Deserialize(ref reader, options);
+				return Game.Instance.World.GetRequest(id) ?? UnknownRequestModel;
+			}
+		}
 	}
 }

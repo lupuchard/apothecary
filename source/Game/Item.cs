@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Godot;
+using MessagePack;
 
 namespace Apothecary;
 
+[MessagePackObject]
 public readonly struct Item : IEquatable<Item> {
-	public readonly ImmutableList<ItemModel> Raw;
-	public readonly ImmutableList<(Aspect, int)> Aspects;
-	public readonly ItemType Type;
+	[Key("raw")] public readonly ImmutableList<ItemModel> Raw;
+	[Key("aspects")] public readonly ImmutableList<(Aspect, int)> Aspects;
+	[Key("type")] public readonly ItemType Type;
 
 	private Item(ImmutableList<ItemModel> raw, ImmutableList<(Aspect, int)> aspects, ItemType type) {
 		Raw = raw;

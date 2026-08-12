@@ -1,10 +1,13 @@
 
+using MessagePack;
+
 namespace Apothecary;
 
+[MessagePackObject]
 public record JournalEntry(ItemModel Item) {
-	public ItemModel Item { get; } = Item;
-	public bool Confirmed { get; init; } = false;
-	public RegionModel? LocationGuess { get; init; } = null;
-	public Rarity? RarityGuess { get; init; } = null;
-	public ItemFindCondition? ConditionGuess { get; init; } = null;
+	[Key("item")] public ItemModel Item { get; } = Item;
+	[Key("confirmed")] public bool Confirmed { get; init; }
+	[Key("location_guess")] public RegionModel? LocationGuess { get; init; }
+	[Key("rarity_guess")] public Rarity? RarityGuess { get; init; }
+	[Key("condition_guess")] public ItemFindCondition? ConditionGuess { get; init; }
 }

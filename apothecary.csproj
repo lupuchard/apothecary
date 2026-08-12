@@ -10,4 +10,7 @@
     <Compile Remove="script_templates\empty.cs" />
     <None Include="script_templates\empty.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MessagePack" Version="3.1.7" />
+  </ItemGroup>
 </Project>

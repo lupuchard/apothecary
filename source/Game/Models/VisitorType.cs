@@ -11,6 +11,8 @@ public class VisitorType {
 	public ImmutableArray<string> LastNames { get; }
 	public ImmutableArray<Resource> Reward { get; }
 	public ImmutableArray<Resource> Tip { get; }
+	
+	public static readonly VisitorType UnknownVisitorType = new("unknown", [], [], [], []);
 
 	public VisitorType(string id, string[] first_names, string[] last_names, Resource[] reward, Resource[] tip) {
 		Id = id;

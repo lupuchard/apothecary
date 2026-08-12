@@ -17,7 +17,7 @@ public partial class ResourceUi : HBoxContainer {
 		count_label = GetNode<Label>("CountLabel");
 		sprite = GetNode<TextureRect>("Sprite");
 		
-		Game.Instance.ResourceUpdated += resource => {
+		Game.Instance.ResourceUpdated += (resource, _) => {
 			if (resource == Resource) {
 				UpdateResource();
 			}

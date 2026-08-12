@@ -72,7 +72,7 @@ public partial class JournalEntryUi : Panel {
 		where_option.ItemSelected += OnItemSelected;
 		when_option.ItemSelected += OnItemSelected;
 		rarity_option.ItemSelected += OnItemSelected;
-		Game.Instance.Journal.Confirmation += (_) => Update();
+		Game.Instance.JournalConfirmation += (_) => Update();
 	}
 
 	public void Update() {

@@ -66,3 +66,4 @@ AT_LEAST_GOOD_TREATMENT,This is a good or better treatment.
 VERY_GOOD_TREATMENT,This is a very good treatment.
 AT_LEAST_VERY_GOOD_TREATMENT,This is a very good or excellent treatment.
 EXCELLENT_TREATMENT,This is an excellent treatment.
+DEFAULT_PROFILE_NAME,Profile {0}

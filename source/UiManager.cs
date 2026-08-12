@@ -9,6 +9,7 @@ public partial class UiManager : Node2D {
 	private ForagingUi? foraging_ui;
 	private HomeUi? home_ui;
 	private BaseButton? home_icon;
+	private MainMenuUi? main_menu;
 
 	private readonly List<RegionSelect> region_selects = [];
 	private BaseUi? current_ui;
@@ -34,6 +35,18 @@ public partial class UiManager : Node2D {
 			if (child is RegionSelect region_select) {
 				region_select.Selected += OnRegionSelected;
 				region_selects.Add(region_select);
+			}
+		}
+		
+		main_menu = GetNode<MainMenuUi>("%MainMenu");
+	}
+	
+	public override void _Input(InputEvent input_event) {
+		if (input_event.IsActionPressed("ui_close_dialog")) {
+			if (current_ui != null) {
+				CloseUi();
+			} else {
+				main_menu?.Show();
 			}
 		}
 	}

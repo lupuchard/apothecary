@@ -41,7 +41,7 @@ public partial class JournalTabUi : MarginContainer {
 		prev_page_button.Pressed += ToPrevPage;
 		next_page_button.Pressed += ToNextPage;
 
-		Game.Instance.Journal.Confirmation += ShowPopup;
+		Game.Instance.JournalConfirmation += ShowPopup;
 		verified_popup_button.Pressed += () => verified_popup.Hide();
 	}
 

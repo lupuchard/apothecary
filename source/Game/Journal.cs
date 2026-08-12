@@ -1,17 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Godot;
+using MessagePack;
+
 namespace Apothecary;
 
-public partial class Journal : RefCounted {
-	[Signal] public delegate void ConfirmationEventHandler(Godot.Collections.Array<string> items);
-
+[MessagePackObject(AllowPrivate=true)]
+public partial class Journal {
 	public const int ConfirmationRequirement = 3;
-	private readonly Dictionary<string, JournalEntry> entries = [];
-	private readonly HashSet<JournalEntry> solved = [];
-	public int TotalConfirmed { get; private set; }
-
+	[Key("entries")] private readonly Dictionary<string, JournalEntry> entries = [];
+	[Key("solved")] private readonly HashSet<JournalEntry> solved = [];
+	[Key("total_confirmed")] public int TotalConfirmed { get; private set; }
+	[IgnoreMember] public Action<IEnumerable<ItemModel>>? OnConfirmation;
+	
 	public bool IsDiscovered(ItemModel item) {
 		return entries.ContainsKey(item.Id);
 	}
@@ -47,7 +49,7 @@ public partial class Journal : RefCounted {
 						TotalConfirmed += 1;
 					}
 				}
-				EmitSignalConfirmation([.. solved.Select(s => s.Item.Id)]);
+				OnConfirmation?.Invoke(solved.Select(s => s.Item));
 				solved.Clear();
 				return entry with { Confirmed = true };
 			}

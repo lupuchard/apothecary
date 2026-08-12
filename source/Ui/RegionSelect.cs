@@ -98,7 +98,7 @@ public partial class RegionSelect : Area2D {
 			var poly_line = fog_poly.GetChild<Line2D>(0);
 			if (fog_shown && region.Unlocked) {
 				hide_fog_tween?.Kill();
-				hide_fog_tween = new Tween();
+				hide_fog_tween = CreateTween();
 				hide_fog_tween.TweenProperty(fog_poly, "modulate", new Color(1, 1, 1, 0.5f), 0.5);
 				hide_fog_tween.TweenProperty(poly_line, "modulate", Colors.Transparent, 1.0);
 				hide_fog_tween.Parallel().TweenProperty(fog_poly, "modulate", Colors.Transparent, 0.5);

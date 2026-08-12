@@ -41,6 +41,11 @@
 [ext_resource type="Texture2D" uid="uid://ddik8f6lxe51d" path="res://assets/bag.png" id="37_uvlxr"]
 [ext_resource type="Script" uid="uid://bgg5oc2br6nw" path="res://source/Ui/HomeIconUi.cs" id="38_1dlgw"]
 [ext_resource type="Texture2D" uid="uid://jtxsnhd2a25m" path="res://assets/resources/reputation.png" id="38_fe1od"]
+[ext_resource type="Script" uid="uid://ds4yp1r0vlu5l" path="res://source/Ui/ResourceParticles.cs" id="42_fe1od"]
+[ext_resource type="Texture2D" uid="uid://56a2448o3l0x" path="res://assets/resources/coins_small.png" id="43_fq8n2"]
+[ext_resource type="Script" uid="uid://dj8kra5a42vlu" path="res://source/Ui/MainMenuUi.cs" id="44_ipkxx"]
+[ext_resource type="Texture2D" uid="uid://b5ysw1gnltxwr" path="res://assets/background2.jpg" id="45_u7ijn"]
+[ext_resource type="Texture2D" uid="uid://de77en0s005q5" path="res://assets/arrow_small.png" id="45_vjpxa"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xwag"]
 
@@ -127,6 +132,33 @@ _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 425, -350, 110.16277, -88.4027, -110.16277, 88.4027, 163, -243, 0, 0, 0, 0, 0, 0)
 }
 point_count = 3
+
+[sub_resource type="Curve" id="Curve_u7ijn"]
+_data = [Vector2(0, 1), 0.0, -0.17964005, 0, 0, Vector2(1, 0.00070512295), -2.7916088, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_h3qio"]
+curve = SubResource("Curve_u7ijn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ipkxx"]
+particle_flag_disable_z = true
+direction = Vector3(0, -1, 0)
+initial_velocity_min = 60.0
+initial_velocity_max = 200.0
+gravity = Vector3(0, 300, 0)
+alpha_curve = SubResource("CurveTexture_h3qio")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h3qio"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.32, 0.32, 0.32, 0.654902)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
 
 [node name="Node2D" type="Node2D" unique_id=1328475761]
 script = ExtResource("1_cho24")
@@ -987,10 +1019,14 @@ texture = ExtResource("38_fe1od")
 
 [node name="HomeIcon" type="TextureButton" parent="CanvasLayer" unique_id=871859052]
 unique_name_in_owner = true
-offset_left = 3.0
-offset_top = 579.0
-offset_right = 67.0
-offset_bottom = 643.0
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = -69.0
+offset_right = 69.0
+offset_bottom = -5.0
+grow_vertical = 0
 texture_normal = ExtResource("37_kaldw")
 script = ExtResource("38_1dlgw")
 
@@ -1001,6 +1037,7 @@ offset_left = 40.0
 offset_top = 19.0
 offset_right = 90.0
 offset_bottom = 59.0
+mouse_filter = 1
 
 [node name="BagSprite" type="Sprite2D" parent="CanvasLayer/HomeIcon/BagMask" unique_id=1516112860]
 position = Vector2(35, 19)
@@ -1016,3 +1053,156 @@ position = Vector2(64, 24)
 unique_name_in_owner = true
 position = Vector2(7, 17)
 curve = SubResource("Curve2D_uvlxr")
+
+[node name="ResourceParticles" type="Node2D" parent="CanvasLayer" unique_id=1140295363]
+script = ExtResource("42_fe1od")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="CanvasLayer/ResourceParticles" unique_id=404737589]
+visible = false
+position = Vector2(547, 460)
+texture = ExtResource("43_fq8n2")
+lifetime = 0.8
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_ipkxx")
+
+[node name="MainMenu" type="PanelContainer" parent="CanvasLayer" unique_id=749046666]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_h3qio")
+script = ExtResource("44_ipkxx")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/MainMenu" unique_id=1333921185]
+show_behind_parent = true
+layout_mode = 2
+texture = ExtResource("45_u7ijn")
+expand_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/MainMenu" unique_id=523040275]
+layout_mode = 2
+theme = ExtResource("2_8rhti")
+
+[node name="MainMainMenu" type="PanelContainer" parent="CanvasLayer/MainMenu/CenterContainer" unique_id=879863404]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu" unique_id=410421970]
+layout_mode = 2
+
+[node name="NewGameButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu/VBoxContainer" unique_id=170727930]
+unique_name_in_owner = true
+layout_mode = 2
+text = "New Game"
+
+[node name="ContinueButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu/VBoxContainer" unique_id=1985740628]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue"
+
+[node name="LoadGameButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu/VBoxContainer" unique_id=871911920]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Load Game"
+
+[node name="ExitButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu/VBoxContainer" unique_id=789059213]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Exit"
+
+[node name="NewGameMenu" type="Control" parent="CanvasLayer/MainMenu/CenterContainer" unique_id=943782431]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MainMenu/CenterContainer/NewGameMenu" unique_id=1278076461]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -48.5
+offset_right = 75.0
+offset_bottom = 48.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/CenterContainer/NewGameMenu/PanelContainer" unique_id=130044115]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/CenterContainer/NewGameMenu/PanelContainer/VBoxContainer" unique_id=1194196729]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "New Profile"
+horizontal_alignment = 1
+
+[node name="NewGameNameEdit" type="LineEdit" parent="CanvasLayer/MainMenu/CenterContainer/NewGameMenu/PanelContainer/VBoxContainer" unique_id=1004852954]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Profile 1"
+alignment = 1
+
+[node name="NewGameStartButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/NewGameMenu/PanelContainer/VBoxContainer" unique_id=985381275]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Start"
+
+[node name="NewGameBackButton" type="TextureButton" parent="CanvasLayer/MainMenu/CenterContainer/NewGameMenu" unique_id=356009202]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -66.0
+offset_top = -47.0
+offset_right = -50.0
+offset_bottom = -31.0
+texture_normal = ExtResource("45_vjpxa")
+stretch_mode = 0
+flip_h = true
+
+[node name="LoadGameMenu" type="Control" parent="CanvasLayer/MainMenu/CenterContainer" unique_id=2050388818]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu" unique_id=1252886491]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -60.0
+offset_top = -59.5
+offset_right = 60.0
+offset_bottom = 59.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LoadGameBackButton" type="TextureButton" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer" unique_id=487920357]
+unique_name_in_owner = true
+layout_mode = 2
+texture_normal = ExtResource("45_vjpxa")
+flip_h = true
+
+[node name="LoadGameList" type="VBoxContainer" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer" unique_id=624102241]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer/LoadGameList" unique_id=1001592603]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "Load Game"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer/LoadGameList" unique_id=228241982]
+layout_mode = 2
+text = "Profile 1"
+
+[node name="Button2" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer/LoadGameList" unique_id=483416765]
+layout_mode = 2
+text = "Profile 2"
