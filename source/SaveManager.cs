@@ -42,6 +42,7 @@ public class SaveManager {
 		};
 		
 		profiles.Add(new_profile);
+		SaveGame(new Game(), new_profile);
 		SaveProfiles();
 		cur_profile = new_profile;
 		return new_profile;

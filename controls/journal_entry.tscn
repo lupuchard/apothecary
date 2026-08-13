@@ -5,7 +5,9 @@
 [ext_resource type="Script" uid="uid://bebhriuhsiqfq" path="res://source/Ui/JournalEntryUi.cs" id="2_u23ui"]
 [ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="2_wlxyl"]
 [ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="3_u23ui"]
+[ext_resource type="Texture2D" uid="uid://baktwkxhcf0pf" path="res://assets/note.png" id="4_4b87a"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="4_vmb3e"]
+[ext_resource type="Texture2D" uid="uid://dvrv32d1wdudd" path="res://assets/note3.png" id="5_4b87a"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u23ui"]
 bg_color = Color(0.3, 0.3, 0.3, 0.3019608)
@@ -53,6 +55,14 @@ text = "Meadowsweet"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+
+[node name="NotesButton" type="TextureButton" parent="BasicInfo/PanelContainer" unique_id=1701379529]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+texture_normal = ExtResource("4_4b87a")
+texture_hover = ExtResource("5_4b87a")
 
 [node name="AspectList" type="HBoxContainer" parent="BasicInfo" unique_id=1827267658]
 unique_name_in_owner = true

@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://b3opkjenrrc4b"]
+
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="1_1ux6n"]
+[ext_resource type="Texture2D" uid="uid://cfi71ffjc02k3" path="res://assets/close.png" id="1_3p22o"]
+[ext_resource type="Texture2D" uid="uid://c6tgmpykfrww4" path="res://assets/close2.png" id="2_1ux6n"]
+[ext_resource type="Script" uid="uid://dv871yw0rres3" path="res://source/Ui/ProfileEntryUi.cs" id="2_78twp"]
+
+[node name="ProfileEntry" type="HBoxContainer" unique_id=17731858]
+theme = ExtResource("1_1ux6n")
+alignment = 1
+script = ExtResource("2_78twp")
+
+[node name="SelectButton" type="Button" parent="." unique_id=199306852]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Profile 1"
+
+[node name="DeleteButton" type="TextureButton" parent="." unique_id=1295281579]
+layout_mode = 2
+texture_normal = ExtResource("1_3p22o")
+texture_hover = ExtResource("2_1ux6n")
+stretch_mode = 3

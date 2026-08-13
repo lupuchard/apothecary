@@ -36,6 +36,10 @@ public partial class Journal {
 		entries[entry.Item.Id] = CheckGuess(entry);
 	}
 
+	public void UpdateNotes(JournalEntry entry, string? notes) {
+		entries[entry.Item.Id] = entry with { Notes = notes };
+	}
+
 	private JournalEntry CheckGuess(JournalEntry entry) {
 		if (entry.LocationGuess == entry.Item.WhereFound
 			&& entry.ConditionGuess == entry.Item.WhenFound

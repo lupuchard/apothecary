@@ -32,15 +32,15 @@ public partial class Game : RefCounted {
 		public int time_of_day = 0;
 		public int year = 0;
 
-		public readonly List<Region> regions = [];
-		public readonly Dictionary<Item, int> inventory = [];
+		public List<Region> regions = [];
+		public Dictionary<Item, int> inventory = [];
 
 		public Visitor? visitor_at_door = null;
 		public List<Visitor> current_requests = [];
 
-		public readonly Journal journal = journal;
+		public Journal journal = journal;
 		
-		public readonly List<int> resources = [];
+		public List<int> resources = [];
 	}
 
 	public GameState state { get; private set; }

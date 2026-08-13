@@ -104,15 +104,15 @@ public partial class RegionSelect : Area2D {
 				hide_fog_tween.Parallel().TweenProperty(fog_poly, "modulate", Colors.Transparent, 0.5);
 				hide_fog_tween.Finished += () => fog_poly.Hide();
 				fog_shown = false;
-				region_label?.Text = Tr(region_id.ToUpperInvariant());
 			} else if (!fog_shown && !region.Unlocked) {
 				hide_fog_tween?.Kill();
 				fog_poly.Show();
 				fog_poly.Modulate = Colors.White;
 				poly_line.Modulate = Colors.White;
 				fog_shown = true;
-				region_label?.Text = Tr(region_id.ToUpperInvariant() + "_UNKNOWN");
 			}
+
+			region_label?.Text = Tr(region.TrString());
 		}
 	}
 

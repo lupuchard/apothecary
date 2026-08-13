@@ -8,6 +8,7 @@ public partial class Region(RegionModel Model) {
 	[Key("model")] public RegionModel Model { get; } = Model;
 	[Key("remaining")] public int Remaining { get; private set; } = Model.MaxForage;
 	[Key("unlocked")] public bool Unlocked { get; set; }
+	[Key("known")] public bool Known { get; set; } = true;
 
 	public void ConsumeForage(int amount = 1) {
 		Remaining = Math.Max(0, Remaining - amount);
@@ -20,5 +21,9 @@ public partial class Region(RegionModel Model) {
 		if (Remaining > Model.MaxForage) {
 			Remaining = Model.MaxForage;
 		}
+	}
+
+	public string TrString() {
+		return Unlocked ? Model.Id.ToUpper() : Model.Id.ToUpper() + "_UNKNOWN";
 	}
 }

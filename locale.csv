@@ -53,6 +53,8 @@ AFTERNOON,Afternoon
 NIGHT,Night
 AFTER_RAINING,After rain
 IN_MOONLIGHT,In moonlight
+JOURNAL,Journal
+JOURNAL_NOTES,Notes - {0}
 EUREKA,Eureka!
 OK,Ok
 VERIFIED_POPUP_TEXT,Locked in:\n{0}\nAll aspects will now be shown for these ingredients. {1}
@@ -67,3 +69,10 @@ VERY_GOOD_TREATMENT,This is a very good treatment.
 AT_LEAST_VERY_GOOD_TREATMENT,This is a very good or excellent treatment.
 EXCELLENT_TREATMENT,This is an excellent treatment.
 DEFAULT_PROFILE_NAME,Profile {0}
+NEW_GAME,New game
+CONTINUE_GAME,Continue
+LOAD_GAME,Load game
+EXIT_GAME,Exit
+DELETE,Delete (hold)
+CANCEL,Cancel
+DELETE_CONFIRM,Confirm deletion of profile {0}

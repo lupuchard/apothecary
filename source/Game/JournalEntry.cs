@@ -10,4 +10,5 @@ public record JournalEntry(ItemModel Item) {
 	[Key("location_guess")] public RegionModel? LocationGuess { get; init; }
 	[Key("rarity_guess")] public Rarity? RarityGuess { get; init; }
 	[Key("condition_guess")] public ItemFindCondition? ConditionGuess { get; init; }
+	[Key("notes")] public string? Notes { get; init; }
 }

@@ -5,6 +5,8 @@ namespace Apothecary;
 public partial class MainMenuUi : PanelContainer {
 	private readonly SaveManager save_manager = new();
 	
+	[Signal] public delegate void GameStartedEventHandler();
+	
 	private Control? main_main_menu;
 	private Button? new_game_button;
 	private Button? continue_button;
@@ -19,6 +21,13 @@ public partial class MainMenuUi : PanelContainer {
 	private Control? load_game_menu;
 	private BaseButton? load_game_back_button;
 	private Control? load_game_list;
+	private PackedScene? profile_entry_scene;
+
+	private Control? delete_game_menu;
+	private Label? delete_game_menu_label;
+	private SlowButton? delete_game_button;
+	private Button? cancel_delete_game_button;
+	private Profile? deleting_profile = null;
 	
 	public override void _Ready() {
 		main_main_menu = GetNode<Control>("%MainMainMenu");
@@ -43,14 +52,23 @@ public partial class MainMenuUi : PanelContainer {
 		load_game_back_button = GetNode<BaseButton>("%LoadGameBackButton");
 		load_game_back_button.Pressed += Open;
 		load_game_list = GetNode<Control>("%LoadGameList");
+		profile_entry_scene = ResourceLoader.Load<PackedScene>("res://controls/profile_entry.tscn");
+
+		delete_game_menu = GetNode<Control>("%DeleteGameMenu");
+		delete_game_menu_label = GetNode<Label>("%DeleteGameMenuLabel");
+		delete_game_button = GetNode<SlowButton>("%DeleteGameButton");
+		delete_game_button.PressFinished += ConfirmDeleteProfile;
+		cancel_delete_game_button = GetNode<Button>("%CancelDeleteGameButton");
+		cancel_delete_game_button.Pressed += CloseDeleteProfile;
 
 		Open();
 	}
 
-	private void Open() {
+	public void Open() {
 		main_main_menu?.Show();
 		new_game_menu?.Hide();
 		load_game_menu?.Hide();
+		delete_game_menu?.Hide();
 		var has_profiles = save_manager.GetProfiles().Count == 0;
 		continue_button?.Disabled = has_profiles;
 		load_game_button?.Disabled = has_profiles;
@@ -74,10 +92,11 @@ public partial class MainMenuUi : PanelContainer {
 	private void StartNewGame() {
 		save_manager.CreateProfile(new_game_name_edit!.Text);
 		Hide();
+		EmitSignalGameStarted();
 	}
 
 	private void OnLoadGame() {
-		if (load_game_list == null) return;
+		if (load_game_list == null || profile_entry_scene == null) return;
 		main_main_menu?.Hide();
 		load_game_menu?.Show();
 
@@ -89,17 +108,42 @@ public partial class MainMenuUi : PanelContainer {
 
 		var profiles = save_manager.GetProfiles();
 		foreach (var profile in profiles) {
-			var button = new Button();
-			button.Text = profile.Name;
-			button.Pressed += () => LoadGame(profile);
-			load_game_list.AddChild(button);
+			var entry = profile_entry_scene.Instantiate<ProfileEntryUi>();
+			entry.ProfileName = profile.Name;
+			entry.Selected += () => LoadGame(profile);
+			entry.DeletePressed += () => OnDeleteEntry(profile);
+			load_game_list.AddChild(entry);
 		}
+	}
+
+	private void OnDeleteEntry(Profile profile) {
+		load_game_menu?.Hide();
+		delete_game_menu?.Show();
+		deleting_profile = profile;
+		delete_game_menu_label?.Text = string.Format(Tr("DELETE_CONFIRM"), profile.Name);
+	}
+
+	private void ConfirmDeleteProfile() {
+		if (deleting_profile == null) return;
+		save_manager.DeleteProfile(deleting_profile);
+		if (save_manager.GetProfiles().Count == 0) {
+			Open();
+		} else {
+			CloseDeleteProfile();
+		}
+	}
+
+	private void CloseDeleteProfile() {
+		delete_game_menu?.Hide();
+		OnLoadGame();
+		deleting_profile = null;
 	}
 
 	private void LoadGame(Profile profile) {
 		var game = save_manager.LoadGame(profile);
 		Game.LoadGame(game);
 		Hide();
+		EmitSignalGameStarted();
 	}
 
 	private void OnExitGame() {

@@ -46,6 +46,7 @@
 [ext_resource type="Script" uid="uid://dj8kra5a42vlu" path="res://source/Ui/MainMenuUi.cs" id="44_ipkxx"]
 [ext_resource type="Texture2D" uid="uid://b5ysw1gnltxwr" path="res://assets/background2.jpg" id="45_u7ijn"]
 [ext_resource type="Texture2D" uid="uid://de77en0s005q5" path="res://assets/arrow_small.png" id="45_vjpxa"]
+[ext_resource type="PackedScene" uid="uid://b3opkjenrrc4b" path="res://controls/profile_entry.tscn" id="47_h3qio"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xwag"]
 
@@ -305,7 +306,7 @@ position = Vector2(1126, 639)
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(667, -639, 479, -415, 314, -317, -187, -322, -298, -246, -1019, -296, -1126, -361, -1127, -639)
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1514244865 node_paths=PackedStringArray("Map")]
+[node name="PlayerCamera" type="Camera2D" parent="." unique_id=1514244865 node_paths=PackedStringArray("Map")]
 position = Vector2(1220, 804)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
@@ -520,7 +521,7 @@ size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("16_v7taj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_50rgw")
 theme_override_styles/tab_selected = SubResource("StyleBoxTexture_4a7sh")
-current_tab = 0
+current_tab = 2
 tab_0/title = "VISITORS_TAB"
 tab_1/title = "KITCHEN_TAB"
 tab_2/title = "JOURNAL_TAB"
@@ -528,6 +529,7 @@ tab_3/title = "BEDROOM_TAB"
 
 [node name="VisitorsTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1123293159]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 script = ExtResource("19_1uwki")
 metadata/_tab_index = 0
@@ -842,7 +844,6 @@ WhereInputNodes = NodePath("../..")
 
 [node name="JournalTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1911984868]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 script = ExtResource("34_f7hpq")
 metadata/_tab_index = 2
@@ -854,7 +855,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer" unique_id=1054939844]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("6_56f15")
-text = "Journal"
+text = "JOURNAL"
 horizontal_alignment = 1
 
 [node name="GridContainer" type="GridContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/VBoxContainer" unique_id=1248368050]
@@ -960,6 +961,51 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "OK"
+
+[node name="NotesPopup" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab" unique_id=1338919422]
+visible = false
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup" unique_id=402880556]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f7hpq")
+
+[node name="Panel" type="Panel" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer" unique_id=177234837]
+custom_minimum_size = Vector2(400, 300)
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel" unique_id=512145810]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer" unique_id=1928686195]
+layout_mode = 2
+
+[node name="NotesPopupLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=1105560916]
+unique_name_in_owner = true
+layout_mode = 2
+text = "JOURNAL_NOTES"
+
+[node name="NotesTextEdit" type="TextEdit" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=1620409572]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 225)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=377220585]
+layout_mode = 2
+alignment = 1
+
+[node name="CloseNotesButton" type="Button" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1146939897]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+text = "Close"
 
 [node name="BedroomTab" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1007219983]
 visible = false
@@ -1067,6 +1113,7 @@ process_material = SubResource("ParticleProcessMaterial_ipkxx")
 
 [node name="MainMenu" type="PanelContainer" parent="CanvasLayer" unique_id=749046666]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1096,22 +1143,22 @@ layout_mode = 2
 [node name="NewGameButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu/VBoxContainer" unique_id=170727930]
 unique_name_in_owner = true
 layout_mode = 2
-text = "New Game"
+text = "NEW_GAME"
 
 [node name="ContinueButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu/VBoxContainer" unique_id=1985740628]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Continue"
+text = "CONTINUE_GAME"
 
 [node name="LoadGameButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu/VBoxContainer" unique_id=871911920]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Load Game"
+text = "LOAD_GAME"
 
 [node name="ExitButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/MainMainMenu/VBoxContainer" unique_id=789059213]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Exit"
+text = "EXIT_GAME"
 
 [node name="NewGameMenu" type="Control" parent="CanvasLayer/MainMenu/CenterContainer" unique_id=943782431]
 unique_name_in_owner = true
@@ -1167,6 +1214,7 @@ flip_h = true
 
 [node name="LoadGameMenu" type="Control" parent="CanvasLayer/MainMenu/CenterContainer" unique_id=2050388818]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu" unique_id=1252886491]
@@ -1199,10 +1247,36 @@ theme_type_variation = &"LabelSmall"
 text = "Load Game"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer/LoadGameList" unique_id=228241982]
+[node name="ProfileEntry" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer/LoadGameList" unique_id=17731858 instance=ExtResource("47_h3qio")]
 layout_mode = 2
-text = "Profile 1"
 
 [node name="Button2" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer/LoadGameList" unique_id=483416765]
 layout_mode = 2
 text = "Profile 2"
+
+[node name="DeleteGameMenu" type="PanelContainer" parent="CanvasLayer/MainMenu/CenterContainer" unique_id=1848711332]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu" unique_id=11137970]
+layout_mode = 2
+
+[node name="DeleteGameMenuLabel" type="Label" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu/VBoxContainer" unique_id=2027752381]
+unique_name_in_owner = true
+layout_mode = 2
+text = "DELETE_CONFIRM"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu/VBoxContainer" unique_id=6500527]
+layout_mode = 2
+alignment = 1
+
+[node name="DeleteGameButton" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu/VBoxContainer/HBoxContainer" unique_id=1170755638 instance=ExtResource("11_im64q")]
+unique_name_in_owner = true
+layout_mode = 2
+text = "DELETE"
+
+[node name="CancelDeleteGameButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu/VBoxContainer/HBoxContainer" unique_id=750474363]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CANCEL"

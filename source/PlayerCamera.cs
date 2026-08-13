@@ -7,6 +7,7 @@ public partial class PlayerCamera : Camera2D {
 	private readonly Vector2 ZOOM_MIN = new(0.5f, 0.5f);
 	private const float PAN_SPEED = 6.0f;
 
+	public bool CanPan { get; set; }= true;
 	private bool panning = false;
 
 	[Export] public Sprite2D? Map { get; set; }
@@ -26,6 +27,7 @@ public partial class PlayerCamera : Camera2D {
 	}
 
 	public override void _Input(InputEvent inputEvent) {
+		if (!CanPan) return;
 		base._Input(inputEvent);
 		
 		if (inputEvent.IsActionPressed("pan")) {

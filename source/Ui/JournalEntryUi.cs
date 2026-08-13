@@ -3,6 +3,8 @@ using Godot;
 namespace Apothecary;
 
 public partial class JournalEntryUi : Panel {
+	[Signal] public delegate void NotesOpenedEventHandler();
+	
 	public ItemModel? Item { get; set; }
 	
 	private const int UNSELECTED_ID = -2;
@@ -15,6 +17,10 @@ public partial class JournalEntryUi : Panel {
 	private OptionButton? where_option;
 	private OptionButton? when_option;
 	private OptionButton? rarity_option;
+
+	private TextureButton? notes_button;
+	private Texture2D? notes_texture;
+	private Texture2D? notes_texture2;
 
 	private static readonly Dictionary<RegionModel, int> region_to_option_id = [];
 	private static readonly Dictionary<int, RegionModel> option_id_to_region = [];
@@ -37,6 +43,9 @@ public partial class JournalEntryUi : Panel {
 	}
 
 	public override void _Ready() {
+		notes_texture = GD.Load<Texture2D>("res://assets/note.png");
+		notes_texture2 = GD.Load<Texture2D>("res://assets/note2.png");
+		
 		name_label = GetNode<Label>("%NameLabel");
 		sprite = GetNode<TextureRect>("%TextureRect");
 		aspect_list = GetNode<AspectListUi>("%AspectList");
@@ -47,26 +56,18 @@ public partial class JournalEntryUi : Panel {
 			InitializeRegionOptionIds();
 		}
 		
-		where_option = GetNode<OptionButton>("JournalInfo/WhereOption");
-		where_option.Clear();
-		where_option.AddItem("???", UNSELECTED_ID);
-		foreach (var location in Game.Instance.World.Regions) {
-			where_option.AddItem(Tr(location.Id.ToUpper()), region_to_option_id[location]);
-		}
-		
-		when_option = GetNode<OptionButton>("JournalInfo/WhenOption");
-		when_option.Clear();
-		when_option.AddItem("???", UNSELECTED_ID);
-		foreach (var condition in item_find_conditions) {
-			when_option.AddItem(Tr(condition.TrString()), (int)condition);
-		}
-		
 		rarity_option = GetNode<OptionButton>("JournalInfo/RarityOption");
 		rarity_option.Clear();
 		rarity_option.AddItem("???", UNSELECTED_ID);
 		for (var rarity = 0; rarity < (int)Rarity.COUNT; rarity++) {
 			rarity_option.AddItem(Tr(((Rarity)rarity).TrString()), rarity);
 		}
+		
+		where_option = GetNode<OptionButton>("JournalInfo/WhereOption");
+		when_option = GetNode<OptionButton>("JournalInfo/WhenOption");
+
+		notes_button = GetNode<TextureButton>("%NotesButton");
+		notes_button.Pressed += EmitSignalNotesOpened;
 
 		Update();
 		where_option.ItemSelected += OnItemSelected;
@@ -81,15 +82,19 @@ public partial class JournalEntryUi : Panel {
 			journal_info?.Hide();
 			sprite?.Hide();
 			aspect_list?.Hide();
+			notes_button?.Hide();
 			name_label?.Text = Tr("UNDISCOVERED_ITEM");
 			return;
 		}
+		
+		notes_button?.TextureNormal = string.IsNullOrWhiteSpace(entry.Notes) ? notes_texture : notes_texture2;
 
 		name_label?.Text = Tr(Item.Id.ToUpper());
 		sprite?.Show();
 		sprite?.Texture = Item.Sprite;
 		aspect_list?.Show();
 		aspect_list?.Update(journal.GetShownAspects([Item], Item.Aspects));
+		notes_button?.Show();
 
 		journal_info?.Show();
 		if (where_option == null || when_option == null || rarity_option == null) {
@@ -101,6 +106,20 @@ public partial class JournalEntryUi : Panel {
 		where_option.Disabled = entry.Confirmed;
 		when_option.Disabled = entry.Confirmed;
 		rarity_option.Disabled = entry.Confirmed;
+		
+		where_option.Clear();
+		where_option.AddItem("???", UNSELECTED_ID);
+		foreach (var location in Game.Instance.World.Regions) {
+			var region = Game.Instance.GetRegion(location.Id);
+			if (region?.Known != true) continue;
+			where_option.AddItem(Tr(region.TrString()), region_to_option_id[location]);
+		}
+		
+		when_option.Clear();
+		when_option.AddItem("???", UNSELECTED_ID);
+		foreach (var condition in item_find_conditions) {
+			when_option.AddItem(Tr(condition.TrString()), (int)condition);
+		}
 	}
 
 	private void OnItemSelected(long _) {

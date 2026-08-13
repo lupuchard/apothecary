@@ -9,10 +9,13 @@ public partial class UiManager : Node2D {
 	private ForagingUi? foraging_ui;
 	private HomeUi? home_ui;
 	private BaseButton? home_icon;
+	
 	private MainMenuUi? main_menu;
 
 	private readonly List<RegionSelect> region_selects = [];
 	private BaseUi? current_ui;
+
+	private PlayerCamera? player_camera;
 	
 	public override void _Ready() {
 		background_exit_button = GetNode<Button>("%BackgroundExitButton");
@@ -39,6 +42,9 @@ public partial class UiManager : Node2D {
 		}
 		
 		main_menu = GetNode<MainMenuUi>("%MainMenu");
+		main_menu.GameStarted += CloseUi;
+
+		player_camera = GetNode<PlayerCamera>("PlayerCamera");
 	}
 	
 	public override void _Input(InputEvent input_event) {
@@ -46,7 +52,7 @@ public partial class UiManager : Node2D {
 			if (current_ui != null) {
 				CloseUi();
 			} else {
-				main_menu?.Show();
+				main_menu?.Open();
 			}
 		}
 	}
@@ -71,6 +77,8 @@ public partial class UiManager : Node2D {
 		foreach (var region_select in region_selects) {
 			region_select.InputPickable = false;
 		}
+
+		player_camera?.CanPan = false;
 	}
 
 	private void CloseUi() {
@@ -81,5 +89,7 @@ public partial class UiManager : Node2D {
 		foreach (var region_select in region_selects) {
 			region_select.InputPickable = true;
 		}
+		
+		player_camera?.CanPan = true;
 	}
 }
