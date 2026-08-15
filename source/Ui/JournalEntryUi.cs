@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using Godot;
+using static Apothecary.ItemFindCondition;
 namespace Apothecary;
 
 public partial class JournalEntryUi : Panel {
@@ -25,14 +27,14 @@ public partial class JournalEntryUi : Panel {
 	private static readonly Dictionary<RegionModel, int> region_to_option_id = [];
 	private static readonly Dictionary<int, RegionModel> option_id_to_region = [];
 	
-	private readonly ItemFindCondition[] item_find_conditions = [
-		ItemFindCondition.None,
-		ItemFindCondition.Morning, 
-		ItemFindCondition.Afternoon, 
+	/*private readonly ItemFindCondition[] item_find_conditions = [
+		None,
+		Morning, 
+		Afternoon, 
 		ItemFindCondition.Night, 
 		ItemFindCondition.AfterRaining, 
 		ItemFindCondition.InMoonlight
-	];
+	];*/
 
 	private static void InitializeRegionOptionIds() {
 		foreach (var region in Game.Instance.World.Regions) {
@@ -117,9 +119,29 @@ public partial class JournalEntryUi : Panel {
 		
 		when_option.Clear();
 		when_option.AddItem("???", UNSELECTED_ID);
-		foreach (var condition in item_find_conditions) {
+		foreach (var condition in GetItemFindConditions()) {
 			when_option.AddItem(Tr(condition.TrString()), (int)condition);
 		}
+	}
+	
+	private static readonly ItemFindCondition[] FirstEstival = [None, Morning, Afternoon, AfterRaining];
+	private static readonly ItemFindCondition[] Estival   = [None, Morning, Afternoon, AfterRaining, HeatWave, Wind];
+	private static readonly ItemFindCondition[] Serotinal = [None, Morning, Afternoon, AfterRaining, Night, Wind];
+	private static readonly ItemFindCondition[] Autumnal  = [None, Daytime, AfterRaining, Night, InMoonlight, Wind];
+	private static readonly ItemFindCondition[] Hibernal  = [None, Daytime, Night, InMoonlight, Wind, Snowing];
+	private static readonly ItemFindCondition[] Prevernal = [None, Daytime, AfterRaining, Night, InMoonlight, Wind];
+	private static readonly ItemFindCondition[] Vernal    = [None, Morning, Afternoon, AfterRaining, Night, Wind];
+
+	private static ItemFindCondition[] GetItemFindConditions() {
+		return Game.Instance.Season switch {
+			Season.Prevernal => Prevernal,
+			Season.Vernal => Vernal,
+			Season.Estival => Game.Instance.Year > 0 ? Estival : FirstEstival,
+			Season.Serotinal => Serotinal,
+			Season.Autumnal => Autumnal,
+			Season.Hibernal => Hibernal,
+			_ => throw new ArgumentOutOfRangeException()
+		};
 	}
 
 	private void OnItemSelected(long _) {

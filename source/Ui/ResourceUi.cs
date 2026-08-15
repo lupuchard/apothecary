@@ -37,8 +37,7 @@ public partial class ResourceUi : HBoxContainer {
 
 	private void UpdateResource() {
 		if (Resource != null) {
-			var filename = $"res://assets/resources/{Resource.Value.TrString().ToLowerInvariant()}.png";
-			sprite?.Texture = ResourceLoader.Load<Texture2D>(filename);
+			sprite?.Texture = ResourceLoader.Load<Texture2D>(Resource.Value.SpritePath());
 			sprite?.Modulate = Resource.Value.GetColor();
 		}
 

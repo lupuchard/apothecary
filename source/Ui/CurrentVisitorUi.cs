@@ -66,6 +66,10 @@ public partial class CurrentVisitorUi : PanelContainer {
 			AcceptButton?.Show();
 			RejectButton?.Show();
 		}
+
+		if (Game.Instance.Day == 0) {
+			RejectButton?.Hide();
+		}
 	}
 
 	private string FormatDays(int days) {

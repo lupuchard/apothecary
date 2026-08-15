@@ -61,7 +61,13 @@ public partial class MainMenuUi : PanelContainer {
 		cancel_delete_game_button = GetNode<Button>("%CancelDeleteGameButton");
 		cancel_delete_game_button.Pressed += CloseDeleteProfile;
 
+		Game.Instance.TimeChanged += OnTimeChanged;
+
 		Open();
+	}
+
+	private void OnTimeChanged() {
+		save_manager.SaveGame(Game.Instance);
 	}
 
 	public void Open() {
@@ -141,14 +147,14 @@ public partial class MainMenuUi : PanelContainer {
 
 	private void LoadGame(Profile profile) {
 		var game = save_manager.LoadGame(profile);
-		Game.LoadGame(game);
+		Game.Instance.LoadGame(game);
 		Hide();
 		EmitSignalGameStarted();
 	}
 
 	private void OnExitGame() {
 		save_manager.SaveGame(Game.Instance);
-		Game.NewGame();
+		Game.Instance.NewGame();
 		GetTree().Quit();
 	}
 }

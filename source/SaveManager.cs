@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using Godot;
 using MessagePack;
+using MessagePack.Formatters;
+using MessagePack.Resolvers;
 using FileAccess = Godot.FileAccess;
 
 namespace Apothecary;
@@ -20,11 +22,55 @@ public class Profile: IComparable<Profile> {
 	}
 }
 
+public class DictionaryAsListResolver : IFormatterResolver {
+	public IMessagePackFormatter<T>? GetFormatter<T>() {
+		throw new NotImplementedException();
+	}
+
+	private static class FormatterCache<T> {
+		public static readonly IMessagePackFormatter<T> Formatter;
+
+		static FormatterCache() {
+			if ()
+		}
+	}
+}
+
+internal static class SampleCustomResolverGetFormatterHelper {
+	// If type is concrete type, use type-formatter map
+	static readonly Dictionary<Type, object> formatterMap = new Dictionary<Type, object>()
+	{
+		{typeof(Dictionary), new DictionaryAsListFormatter()}
+	};
+
+	internal static object GetFormatter(Type t)
+	{
+		object formatter;
+		if (formatterMap.TryGetValue(t, out formatter))
+		{
+			return formatter;
+		}
+
+		// If type can not get, must return null for fallback mechanism.
+		return null;
+	}
+}
+
 public class SaveManager {
 	private readonly string PROFILE_FILENAME = ProjectSettings.GlobalizePath("user://profiles.json");
 	private readonly string SAVES_DIRECTORY = ProjectSettings.GlobalizePath("user://saves/");
 	private List<Profile> profiles = [];
 	private Profile? cur_profile = null;
+
+	private MessagePackSerializerOptions serializer_options;
+
+	public SaveManager() {
+		var resolver = MessagePack.Resolvers.CompositeResolver.Create(
+			MessagePack.Resolvers.
+			DictionaryAsListResolver,
+			StandardResolver.Instance
+		);
+	}
 
 	public Profile CreateProfile(string name) {
 		GetProfiles();
@@ -61,8 +107,12 @@ public class SaveManager {
 		profile ??= cur_profile;
 		if (profile == null) return;
 		Directory.CreateDirectory(SAVES_DIRECTORY);
-		using var stream = File.Open(profile.Filename, FileMode.Create);
-		MessagePackSerializer.Serialize(stream, game.state);
+		var bytes = MessagePackSerializer.Serialize(game.state);
+		//using var stream = File.Open(profile.Filename, FileMode.Create);
+		//using var stream_writer = new StreamWriter(stream);
+		//stream_writer.Write(MessagePackSerializer.ConvertToJson(bytes));
+		//MessagePackSerializer.Serialize(stream, game.state);
+		File.WriteAllText(profile.Filename, MessagePackSerializer.ConvertToJson(bytes));
 		profile.LastLoaded = DateTimeOffset.Now;
 		SaveProfiles();
 	}
@@ -83,8 +133,10 @@ public class SaveManager {
 	}
 
 	public Game.GameState LoadGame(Profile profile) {
-		using var stream = File.Open(profile.Filename, FileMode.Open);
+		var json = File.ReadAllText(profile.Filename);
+		var bytes = MessagePackSerializer.ConvertFromJson(json);
+		//using var stream = File.Open(profile.Filename, FileMode.Open);
 		cur_profile = profile;
-		return MessagePackSerializer.Deserialize<Game.GameState>(stream);
+		return MessagePackSerializer.Deserialize<Game.GameState>(bytes);
 	}
 }

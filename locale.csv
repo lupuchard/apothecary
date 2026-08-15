@@ -53,6 +53,12 @@ AFTERNOON,Afternoon
 NIGHT,Night
 AFTER_RAINING,After rain
 IN_MOONLIGHT,In moonlight
+PREVERNAL,Prevernal
+VERNAL,Vernal
+ESTIVAL,Estival
+SEROTINAL,Serotinal
+AUTUMNAL,Autumnal
+HIBERNAL,Hibernal
 JOURNAL,Journal
 JOURNAL_NOTES,Notes - {0}
 EUREKA,Eureka!
@@ -76,3 +82,12 @@ EXIT_GAME,Exit
 DELETE,Delete (hold)
 CANCEL,Cancel
 DELETE_CONFIRM,Confirm deletion of profile {0}
+TOO_EARLY_TO_SLEEP,Too early to sleep.
+EARLY_TO_SLEEP,{0} actions left in day. Sleep anyway?
+TIME_TO_SLEEP,Time to sleep.
+GO_TO_SLEEP,Go to sleep
+IT_IS_NOW_DAY,It is now day {0} of {1}.
+WAKE_UP,Wake up
+GAINED,Gained {0} {1}
+EARNED,Earned {0} {1}
+LOST,Lost {0} {1}

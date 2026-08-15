@@ -4,6 +4,8 @@ namespace Apothecary;
 
 public partial class SlowButton : Button {
 	[Export] public double Duration { get; set; } = 0.5;
+	[Export] public AudioStreamPlayer? StartSound { get; set; }
+	[Export] public AudioStreamPlayer? FinishSound { get; set; }
 	
 	[Signal] public delegate void PressFinishedEventHandler();
 	private ProgressBar? progress_bar;
@@ -17,10 +19,12 @@ public partial class SlowButton : Button {
 	}
 
 	private void OnPressed() {
+		StartSound?.Play();
 		tween?.Kill();
 		tween = CreateTween();
 		tween.TweenProperty(progress_bar, "value", 1.0, Duration);
 		tween.Finished += () => {
+			FinishSound?.Play();
 			progress_bar?.Value = 0;
 			EmitSignalPressFinished();
 			tween = null;

@@ -41,11 +41,15 @@ public partial class Game : RefCounted {
 		public Journal journal = journal;
 		
 		public List<int> resources = [];
+		public List<int> daily_resource_summary = [];
 	}
 
 	public GameState state { get; private set; }
 
 	public int TimeOfDay => state.time_of_day;
+	public int Day => state.day;
+	public Season Season => state.season;
+	public int Year => state.year;
 
 	private readonly Dictionary<(long, RegionModel), List<ItemModel>> foraging_possibilities_cache = [];
 	private List<ItemModel?> current_foraging_results = [];
@@ -65,8 +69,7 @@ public partial class Game : RefCounted {
 	private readonly Dictionary<UnlockRequirementType, List<RegionModel>> region_unlocks = [];
 
 	public Game() {
-		state = new(new Journal());
-		state.journal.OnConfirmation = OnJournalConfirmation;
+		state = new GameState(new Journal() { OnConfirmation = OnJournalConfirmation });
 			
 		for (var i = 1; i < (int)UnlockRequirementType.COUNT; i++) {
 			region_unlocks.Add((UnlockRequirementType)i, []);
@@ -89,29 +92,39 @@ public partial class Game : RefCounted {
 			region_unlocks[type] = [..region_unlocks[type].OrderBy(x => x.UnlockRequirement.Amount)];
 		}
 
-		for (var i = 0; i < (int)Resource.COUNT; i++) {
+		/*for (var i = 0; i < (int)Resource.COUNT; i++) {
 			state.resources.Add(0);
-		}
+			state.daily_resource_summary.Add(0);
+		}*/
 		
 		MakeNewVisitor(World.GetRequest("pain"));
 	}
 
-	public static void LoadGame(GameState state) {
-		Instance = new Game();
-		Instance.state = state;
+	public void LoadGame(GameState new_state) {
+		state = new_state;
 	}
 
-	public static void NewGame() {
-		Instance = new Game();
+	public void NewGame() {
+		state = new GameState(new Journal() { OnConfirmation = OnJournalConfirmation });
 	}
 
 	public int GetResource(Resource resource) {
-		return state.resources[(int)resource];
+		return (int)resource >= state.resources.Count ? 0 : state.resources[(int)resource];
 	}
 
 	public void ModifyResource(Resource resource, int amount) {
+		EnsureListSize(state.resources, (int)resource);
+		EnsureListSize(state.daily_resource_summary, (int)resource);
+		
 		state.resources[(int)resource] += amount;
+		state.daily_resource_summary[(int)resource] += amount;
 		EmitSignalResourceUpdated(resource, Math.Max(amount, 0));
+	}
+
+	private static void EnsureListSize<T>(List<T> list, int min_index) where T : struct {
+		while (list.Count <= min_index) {
+			list.Add(default(T));
+		}
 	}
 
 	public void GetReward(Reward reward) {
@@ -156,6 +169,7 @@ public partial class Game : RefCounted {
 			location.DailyRecovery(ref state.rando);
 		}
 
+		state.daily_resource_summary.Clear();
 		UpdateVisitors();
 		EmitSignalTimeChanged();
 	}

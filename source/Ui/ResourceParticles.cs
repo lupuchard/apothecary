@@ -27,8 +27,7 @@ public partial class ResourceParticles : Node2D {
 		particle_material.InitialVelocityMax = 100.0f;*/
 
 		for (var i = 1; i < (int)Resource.COUNT; i++) {
-			var texture_filename = $"res://assets/resources/{((Resource)i).TrString().ToLowerInvariant()}_small.png";
-			resource_textures.Add(GD.Load<Texture2D>(texture_filename));
+			resource_textures.Add(GD.Load<Texture2D>(((Resource)i).SmallSpritePath()));
 		}
 	}
 

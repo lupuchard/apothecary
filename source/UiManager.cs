@@ -4,7 +4,7 @@ using Godot;
 namespace Apothecary;
 
 public partial class UiManager : Node2D {
-	private Node2D? map;
+	private MapColor? map;
 	private Button? background_exit_button;
 	private ForagingUi? foraging_ui;
 	private HomeUi? home_ui;
@@ -16,6 +16,9 @@ public partial class UiManager : Node2D {
 	private BaseUi? current_ui;
 
 	private PlayerCamera? player_camera;
+
+	private AudioStreamPlayer? click_sound1;
+	private AudioStreamPlayer? click_sound2;
 	
 	public override void _Ready() {
 		background_exit_button = GetNode<Button>("%BackgroundExitButton");
@@ -32,7 +35,7 @@ public partial class UiManager : Node2D {
 		home_icon = GetNode<BaseButton>("%HomeIcon");
 		home_icon.Pressed += () => OpenUi(home_ui);
 		
-		map = GetNode<Node2D>("%Map");
+		map = GetNode<MapColor>("%Map");
 
 		foreach (var child in map.GetChildren()) {
 			if (child is RegionSelect region_select) {
@@ -45,6 +48,13 @@ public partial class UiManager : Node2D {
 		main_menu.GameStarted += CloseUi;
 
 		player_camera = GetNode<PlayerCamera>("PlayerCamera");
+		
+		click_sound1 = GetNode<AudioStreamPlayer>("%ClickSound1");
+		click_sound2 = GetNode<AudioStreamPlayer>("%ClickSound2");
+		AttachButtonClickSound(this);
+
+		Game.Instance.TimeChanged += OnTimeChanged;
+		OnTimeChanged();
 	}
 	
 	public override void _Input(InputEvent input_event) {
@@ -55,6 +65,11 @@ public partial class UiManager : Node2D {
 				main_menu?.Open();
 			}
 		}
+	}
+
+	private void OnTimeChanged() {
+		var game = Game.Instance;
+		map?.SetColor(game.TimeOfDay, game.Season, 1.0);
 	}
 
 	private void OnRegionSelected(RegionSelect.Type type, RegionModel? region) {
@@ -91,5 +106,25 @@ public partial class UiManager : Node2D {
 		}
 		
 		player_camera?.CanPan = true;
+	}
+
+	private void AttachButtonClickSound(Node parent) {
+		foreach (var child in parent.FindChildren("*", "Button")) {
+			if (child is Button button) {
+				button.Pressed += () => click_sound1?.Play();
+			}
+		}
+		
+		foreach (var child in parent.FindChildren("*", "TextureButton")) {
+			if (child is TextureButton button) {
+				button.Pressed += () => click_sound1?.Play();
+			}
+		}
+		
+		foreach (var child in parent.FindChildren("*", "TabContainer")) {
+			if (child is TabContainer button) {
+				button.TabChanged += _ => click_sound2?.Play();
+			}
+		}
 	}
 }

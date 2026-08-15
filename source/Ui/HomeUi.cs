@@ -7,6 +7,7 @@ public partial class HomeUi : BaseUi {
 	private VisitorsTabUi? visitors_tab;
 	private KitchenTabUi? kitchen_tab;
 	private JournalTabUi? journal_tab;
+	private BedroomTabUi? bedroom_tab;
 
 	private Container? resource_list;
 	private PackedScene? resource_info_scene;
@@ -17,8 +18,7 @@ public partial class HomeUi : BaseUi {
 		visitors_tab = GetNode<VisitorsTabUi>("%VisitorsTab");
 		kitchen_tab = GetNode<KitchenTabUi>("%KitchenTab");
 		journal_tab = GetNode<JournalTabUi>("%JournalTab");
-		tab_container.TabChanged += (_) => Update();
-		tab_container.SetCurrentTab(0);
+		bedroom_tab = GetNode<BedroomTabUi>("%BedroomTab");
 		
 		resource_info_scene = ResourceLoader.Load<PackedScene>("res://controls/resource_info.tscn");
 		resource_list = GetNode<Container>("%ResourceList");
@@ -32,6 +32,9 @@ public partial class HomeUi : BaseUi {
 			resource_list.AddChild(resource_ui);
 			resource_ui.Update();
 		}
+		
+		tab_container.TabChanged += (_) => Update();
+		tab_container.SetCurrentTab(0);
 	}
 
 	public void Update() {
@@ -39,6 +42,7 @@ public partial class HomeUi : BaseUi {
 			case 0: visitors_tab?.Update(); break;
 			case 1: kitchen_tab?.Update(); break;
 			case 2: journal_tab?.Update(); break;
+			case 3: bedroom_tab?.Update(); break;
 		}
 
 		foreach (var child in resource_list!.GetChildren()) {
@@ -53,6 +57,7 @@ public partial class HomeUi : BaseUi {
 			case 0: visitors_tab?.CloseUi(); break;
 			case 1: kitchen_tab?.CloseUi(); break;
 			case 2: journal_tab?.Update(); break;
+			case 3: bedroom_tab?.Update(); break;
 		}
 	}
 }
