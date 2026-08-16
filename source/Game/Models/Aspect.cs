@@ -1,12 +1,11 @@
 using System;
 using Godot;
-using MessagePack;
-using MessagePack.Formatters;
+using Serde;
 
 namespace Apothecary;
 
-[MessagePackFormatter(typeof(AspectFormatter))]
-public class Aspect {
+[GenerateSerde(With = typeof(AspectSerdeObj))]
+public partial class Aspect {
 	public static readonly Color Orange = new(1, 0.5f, 0);
 	public static readonly Color Chartreuse = new(0.5f, 1, 0);
 	public static readonly Color SpringGreen = new(0, 1, 0.5f);
@@ -29,23 +28,20 @@ public class Aspect {
 		Sprite = ResourceLoader.Load<Texture2D>($"res://assets/aspect/{id}.png");
 		this.mutates_into = mutates_into;
 	}
-	
-	public class AspectFormatter : IMessagePackFormatter<Aspect?> {
-		public void Serialize(ref MessagePackWriter writer, Aspect? value, MessagePackSerializerOptions options) {
-			if (value == null) {
-				writer.WriteNil();
-			} else {
-				options.Resolver.GetFormatterWithVerify<string>().Serialize(ref writer, value.Id, options);
-			}
-		}
+}
 
-		public Aspect? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) {
-			if (reader.IsNil) {
-				return null;
-			} else {
-				var id = options.Resolver.GetFormatterWithVerify<string>().Deserialize(ref reader, options);
-				return Game.Instance.World.GetAspect(id) ?? UnknownAspect;
-			}
+public class AspectSerdeObj : ISerde<Aspect?> {
+	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("Aspect");
+
+	public void Serialize(Aspect? aspect, ISerializer serializer) {
+		if (aspect == null) {
+			serializer.WriteNull();
+		} else {
+			serializer.WriteString(aspect.Id);
 		}
+	}
+
+	public Aspect? Deserialize(IDeserializer deserializer) {
+		return deserializer.TryReadNull() ? null : Game.Instance.World.GetAspect(deserializer.ReadString());
 	}
 }

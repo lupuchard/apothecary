@@ -1,14 +1,14 @@
 using System;
-using MessagePack;
+using Serde;
 
 namespace Apothecary;
 
-[MessagePackObject]
+[GenerateSerde]
 public partial class Region(RegionModel Model) {
-	[Key("model")] public RegionModel Model { get; } = Model;
-	[Key("remaining")] public int Remaining { get; private set; } = Model.MaxForage;
-	[Key("unlocked")] public bool Unlocked { get; set; }
-	[Key("known")] public bool Known { get; set; } = true;
+	public RegionModel Model { get; } = Model; 
+	public int Remaining { get; set; } = Model.MaxForage;
+	public bool Unlocked { get; set; }
+	public bool Known { get; set; } = true;
 
 	public void ConsumeForage(int amount = 1) {
 		Remaining = Math.Max(0, Remaining - amount);

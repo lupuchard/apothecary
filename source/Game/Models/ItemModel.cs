@@ -1,12 +1,11 @@
 using System.Collections.Immutable;
 using Godot;
-using MessagePack;
-using MessagePack.Formatters;
+using Serde;
 
 namespace Apothecary;
 
-[MessagePackFormatter(typeof(ItemModelFormatter))]
-public class ItemModel {
+[GenerateSerde(With = typeof(ItemModelSerdeObj))]
+public partial class ItemModel {
 	public string Id { get; }
 	public int Index { get; set; } = 0;
 	public ImmutableArray<(Aspect, int)> Aspects { get; }
@@ -34,23 +33,20 @@ public class ItemModel {
 		
 		Sprite = ResourceLoader.Load<Texture2D>($"res://assets/item/{id}.png");
 	}
-	
-	public class ItemModelFormatter : IMessagePackFormatter<ItemModel?> {
-		public void Serialize(ref MessagePackWriter writer, ItemModel? value, MessagePackSerializerOptions options) {
-			if (value == null) {
-				writer.WriteNil();
-			} else {
-				options.Resolver.GetFormatterWithVerify<string>().Serialize(ref writer, value.Id, options);
-			}
-		}
+}
 
-		public ItemModel? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) {
-			if (reader.IsNil) {
-				return null;
-			} else {
-				var id = options.Resolver.GetFormatterWithVerify<string>().Deserialize(ref reader, options);
-				return Game.Instance.World.GetItemModel(id) ?? UnknownItemModel;
-			}
+public class ItemModelSerdeObj : ISerde<ItemModel?> {
+	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("ItemModel");
+
+	public void Serialize(ItemModel? item, ISerializer serializer) {
+		if (item == null) {
+			serializer.WriteNull();
+		} else {
+			serializer.WriteString(item.Id);
 		}
+	}
+
+	public ItemModel? Deserialize(IDeserializer deserializer) {
+		return deserializer.TryReadNull() ? null : Game.Instance.World.GetItemModel(deserializer.ReadString());
 	}
 }

@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using MessagePack;
-using MessagePack.Formatters;
+using Serde;
 
 namespace Apothecary;
 
-[MessagePackFormatter(typeof(RequestModelFormatter))]
-public class RequestModel {
+[GenerateSerde(With = typeof(RequestModelSerdeObj))]
+public partial class RequestModel {
 	private readonly struct TextGen(string[] base_texts, Dictionary<int, string[]> fillers) {
 		public readonly string[] base_texts = base_texts;
 		public readonly Dictionary<int, string[]> fillers = fillers;
@@ -46,23 +45,20 @@ public class RequestModel {
 		}
 		return text;
 	}
-	
-	public class RequestModelFormatter : IMessagePackFormatter<RequestModel?> {
-		public void Serialize(ref MessagePackWriter writer, RequestModel? value, MessagePackSerializerOptions options) {
-			if (value == null) {
-				writer.WriteNil();
-			} else {
-				options.Resolver.GetFormatterWithVerify<string>().Serialize(ref writer, value.Id, options);
-			}
-		}
+}
 
-		public RequestModel? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) {
-			if (reader.IsNil) {
-				return null;
-			} else {
-				var id = options.Resolver.GetFormatterWithVerify<string>().Deserialize(ref reader, options);
-				return Game.Instance.World.GetRequest(id) ?? UnknownRequestModel;
-			}
+public class RequestModelSerdeObj : ISerde<RequestModel?> {
+	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("RequestModel");
+
+	public void Serialize(RequestModel? request, ISerializer serializer) {
+		if (request == null) {
+			serializer.WriteNull();
+		} else {
+			serializer.WriteString(request.Id);
 		}
+	}
+
+	public RequestModel? Deserialize(IDeserializer deserializer) {
+		return deserializer.TryReadNull() ? null : Game.Instance.World.GetRequest(deserializer.ReadString());
 	}
 }

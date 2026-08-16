@@ -1,7 +1,9 @@
 using System;
+using Serde;
 
 namespace Apothecary;
 
+[GenerateSerde]
 public enum Season {
 	Prevernal, Vernal, Estival, Serotinal, Autumnal, Hibernal
 }

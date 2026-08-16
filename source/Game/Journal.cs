@@ -2,17 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using MessagePack;
+using Serde;
 
 namespace Apothecary;
 
-[MessagePackObject(AllowPrivate=true)]
-public partial class Journal {
+[GenerateSerde]
+public partial class Journal(
+	ImmutableArray<(string, JournalEntry)> Entries, 
+	ImmutableArray<JournalEntry> Solved, 
+	int TotalConfirmed
+) {
 	public const int ConfirmationRequirement = 3;
-	[Key("entries")] private readonly Dictionary<string, JournalEntry> entries = [];
-	[Key("solved")] private readonly HashSet<JournalEntry> solved = [];
-	[Key("total_confirmed")] public int TotalConfirmed { get; private set; }
-	[IgnoreMember] public Action<IEnumerable<ItemModel>>? OnConfirmation;
+
+	private readonly Dictionary<string, JournalEntry> entries = Entries.ToDictionary(x => x.Item1, x => x.Item2);
+	public ImmutableArray<(string, JournalEntry)> Entries => [..entries.Select(x => (x.Key, x.Value))];
+	
+	private readonly HashSet<JournalEntry> solved = Solved.ToHashSet();
+	public ImmutableArray<JournalEntry> Solved => [..solved];
+
+	public int TotalConfirmed { get; private set; } = TotalConfirmed;
+	
+	public Journal(): this([], [], 0) { }
+	
+	[SerdeMemberOptions(Skip = true)]
+	public Action<IEnumerable<ItemModel>>? OnConfirmation; // ignore
 	
 	public bool IsDiscovered(ItemModel item) {
 		return entries.ContainsKey(item.Id);

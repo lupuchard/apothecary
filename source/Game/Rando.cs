@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Numerics;
-using MessagePack;
+using Serde;
 
 namespace Apothecary;
 
-[MessagePackObject(AllowPrivate=true)]
+[GenerateSerde(With = typeof(RandoSerdeObj))]
 public partial struct Rando {
-	[Key(0)] private ulong s0;
-	[Key(1)] private ulong s1;
-	[Key(2)] private ulong s2;
-	[Key(3)] private ulong s3;
+	private ulong s0;
+	private ulong s1;
+	private ulong s2;
+	private ulong s3;
 
 	public Rando(ulong seed) {
 		var z = seed;
@@ -20,11 +20,15 @@ public partial struct Rando {
 		s3 = InitS(ref z);
 	}
 
-	private Rando(ulong s0, ulong s1, ulong s2, ulong s3) {
+	public Rando(ulong s0, ulong s1, ulong s2, ulong s3) {
 		this.s0 = s0;
 		this.s1 = s1;
 		this.s2 = s2;
 		this.s3 = s3;
+	}
+
+	public (ulong, ulong, ulong, ulong) State() {
+		return (s0, s1, s2, s3);
 	}
 
 	private static ulong InitS(ref ulong z) {
@@ -87,5 +91,29 @@ public partial struct Rando {
 
 	public T Pick<T>(IList<T> list) {
 		return list[RandInt(0, list.Count)];
+	}
+}
+
+public class RandoSerdeObj : ISerde<Rando> {
+	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("Rando");
+	
+	public void Serialize(Rando rando, ISerializer serializer) {
+		var (s0, s1, s2, s3) = rando.State();
+		var type_ser = serializer.WriteType(SerdeInfo);
+		type_ser.WriteU64(SerdeInfo, 0, s0);
+		type_ser.WriteU64(SerdeInfo, 1, s1);
+		type_ser.WriteU64(SerdeInfo, 2, s2);
+		type_ser.WriteU64(SerdeInfo, 3, s3);
+		type_ser.End(SerdeInfo);
+	}
+
+	public Rando Deserialize(IDeserializer deserializer) {
+		var type_ser = deserializer.ReadType(SerdeInfo);
+		var s0 = type_ser.ReadU64(SerdeInfo, 0);
+		var s1 = type_ser.ReadU64(SerdeInfo, 1);
+		var s2 = type_ser.ReadU64(SerdeInfo, 2);
+		var s3 = type_ser.ReadU64(SerdeInfo, 3);
+		type_ser.End(SerdeInfo);
+		return new Rando(s0, s1, s2, s3);
 	}
 }

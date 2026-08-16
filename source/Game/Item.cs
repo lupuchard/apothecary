@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Godot;
-using MessagePack;
+using Serde;
 
 namespace Apothecary;
 
-[MessagePackObject]
-public readonly struct Item : IEquatable<Item> {
-	[Key("raw")] public readonly ImmutableList<ItemModel> Raw;
-	[Key("aspects")] public readonly ImmutableList<(Aspect, int)> Aspects;
-	[Key("type")] public readonly ItemType Type;
+[GenerateSerde]
+public readonly partial struct Item : IEquatable<Item> {
+	
+	[SerdeMemberOptions(Proxy = typeof(ImmutableListProxy))]
+	public ImmutableList<ItemModel> Raw { get; init; }
+	
+	[SerdeMemberOptions(Proxy = typeof(ImmutableListProxy))]
+	public ImmutableList<(Aspect, int)> Aspects { get; init; }
+	
+	public ItemType Type { get; init; }
 
 	private Item(ImmutableList<ItemModel> raw, ImmutableList<(Aspect, int)> aspects, ItemType type) {
 		Raw = raw;

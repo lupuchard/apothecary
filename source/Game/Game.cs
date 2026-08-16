@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Godot;
-using MessagePack;
+using Serde;
 
 namespace Apothecary;
 
@@ -24,8 +24,8 @@ public partial class Game : RefCounted {
 
 	public readonly World World = CreateWorld();
 
-	[MessagePackObject(keyAsPropertyName: true)]
-	public class GameState(Journal journal) {
+	[GenerateSerde]
+	public partial class GameState(Journal journal) {
 		public Rando rando = new (seed: 2);
 		public int day = 0;
 		public Season season = Season.Estival;
