@@ -1,9 +1,7 @@
 using System;
-using Serde;
 
 namespace Apothecary;
 
-[GenerateSerde]
 public enum Rarity {
 	Common,
 	Rare,

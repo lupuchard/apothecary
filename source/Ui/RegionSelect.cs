@@ -13,7 +13,6 @@ public partial class RegionSelect : Area2D {
 	[Export] public string? region_id { get; set; }
 	[Export] public Polygon2D? fog_poly { get; set; }
 	private Type type;
-	private Region? region;
 	private RegionLabel? region_label;
 	private Node? fog_viewport;
 
@@ -33,12 +32,6 @@ public partial class RegionSelect : Area2D {
 
 		if (region_id == "home") {
 			type = Type.Home;
-		} else {
-			region = Game.Instance.GetRegion(region_id);
-			if (region == null) {
-				GD.PushError("Region '" + region_id + "' not found: " + GetPath());
-				return;
-			}
 		}
 
 		var region_labels = GetNode<Control>("%RegionLabels");
@@ -87,22 +80,32 @@ public partial class RegionSelect : Area2D {
 		
 		Update();
 		Game.Instance.RegionUnlocked += (id) => {
-			if (id == region?.Model.Id) {
+			if (id == region_id) {
 				Update();
 			}
 		};
 	}
 
-	public void Update() {
-		if (region_id != null && region != null && fog_poly != null) {
+	public void Update(bool instant = false) {
+		if (region_id != null && fog_poly != null) {
+			var region = Game.Instance.GetRegion(region_id);
+			if (region == null) {
+				GD.PushError("Region '" + region_id + "' not found: " + GetPath());
+				return;
+			}
+			
 			var poly_line = fog_poly.GetChild<Line2D>(0);
 			if (fog_shown && region.Unlocked) {
 				hide_fog_tween?.Kill();
-				hide_fog_tween = CreateTween();
-				hide_fog_tween.TweenProperty(fog_poly, "modulate", new Color(1, 1, 1, 0.5f), 0.5);
-				hide_fog_tween.TweenProperty(poly_line, "modulate", Colors.Transparent, 1.0);
-				hide_fog_tween.Parallel().TweenProperty(fog_poly, "modulate", Colors.Transparent, 0.5);
-				hide_fog_tween.Finished += () => fog_poly.Hide();
+				if (instant) {
+					fog_poly.Hide();
+				} else {
+					hide_fog_tween = CreateTween();
+					hide_fog_tween.TweenProperty(fog_poly, "modulate", new Color(1, 1, 1, 0.5f), 0.5);
+					hide_fog_tween.TweenProperty(poly_line, "modulate", Colors.Transparent, 1.0);
+					hide_fog_tween.Parallel().TweenProperty(fog_poly, "modulate", Colors.Transparent, 0.5);
+					hide_fog_tween.Finished += () => fog_poly.Hide();
+				}
 				fog_shown = false;
 			} else if (!fog_shown && !region.Unlocked) {
 				hide_fog_tween?.Kill();
@@ -117,6 +120,7 @@ public partial class RegionSelect : Area2D {
 	}
 
 	public override void _Input(InputEvent inputEvent) {
+		var region = region_id == null ? null : Game.Instance.GetRegion(region_id);
 		if (hovering && region?.Unlocked != false && inputEvent is InputEventMouseButton { Pressed: true, ButtonIndex: MouseButton.Left }) {
 			EmitSignalSelected(type, region?.Model);
 		}

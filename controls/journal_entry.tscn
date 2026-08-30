@@ -92,8 +92,10 @@ text = "WHERE"
 
 [node name="WhereOption" type="OptionButton" parent="JournalInfo" unique_id=1558864683]
 custom_minimum_size = Vector2(105, 0)
+custom_maximum_size = Vector2(105, -1)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_vmb3e")
+fit_to_longest_item = false
 item_count = 1
 popup/item_0/text = "Location 1"
 popup/item_0/id = 0
@@ -103,6 +105,7 @@ layout_mode = 2
 text = "WHEN"
 
 [node name="WhenOption" type="OptionButton" parent="JournalInfo" unique_id=1148998479]
+custom_maximum_size = Vector2(105, -1)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_vmb3e")
 item_count = 1
@@ -114,6 +117,7 @@ layout_mode = 2
 text = "RARITY"
 
 [node name="RarityOption" type="OptionButton" parent="JournalInfo" unique_id=2038270155]
+custom_maximum_size = Vector2(105, -1)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_vmb3e")
 item_count = 3

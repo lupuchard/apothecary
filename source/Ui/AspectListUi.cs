@@ -13,7 +13,6 @@ public partial class AspectListUi : HBoxContainer {
 
 	public override void _Ready() {
 		foreach (var child in GetChildren()) {
-			RemoveChild(child);
 			child.QueueFree();
 		}
 

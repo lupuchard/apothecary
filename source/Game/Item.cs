@@ -3,19 +3,12 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Godot;
-using Serde;
 
 namespace Apothecary;
 
-[GenerateSerde]
-public readonly partial struct Item : IEquatable<Item> {
-	
-	[SerdeMemberOptions(Proxy = typeof(ImmutableListProxy))]
+public readonly struct Item : IEquatable<Item> {
 	public ImmutableList<ItemModel> Raw { get; init; }
-	
-	[SerdeMemberOptions(Proxy = typeof(ImmutableListProxy))]
 	public ImmutableList<(Aspect, int)> Aspects { get; init; }
-	
 	public ItemType Type { get; init; }
 
 	private Item(ImmutableList<ItemModel> raw, ImmutableList<(Aspect, int)> aspects, ItemType type) {
@@ -73,11 +66,7 @@ public readonly partial struct Item : IEquatable<Item> {
 	}
 
 	public string GetName() {
-		if (Is(ItemType.Infusion)) {
-			return "INFUSION";
-		} else {
-			return Raw[0].Id.ToUpperInvariant();
-		}
+		return Is(ItemType.Infusion) ? "INFUSION" : Raw[0].Id.ToUpperInvariant();
 	}
 
 	public Texture2D GetSprite() {

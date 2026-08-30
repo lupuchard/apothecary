@@ -46,6 +46,7 @@ public partial class UiManager : Node2D {
 		
 		main_menu = GetNode<MainMenuUi>("%MainMenu");
 		main_menu.GameStarted += CloseUi;
+		main_menu.GameStarted += () => Update(true);
 
 		player_camera = GetNode<PlayerCamera>("PlayerCamera");
 		
@@ -79,7 +80,7 @@ public partial class UiManager : Node2D {
 			foraging_ui.Region = Game.Instance.GetRegion(region.Id);
 			OpenUi(foraging_ui);
 		} else if (type == RegionSelect.Type.Home && home_ui != null) {
-			home_ui.Update();
+			home_ui.Update(false);
 			OpenUi(home_ui);
 		}
 	}
@@ -106,6 +107,14 @@ public partial class UiManager : Node2D {
 		}
 		
 		player_camera?.CanPan = true;
+	}
+
+	public void Update(bool instant) {
+		foraging_ui?.Update();
+		home_ui?.Update(instant);
+		foreach (var region in region_selects) {
+			region.Update(instant);
+		}
 	}
 
 	private void AttachButtonClickSound(Node parent) {

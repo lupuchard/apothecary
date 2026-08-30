@@ -2,6 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://bxsdd6eo4joxe" path="res://assets/theme/ornate.png" id="1"]
 [ext_resource type="FontFile" uid="uid://n5lvdglrdyp4" path="res://assets/theme/pixelplay.ttf" id="2"]
+[ext_resource type="StyleBox" uid="uid://dvwstcemwp00k" path="res://assets/theme/ButtonHoverStyleBox.tres" id="2_jttyq"]
+[ext_resource type="StyleBox" uid="uid://d2c7mqp0f6107" path="res://assets/theme/ButtonStyleBox.tres" id="3_2tcy0"]
 [ext_resource type="StyleBox" uid="uid://b0eg3d2wk8pei" path="res://assets/theme/FancyPanel.tres" id="3_qt738"]
 [ext_resource type="StyleBox" uid="uid://cl5k7bvj2roem" path="res://assets/theme/TabPanel.tres" id="4_10pv6"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="4_nbpqc"]
@@ -163,30 +165,6 @@ cache/0/27/0/scale = 1.0
 [sub_resource type="StyleBoxEmpty" id="1"]
 
 [sub_resource type="StyleBoxEmpty" id="2"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lb5d8"]
-content_margin_left = 7.0
-content_margin_top = 7.0
-content_margin_right = 4.0
-content_margin_bottom = 7.0
-texture = ExtResource("1")
-texture_margin_left = 9.0
-texture_margin_top = 7.0
-texture_margin_right = 9.0
-texture_margin_bottom = 7.0
-region_rect = Rect2(0, 0, 23, 15)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_10pv6"]
-content_margin_left = 7.0
-content_margin_top = 7.0
-content_margin_right = 4.0
-content_margin_bottom = 7.0
-texture = ExtResource("1")
-texture_margin_left = 3.0
-texture_margin_top = 7.0
-texture_margin_right = 3.0
-texture_margin_bottom = 7.0
-region_rect = Rect2(8, 0, 7, 15)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d6vg6"]
 content_margin_left = 7.0
@@ -621,8 +599,8 @@ Button/constants/hseparation = 2
 Button/fonts/font = SubResource("66")
 Button/styles/disabled = SubResource("1")
 Button/styles/focus = SubResource("2")
-Button/styles/hover = SubResource("StyleBoxTexture_lb5d8")
-Button/styles/normal = SubResource("StyleBoxTexture_10pv6")
+Button/styles/hover = ExtResource("2_jttyq")
+Button/styles/normal = ExtResource("3_2tcy0")
 Button/styles/pressed = SubResource("StyleBoxTexture_d6vg6")
 CheckBox/colors/font_color = Color(0.88, 0.88, 0.88, 1)
 CheckBox/colors/font_color_disabled = Color(0.901961, 0.901961, 0.901961, 0.117647)

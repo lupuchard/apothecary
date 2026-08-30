@@ -1,3 +1,4 @@
+using System.Linq;
 using Godot;
 
 namespace Apothecary;
@@ -57,7 +58,7 @@ public partial class MainMenuUi : PanelContainer {
 		delete_game_menu = GetNode<Control>("%DeleteGameMenu");
 		delete_game_menu_label = GetNode<Label>("%DeleteGameMenuLabel");
 		delete_game_button = GetNode<SlowButton>("%DeleteGameButton");
-		delete_game_button.PressFinished += ConfirmDeleteProfile;
+		delete_game_button.Pressed += ConfirmDeleteProfile;
 		cancel_delete_game_button = GetNode<Button>("%CancelDeleteGameButton");
 		cancel_delete_game_button.Pressed += CloseDeleteProfile;
 
@@ -91,7 +92,7 @@ public partial class MainMenuUi : PanelContainer {
 	private void OnContinue() {
 		var profiles = save_manager.GetProfiles();
 		if (profiles.Count > 0) {
-			LoadGame(profiles[0]);
+			LoadGame(profiles.MaxBy(profile => profile.LastLoaded)!);
 		}
 	}
 
@@ -154,7 +155,7 @@ public partial class MainMenuUi : PanelContainer {
 
 	private void OnExitGame() {
 		save_manager.SaveGame(Game.Instance);
-		Game.Instance.NewGame();
+		//Game.Instance.NewGame();
 		GetTree().Quit();
 	}
 }

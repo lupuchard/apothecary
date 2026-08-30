@@ -14,4 +14,8 @@ public readonly struct UnlockRequirement(UnlockRequirementType Type, int Amount,
 	public static UnlockRequirement ConfirmedJournalEntries(int amount) {
 		return new UnlockRequirement(UnlockRequirementType.ConfirmedJournalEntries, amount);
 	}
+
+	public static UnlockRequirement Day(int day) {
+		return new UnlockRequirement(UnlockRequirementType.Day, day);
+	}
 }

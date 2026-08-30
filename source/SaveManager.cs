@@ -2,28 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Godot;
-using Serde;
-using Serde.Json;
+using TupleAsJsonArray;
 using FileAccess = Godot.FileAccess;
 
 namespace Apothecary;
 
-[GenerateSerde]
-public partial class Profile: IComparable<Profile> {
-	public required string Name;
-	public required string Filename;
-	public required DateTimeOffset Created;
-	public required DateTimeOffset LastLoaded;
+public class Profile: IComparable<Profile> {
+	public required string Name { get; set; }
+	public required string Filename { get; set; }
+	public required DateTimeOffset Created { get; set; }
+	public required DateTimeOffset LastLoaded { get; set; }
 	
 	public int CompareTo(Profile? other) {
 		return other == null ? 1 : LastLoaded.CompareTo(other.LastLoaded);
 	}
 }
 
-[GenerateSerde]
-public partial class SaveMeta {
-	public required List<Profile> Profiles;
+public class SaveMeta {
+	public required List<Profile> Profiles { get; set; }
 }
 
 public class SaveManager {
@@ -31,6 +29,12 @@ public class SaveManager {
 	private readonly string SAVES_DIRECTORY = ProjectSettings.GlobalizePath("user://saves/");
 	private SaveMeta? meta = null;
 	private Profile? cur_profile = null;
+
+	private readonly JsonSerializerOptions json_options = new() {
+		Converters = {
+			new TupleConverterFactory(),
+		}
+	};
 
 	public Profile CreateProfile(string name) {
 		var filename_base = new string(name.Where(c => !char.IsWhiteSpace(c)).ToArray());
@@ -65,7 +69,7 @@ public class SaveManager {
 		profile ??= cur_profile;
 		if (profile == null) return;
 		Directory.CreateDirectory(SAVES_DIRECTORY);
-		var json = JsonSerializer.Serialize(game.state);
+		var json = JsonSerializer.Serialize(game.state, json_options);
 		File.WriteAllText(profile.Filename, json);
 		profile.LastLoaded = DateTimeOffset.Now;
 		SaveMeta();
@@ -79,24 +83,24 @@ public class SaveManager {
 		if (meta == null) {
 			if (File.Exists(META_FILENAME)) {
 				var json = File.ReadAllText(META_FILENAME);
-				meta = JsonSerializer.Deserialize<SaveMeta>(json);
+				meta = JsonSerializer.Deserialize<SaveMeta>(json, json_options);
 			} else {
 				meta = new SaveMeta() { Profiles = [] };
 			}
 		}
 
-		meta.Profiles.Sort();
+		meta!.Profiles.Sort();
 		return meta;
 	}
 
 	private void SaveMeta() {
-		var json = JsonSerializer.Serialize(GetMeta());
+		var json = JsonSerializer.Serialize(GetMeta(), json_options);
 		File.WriteAllText(META_FILENAME, json);
 	}
 
 	public Game.GameState LoadGame(Profile profile) {
 		var json = File.ReadAllText(profile.Filename);
 		cur_profile = profile;
-		return JsonSerializer.Deserialize<Game.GameState>(json);
+		return JsonSerializer.Deserialize<Game.GameState>(json, json_options)!;
 	}
 }

@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Serde;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Apothecary;
 
-[GenerateSerde(With = typeof(RequestModelSerdeObj))]
-public partial class RequestModel {
+[JsonConverter(typeof(RequestModelConverter))]
+public class RequestModel {
 	private readonly struct TextGen(string[] base_texts, Dictionary<int, string[]> fillers) {
 		public readonly string[] base_texts = base_texts;
 		public readonly Dictionary<int, string[]> fillers = fillers;
@@ -39,7 +41,7 @@ public partial class RequestModel {
 
 	public string GenText(ref Rando rando) {
 		var text_gen = rando.Pick(text_gens);
-		string text = rando.Pick(text_gen.base_texts);
+		var text = rando.Pick(text_gen.base_texts);
 		foreach (var (key, values) in text_gen.fillers) {
 			text = text.Replace("{" + key + "}", rando.Pick(values));
 		}
@@ -47,18 +49,12 @@ public partial class RequestModel {
 	}
 }
 
-public class RequestModelSerdeObj : ISerde<RequestModel?> {
-	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("RequestModel");
-
-	public void Serialize(RequestModel? request, ISerializer serializer) {
-		if (request == null) {
-			serializer.WriteNull();
-		} else {
-			serializer.WriteString(request.Id);
-		}
+public class RequestModelConverter : JsonConverter<RequestModel?> {
+	public override RequestModel? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+		var id = reader.GetString();
+		return id == null ? null : Game.Instance.World.GetRequest(id);
 	}
-
-	public RequestModel? Deserialize(IDeserializer deserializer) {
-		return deserializer.TryReadNull() ? null : Game.Instance.World.GetRequest(deserializer.ReadString());
+	public override void Write(Utf8JsonWriter writer, RequestModel? region, JsonSerializerOptions options) {
+		writer.WriteStringValue(region?.Id);
 	}
 }

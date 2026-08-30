@@ -1,11 +1,8 @@
-using Godot;
 using System.Collections.Generic;
 using System.Linq;
 namespace Apothecary;
 
-public partial class InfusionUi : Panel {
-	[Signal] public delegate void InfusionCreatedEventHandler();
-	
+public partial class InfusionUi : KitchenProcessBaseUi {
 	private SlowButton? button;
 	private List<InputSlot> input_slots = [];
 	private OutputSlot? output_slot;
@@ -28,10 +25,10 @@ public partial class InfusionUi : Panel {
 		input_aspects = GetNode<AspectListUi>("InputAspects");
 		output_aspects = GetNode<AspectListUi>("OutputAspects");
 
-		button.PressFinished += DoInfusion;
+		button.Pressed += DoInfusion;
 	}
 
-	public void Update() {
+	public override void Update() {
 		foreach (var slot in input_slots) {
 			slot.Update();
 		}
@@ -69,6 +66,6 @@ public partial class InfusionUi : Panel {
 			slot.Referencing = null;
 		}
 		
-		EmitSignalInfusionCreated();
+		EmitSignalOutputCreated();
 	}
 }

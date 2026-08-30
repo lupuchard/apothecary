@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using Serde;
+using System.Text.Json.Serialization;
 
 namespace Apothecary;
 
-[GenerateSerde]
-public partial class Journal(
+[method: JsonConstructor]
+public class Journal(
 	ImmutableArray<(string, JournalEntry)> Entries, 
 	ImmutableArray<JournalEntry> Solved, 
 	int TotalConfirmed
 ) {
 	public const int ConfirmationRequirement = 3;
+	public const int ObservationLimit = 15;
 
 	private readonly Dictionary<string, JournalEntry> entries = Entries.ToDictionary(x => x.Item1, x => x.Item2);
 	public ImmutableArray<(string, JournalEntry)> Entries => [..entries.Select(x => (x.Key, x.Value))];
@@ -24,7 +25,6 @@ public partial class Journal(
 	
 	public Journal(): this([], [], 0) { }
 	
-	[SerdeMemberOptions(Skip = true)]
 	public Action<IEnumerable<ItemModel>>? OnConfirmation; // ignore
 	
 	public bool IsDiscovered(ItemModel item) {
@@ -37,6 +37,13 @@ public partial class Journal(
 
 	public void Discover(ItemModel item) {
 		entries.TryAdd(item.Id, new JournalEntry(item));
+	}
+
+	public void AddObservation(ItemModel item, ItemObservation observation) {
+		var entry = (Get(item) ?? new JournalEntry(item));
+		var observations = entry.Observations.Add(observation);
+		if (observations.Count > ObservationLimit) observations = observations.RemoveAt(0);
+		entries[item.Id] = entry with { Observations = observations };
 	}
 
 	public JournalEntry? Get(ItemModel item) {

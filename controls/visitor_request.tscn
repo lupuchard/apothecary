@@ -119,4 +119,4 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 theme_type_variation = &"SmallButton"
-text = "Give"
+Text = "GIVE"

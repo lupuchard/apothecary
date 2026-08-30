@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Apothecary;
 
-public partial class JournalTabUi : MarginContainer {
+public partial class JournalTabUi : TabBaseUi {
 	private GridContainer? grid;
 	private BaseButton? prev_page_button;
 	private BaseButton? next_page_button;
@@ -18,6 +18,7 @@ public partial class JournalTabUi : MarginContainer {
 	private Control? notes_popup;
 	private Label? notes_popup_label;
 	private TextEdit? notes_text_edit;
+	private Label? item_occurrences_label;
 	private Button? close_notes_button;
 
 	private readonly List<JournalEntryUi> entries = [];
@@ -47,6 +48,7 @@ public partial class JournalTabUi : MarginContainer {
 		notes_popup?.Hide();
 		notes_popup_label = GetNode<Label>("%NotesPopupLabel");
 		notes_text_edit = GetNode<TextEdit>("%NotesTextEdit");
+		item_occurrences_label = GetNode<Label>("%ItemOccurrencesLabel");
 		close_notes_button = GetNode<Button>("%CloseNotesButton");
 		close_notes_button.Pressed += OnNotesClosed;
 
@@ -65,7 +67,15 @@ public partial class JournalTabUi : MarginContainer {
 		if (item == null) return;
 		notes_popup?.Show();
 		notes_popup_label?.Text = string.Format(Tr("JOURNAL_NOTES"), Tr(item.Id.ToUpper()));
+		
 		open_notes = Game.Instance.Journal.Get(item);
+		item_occurrences_label?.Text = string.Join("\n", open_notes?.Observations.Select(x => {
+			var region_name = Tr(x.Region.Id.ToUpper());
+			var time_of_day = Tr(x.Season.TrTimeOfDay(x.TimeOfDay));
+			return x.Amount > 1
+				? string.Format(Tr("STRING_OBSERVATION"), region_name, time_of_day) 
+				: string.Format(Tr("STRING_OBSERVATION_MULTIPLE"), region_name, time_of_day, x.Amount);
+		}) ?? []);
 		notes_text_edit?.Text = open_notes?.Notes ?? "";
 	}
 
@@ -97,7 +107,7 @@ public partial class JournalTabUi : MarginContainer {
 		Update();
 	}
 
-	public void Update() {
+	public override void Update() {
 		var all_items = Game.Instance.World.Items;
 		var offset = page * entries.Count;
 
@@ -110,5 +120,9 @@ public partial class JournalTabUi : MarginContainer {
 		page_label?.Text = string.Format(Tr("X_OF_Y"), page + 1, num_pages);
 		prev_page_button?.Disabled = page <= 0;
 		next_page_button?.Disabled = page >= num_pages - 1;
+	}
+
+	public override bool IsUnlocked() {
+		return Game.Instance.IsUnlocked(Feature.Journal);
 	}
 }

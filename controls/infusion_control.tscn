@@ -1,0 +1,132 @@
+[gd_scene format=3 uid="uid://jfem1aph6dkc"]
+
+[ext_resource type="Script" uid="uid://btnxykkj54aa4" path="res://source/Ui/InfusionUi.cs" id="1_ejjsd"]
+[ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="2_mgs4x"]
+[ext_resource type="AudioStream" uid="uid://b0a5xe3k5p0uo" path="res://assets/sound/infuse_start.mp3" id="3_7xuuk"]
+[ext_resource type="AudioStream" uid="uid://chg5ks5tcj2bj" path="res://assets/sound/infuse_end.mp3" id="4_qdgkc"]
+[ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="5_f1ibk"]
+[ext_resource type="Texture2D" uid="uid://cqylvjhpjdsig" path="res://assets/arrow.png" id="6_luspe"]
+[ext_resource type="PackedScene" uid="uid://bxwulsjuonadl" path="res://controls/output_slot.tscn" id="7_yhb6d"]
+[ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="8_gdae4"]
+[ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="9_8f13q"]
+[ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="10_iik5m"]
+[ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="11_q2osw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7m1qc"]
+
+[node name="InfusionControl" type="Panel" unique_id=458559853]
+custom_minimum_size = Vector2(0, 120)
+script = ExtResource("1_ejjsd")
+
+[node name="HoldButton" parent="." unique_id=528430593 node_paths=PackedStringArray("StartSound", "FinishSound") instance=ExtResource("2_mgs4x")]
+layout_mode = 0
+offset_left = 158.0
+offset_right = 208.0
+StartSound = NodePath("StartInfuse")
+FinishSound = NodePath("EndInfuse")
+Text = "INFUSE"
+
+[node name="StartInfuse" type="AudioStreamPlayer" parent="HoldButton" unique_id=346268133]
+stream = ExtResource("3_7xuuk")
+
+[node name="EndInfuse" type="AudioStreamPlayer" parent="HoldButton" unique_id=1080093217]
+stream = ExtResource("4_qdgkc")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1225096309]
+layout_mode = 0
+offset_top = 35.0
+offset_right = 364.0
+offset_bottom = 83.0
+alignment = 1
+
+[node name="InputSlot1" parent="HBoxContainer" unique_id=1316939867 instance=ExtResource("5_f1ibk")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="InputSlot2" parent="HBoxContainer" unique_id=1293571062 instance=ExtResource("5_f1ibk")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="InputSlot3" parent="HBoxContainer" unique_id=1403752049 instance=ExtResource("5_f1ibk")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Arrow" type="TextureRect" parent="HBoxContainer" unique_id=1865586459]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+texture = ExtResource("6_luspe")
+stretch_mode = 3
+
+[node name="OutputSlot" parent="HBoxContainer" unique_id=1510528001 instance=ExtResource("7_yhb6d")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="InputAspects" type="HBoxContainer" parent="." unique_id=1718122307]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 90.0
+offset_right = 203.0
+offset_bottom = 113.0
+theme_override_constants/separation = 1
+alignment = 1
+script = ExtResource("8_gdae4")
+
+[node name="Label" type="Label" parent="InputAspects" unique_id=687176628]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="InputAspects" unique_id=517749377]
+layout_mode = 2
+texture = ExtResource("9_8f13q")
+stretch_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="InputAspects" unique_id=1981718195]
+layout_mode = 2
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
+
+[node name="Label2" type="Label" parent="InputAspects" unique_id=800509463]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("10_iik5m")
+text = "0"
+
+[node name="TextureRect3" type="TextureRect" parent="InputAspects" unique_id=240453770]
+layout_mode = 2
+texture = ExtResource("11_q2osw")
+stretch_mode = 2
+
+[node name="OutputAspects" type="HBoxContainer" parent="." unique_id=89270555]
+layout_mode = 0
+offset_left = 211.0
+offset_top = 90.0
+offset_right = 373.0
+offset_bottom = 113.0
+theme_override_constants/separation = 1
+alignment = 1
+script = ExtResource("8_gdae4")
+
+[node name="Label" type="Label" parent="OutputAspects" unique_id=212519580]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "1"
+
+[node name="TextureRect" type="TextureRect" parent="OutputAspects" unique_id=4964175]
+layout_mode = 2
+texture = ExtResource("9_8f13q")
+stretch_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="OutputAspects" unique_id=1178192036]
+layout_mode = 2
+theme_override_constants/separation = 5
+theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
+
+[node name="Label2" type="Label" parent="OutputAspects" unique_id=1465657535]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("10_iik5m")
+text = "0"
+
+[node name="TextureRect3" type="TextureRect" parent="OutputAspects" unique_id=148181367]
+layout_mode = 2
+texture = ExtResource("11_q2osw")
+stretch_mode = 2

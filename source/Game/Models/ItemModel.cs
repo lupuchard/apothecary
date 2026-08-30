@@ -1,11 +1,13 @@
+using System;
 using System.Collections.Immutable;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Godot;
-using Serde;
 
 namespace Apothecary;
 
-[GenerateSerde(With = typeof(ItemModelSerdeObj))]
-public partial class ItemModel {
+[JsonConverter(typeof(ItemModelConverter))]
+public class ItemModel {
 	public string Id { get; }
 	public int Index { get; set; } = 0;
 	public ImmutableArray<(Aspect, int)> Aspects { get; }
@@ -35,18 +37,12 @@ public partial class ItemModel {
 	}
 }
 
-public class ItemModelSerdeObj : ISerde<ItemModel?> {
-	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("ItemModel");
-
-	public void Serialize(ItemModel? item, ISerializer serializer) {
-		if (item == null) {
-			serializer.WriteNull();
-		} else {
-			serializer.WriteString(item.Id);
-		}
+public class ItemModelConverter : JsonConverter<ItemModel?> {
+	public override ItemModel? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+		var id = reader.GetString();
+		return id == null ? null : Game.Instance.World.GetItemModel(id);
 	}
-
-	public ItemModel? Deserialize(IDeserializer deserializer) {
-		return deserializer.TryReadNull() ? null : Game.Instance.World.GetItemModel(deserializer.ReadString());
+	public override void Write(Utf8JsonWriter writer, ItemModel? item, JsonSerializerOptions options) {
+		writer.WriteStringValue(item?.Id);
 	}
 }

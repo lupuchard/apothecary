@@ -1,24 +1,53 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using Godot;
 
 namespace Apothecary;
 
 public enum Resource {
 	None,
+	Time,
 	Reputation,
 	Coins,
 	Firewood,
+	Stamina,
+	StaminaMax,
+	Focus,
+	FocusMax,
 	COUNT
 }
 
-public static class ResourceExtensions {
+public static class Resources {
+	public static readonly ImmutableArray<Resource> Materials = [
+		Resource.Reputation, 
+		Resource.Coins, 
+		Resource.Firewood
+	];
+
+	private static readonly Dictionary<string, Resource> resource_name_map = Enumerable.Range(1, (int)Resource.COUNT - 1)
+		.Select(x => (Resource)x).ToDictionary(x => x.TrString(), StringComparer.OrdinalIgnoreCase);
+	public static Resource? FromString(string name) {
+		if (resource_name_map.TryGetValue(name, out var resource)) {
+			return resource;
+		} else {
+			return null;
+		}
+	}
+	
 	extension(Resource resource) {
-		public string TrString() {
+		public string TrString(bool plural = false) {
 			return resource switch {
+				Resource.Time => "TIME",
 				Resource.Reputation => "REPUTATION",
-				Resource.Coins => "COINS",
+				Resource.Coins => plural ? "COIN" : "COINS",
 				Resource.Firewood => "FIREWOOD",
-				_ => throw new ArgumentOutOfRangeException(nameof(resource), resource, null)
+				Resource.Stamina => "STAMINA",
+				Resource.StaminaMax => "STAMINA_MAX",
+				Resource.Focus => "FOCUS",
+				Resource.FocusMax => "FOCUS_MAX",
+				_ => "NONE",
 			};
 		}
 
@@ -31,6 +60,8 @@ public static class ResourceExtensions {
 		
 		public string LostTrString() {
 			return resource switch {
+				Resource.Coins => "SPENT",
+				Resource.Firewood => "USED",
 				_ => "LOST",
 			};
 		}
@@ -39,8 +70,10 @@ public static class ResourceExtensions {
 			return resource switch {
 				Resource.Reputation => Colors.CornflowerBlue,
 				Resource.Coins => Colors.Yellow,
-				Resource.Firewood => Colors.Brown,
-				_ => throw new ArgumentOutOfRangeException(nameof(resource), resource, null)
+				Resource.Firewood => Colors.DarkOrange,
+				Resource.Stamina => Colors.LightGreen,
+				Resource.Focus => Colors.Cyan,
+				_ => Colors.White,
 			};
 		}
 

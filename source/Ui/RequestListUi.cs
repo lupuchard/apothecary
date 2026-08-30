@@ -9,7 +9,6 @@ public partial class RequestListUi : VBoxContainer {
 	
 	public override void _Ready() {
 		foreach (var child in GetChildren()) {
-			RemoveChild(child);
 			child.QueueFree();
 		}
 		

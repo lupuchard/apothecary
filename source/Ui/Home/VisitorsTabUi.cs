@@ -2,7 +2,7 @@ using Godot;
 
 namespace Apothecary;
 
-public partial class VisitorsTabUi : Control {
+public partial class VisitorsTabUi : TabBaseUi {
 	private InventoryUi? inventory;
 	private CurrentVisitorUi? current_visitor;
 	private RequestListUi? request_list;
@@ -11,8 +11,8 @@ public partial class VisitorsTabUi : Control {
 		inventory = GetNode<InventoryUi>("HBoxContainer/Inventory");
 		current_visitor = GetNode<CurrentVisitorUi>("%CurrentVisitor");
 		request_list = GetNode<RequestListUi>("%CurrentRequests");
-		current_visitor.AcceptButton?.PressFinished += OnAccept;
-		current_visitor.RejectButton?.PressFinished += OnReject;
+		current_visitor.AcceptButton?.Pressed += OnAccept;
+		current_visitor.RejectButton?.Pressed += OnReject;
 	}
 
 	private void OnAccept() {
@@ -25,13 +25,13 @@ public partial class VisitorsTabUi : Control {
 		Update();
 	}
 
-	public void Update() {
+	public override void Update() {
 		current_visitor?.Update();
 		request_list?.Update();
 		inventory?.Update();
 	}
 	
-	public void CloseUi() {
+	public override void CloseUi() {
 		inventory?.CloseUi();
 	}
 }

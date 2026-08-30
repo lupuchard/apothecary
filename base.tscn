@@ -20,42 +20,47 @@
 [ext_resource type="AudioStream" uid="uid://jwyn2xsxv6sj" path="res://assets/sound/forage1.mp3" id="13_q1yh3"]
 [ext_resource type="AudioStream" uid="uid://s584h3fgec0k" path="res://assets/sound/forage2.mp3" id="14_aw26h"]
 [ext_resource type="AudioStream" uid="uid://b5n584ol1taqc" path="res://assets/sound/forage3.mp3" id="15_3c4kj"]
-[ext_resource type="Script" uid="uid://8f3s54mmvyoh" path="res://source/Ui/HomeUi.cs" id="16_50rgw"]
+[ext_resource type="Script" uid="uid://8f3s54mmvyoh" path="res://source/Ui/Home/HomeUi.cs" id="16_50rgw"]
 [ext_resource type="AudioStream" uid="uid://dslnovtsnx0if" path="res://assets/sound/forage_end.mp3" id="16_66ob2"]
 [ext_resource type="StyleBox" uid="uid://cl5k7bvj2roem" path="res://assets/theme/TabPanel.tres" id="16_v7taj"]
 [ext_resource type="Texture2D" uid="uid://bxsdd6eo4joxe" path="res://assets/theme/ornate.png" id="17_jym3p"]
-[ext_resource type="Script" uid="uid://dmt26pnee1ajo" path="res://source/Ui/VisitorsTabUi.cs" id="19_1uwki"]
+[ext_resource type="Script" uid="uid://dmt26pnee1ajo" path="res://source/Ui/Home/VisitorsTabUi.cs" id="19_1uwki"]
 [ext_resource type="Script" uid="uid://bx5fmbtwmaqyg" path="res://source/Ui/CurrentVisitorUi.cs" id="20_7m1qc"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="20_wudxj"]
 [ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="21_2btif"]
+[ext_resource type="PackedScene" uid="uid://dpcnccwd72ugx" path="res://controls/attribute_info.tscn" id="22_hjerm"]
 [ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="22_mh4ky"]
 [ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="22_n0uqe"]
 [ext_resource type="Texture2D" uid="uid://f8vgd1htx0vj" path="res://assets/visitor/villager.png" id="23_n0uqe"]
+[ext_resource type="Texture2D" uid="uid://cpopxgsd5hm7a" path="res://assets/alert_icon.png" id="26_sqt58"]
 [ext_resource type="Script" uid="uid://co53vm3ckuw8f" path="res://source/Ui/RequestListUi.cs" id="26_x13uo"]
 [ext_resource type="PackedScene" uid="uid://5e63ly4cxv6m" path="res://controls/visitor_request.tscn" id="27_3vupj"]
 [ext_resource type="PackedScene" uid="uid://4ln4d4xohp61" path="res://controls/inventory.tscn" id="28_mh4ky"]
-[ext_resource type="Script" uid="uid://btnxykkj54aa4" path="res://source/Ui/InfusionUi.cs" id="29_2bbbl"]
-[ext_resource type="Script" uid="uid://bwm46sdoi0m4f" path="res://source/Ui/KitchenTabUi.cs" id="29_d5d72"]
+[ext_resource type="Script" uid="uid://bwm46sdoi0m4f" path="res://source/Ui/Home/KitchenTabUi.cs" id="29_d5d72"]
 [ext_resource type="Texture2D" uid="uid://cqylvjhpjdsig" path="res://assets/arrow.png" id="30_3vupj"]
-[ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="31_18b1w"]
-[ext_resource type="PackedScene" uid="uid://bxwulsjuonadl" path="res://controls/output_slot.tscn" id="33_18b1w"]
 [ext_resource type="PackedScene" uid="uid://dq1res6vuuu0s" path="res://controls/journal_entry.tscn" id="34_aggb6"]
-[ext_resource type="Script" uid="uid://dt7allqwblld8" path="res://source/Ui/JournalTabUi.cs" id="34_f7hpq"]
+[ext_resource type="Script" uid="uid://dt7allqwblld8" path="res://source/Ui/Home/JournalTabUi.cs" id="34_f7hpq"]
 [ext_resource type="PackedScene" uid="uid://bbrg82kndigne" path="res://controls/resource_info.tscn" id="37_5pcrg"]
 [ext_resource type="Texture2D" uid="uid://c2x2ca4jatoof" path="res://assets/house.png" id="37_kaldw"]
 [ext_resource type="Texture2D" uid="uid://ddik8f6lxe51d" path="res://assets/bag.png" id="37_uvlxr"]
 [ext_resource type="Script" uid="uid://bgg5oc2br6nw" path="res://source/Ui/HomeIconUi.cs" id="38_1dlgw"]
 [ext_resource type="Texture2D" uid="uid://jtxsnhd2a25m" path="res://assets/resources/reputation.png" id="38_fe1od"]
-[ext_resource type="Script" uid="uid://kibpep7iy6dq" path="res://source/Ui/BedroomTabUi.cs" id="41_aw26h"]
+[ext_resource type="PackedScene" uid="uid://jfem1aph6dkc" path="res://controls/infusion_control.tscn" id="38_p3pq8"]
+[ext_resource type="PackedScene" uid="uid://d0n2fhv3mb5w" path="res://grinder_control.tscn" id="39_kajva"]
+[ext_resource type="Script" uid="uid://kibpep7iy6dq" path="res://source/Ui/Home/BedroomTabUi.cs" id="41_aw26h"]
 [ext_resource type="Script" uid="uid://ds4yp1r0vlu5l" path="res://source/Ui/ResourceParticles.cs" id="42_fe1od"]
 [ext_resource type="Texture2D" uid="uid://56a2448o3l0x" path="res://assets/resources/coins_small.png" id="43_fq8n2"]
+[ext_resource type="Script" uid="uid://e3fxsbpujsyd" path="res://source/Ui/Home/ExploreTabUi.cs" id="44_hjerm"]
 [ext_resource type="Script" uid="uid://dj8kra5a42vlu" path="res://source/Ui/MainMenuUi.cs" id="44_ipkxx"]
 [ext_resource type="Texture2D" uid="uid://b5ysw1gnltxwr" path="res://assets/background2.jpg" id="45_u7ijn"]
 [ext_resource type="Texture2D" uid="uid://de77en0s005q5" path="res://assets/arrow_small.png" id="45_vjpxa"]
+[ext_resource type="AudioStream" uid="uid://cpb01u7rcjqi6" path="res://assets/sound/explore_start.mp3" id="46_kajva"]
 [ext_resource type="PackedScene" uid="uid://b3opkjenrrc4b" path="res://controls/profile_entry.tscn" id="47_h3qio"]
+[ext_resource type="AudioStream" uid="uid://dtipq1qk5crsu" path="res://assets/sound/explore_end.mp3" id="47_rvcyw"]
 [ext_resource type="AudioStream" uid="uid://167b1swbe2l6" path="res://assets/sound/click1.mp3" id="48_y4n4r"]
 [ext_resource type="AudioStream" uid="uid://d3eokw8wwysg5" path="res://assets/sound/click2.mp3" id="49_k1vn5"]
 [ext_resource type="AudioStream" uid="uid://dfsitjvnk85gf" path="res://assets/sound/forest_ambience.mp3" id="50_8a3cd"]
+[ext_resource type="Texture2D" uid="uid://jyghk532md3j" path="res://assets/arrow_small2.png" id="53_66ob2"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xwag"]
 
@@ -443,10 +448,12 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-text = "Forage
-(1 Action)"
 StartSound = NodePath("StartForage")
 FinishSound = NodePath("EndForage")
+Text = "FORAGE_BUTTON_AVAILABLE"
+Costs = Dictionary[String, int]({
+"time": 1
+})
 
 [node name="StartForage" type="AudioStreamPlayer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ForageButton" unique_id=1902984513]
 stream = SubResource("AudioStreamRandomizer_q1yh3")
@@ -519,6 +526,25 @@ grow_horizontal = 2
 grow_vertical = 0
 texture = SubResource("AtlasTexture_sgv64")
 
+[node name="Attributes" type="VBoxContainer" parent="CanvasLayer/Clock" unique_id=1591172430]
+layout_mode = 0
+offset_left = -139.0
+offset_top = -11.0
+offset_right = -54.0
+offset_bottom = 35.0
+theme = ExtResource("2_8rhti")
+alignment = 1
+
+[node name="Focus" parent="CanvasLayer/Clock/Attributes" unique_id=733819496 instance=ExtResource("22_hjerm")]
+layout_mode = 2
+resource_name = "focus"
+resource_max_name = "focus_max"
+
+[node name="Stamina" parent="CanvasLayer/Clock/Attributes" unique_id=31550263 instance=ExtResource("22_hjerm")]
+layout_mode = 2
+resource_name = "stamina"
+resource_max_name = "stamina_max"
+
 [node name="HomeUi" type="Control" parent="CanvasLayer" unique_id=369692100]
 unique_name_in_owner = true
 layout_mode = 3
@@ -546,11 +572,13 @@ size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("16_v7taj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_50rgw")
 theme_override_styles/tab_selected = SubResource("StyleBoxTexture_4a7sh")
-current_tab = 3
+current_tab = 1
 tab_0/title = "VISITORS_TAB"
 tab_1/title = "KITCHEN_TAB"
 tab_2/title = "JOURNAL_TAB"
 tab_3/title = "BEDROOM_TAB"
+tab_4/title = "EXPLORE_TAB"
+tab_4/icon = ExtResource("26_sqt58")
 
 [node name="VisitorsTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1123293159]
 unique_name_in_owner = true
@@ -690,30 +718,20 @@ stretch_mode = 2
 [node name="VisitorAcceptButton" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1714227321 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
 layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_left = 195.0
 offset_top = 174.5
 offset_right = 246.0
 offset_bottom = 209.5
-grow_horizontal = 1
-grow_vertical = 1
-text = "ACCEPT"
+Text = "ACCEPT"
 
 [node name="VisitorRejectButton" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1489500017 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
 layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_left = 104.0
 offset_top = 174.5
 offset_right = 153.0
 offset_bottom = 209.5
-grow_horizontal = 1
-grow_vertical = 1
-text = "REJECT"
+Text = "REJECT"
 
 [node name="HSeparator" type="HSeparator" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors" unique_id=353454649]
 layout_mode = 2
@@ -733,7 +751,6 @@ WhereInputNodes = NodePath("../..")
 
 [node name="KitchenTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=360496213]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 script = ExtResource("29_d5d72")
 metadata/_tab_index = 1
@@ -746,122 +763,13 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InfusionControl" type="Panel" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer" unique_id=2087661226]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 120)
-layout_mode = 2
-script = ExtResource("29_2bbbl")
-
-[node name="HoldButton" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=806835530 instance=ExtResource("11_im64q")]
-layout_mode = 0
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 158.0
-offset_right = 208.0
-offset_bottom = 35.0
-grow_horizontal = 1
-grow_vertical = 1
-text = "INFUSE"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=1185824473]
-layout_mode = 0
-offset_top = 35.0
-offset_right = 364.0
-offset_bottom = 83.0
-alignment = 1
-
-[node name="InputSlot1" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=1510528001 instance=ExtResource("31_18b1w")]
+[node name="InfusionControl" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer" unique_id=458559853 instance=ExtResource("38_p3pq8")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="InputSlot2" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=485582453 instance=ExtResource("31_18b1w")]
+[node name="GrinderControl" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer" unique_id=1007315474 instance=ExtResource("39_kajva")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="InputSlot3" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=960739610 instance=ExtResource("31_18b1w")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Arrow" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=812494708]
-custom_minimum_size = Vector2(64, 0)
-layout_mode = 2
-texture = ExtResource("30_3vupj")
-stretch_mode = 3
-
-[node name="OutputSlot" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/HBoxContainer" unique_id=1806058791 instance=ExtResource("33_18b1w")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="InputAspects" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=1380578562]
-layout_mode = 0
-offset_left = 51.0
-offset_top = 90.0
-offset_right = 195.0
-offset_bottom = 106.0
-theme_override_constants/separation = 1
-alignment = 1
-script = ExtResource("22_mh4ky")
-
-[node name="Label" type="Label" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=1333339491]
-layout_mode = 2
-theme_type_variation = &"LabelSmall"
-text = "1"
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=466271478]
-layout_mode = 2
-texture = ExtResource("21_2btif")
-stretch_mode = 2
-
-[node name="VSeparator" type="VSeparator" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=1549921677]
-layout_mode = 2
-theme_override_constants/separation = 5
-theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
-
-[node name="Label2" type="Label" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=771702664]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("20_wudxj")
-text = "0"
-
-[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/InputAspects" unique_id=1126520441]
-layout_mode = 2
-texture = ExtResource("22_n0uqe")
-stretch_mode = 2
-
-[node name="OutputAspects" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl" unique_id=1084089667]
-layout_mode = 0
-offset_left = 222.0
-offset_top = 90.0
-offset_right = 366.0
-offset_bottom = 106.0
-theme_override_constants/separation = 1
-alignment = 1
-script = ExtResource("22_mh4ky")
-
-[node name="Label" type="Label" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=456135322]
-layout_mode = 2
-theme_type_variation = &"LabelSmall"
-text = "1"
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=1379643564]
-layout_mode = 2
-texture = ExtResource("21_2btif")
-stretch_mode = 2
-
-[node name="VSeparator" type="VSeparator" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=1083432407]
-layout_mode = 2
-theme_override_constants/separation = 5
-theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
-
-[node name="Label2" type="Label" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=990499954]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("20_wudxj")
-text = "0"
-
-[node name="TextureRect3" type="TextureRect" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer/InfusionControl/OutputAspects" unique_id=1035962847]
-layout_mode = 2
-texture = ExtResource("22_n0uqe")
-stretch_mode = 2
 
 [node name="Inventory" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer" unique_id=1473971935 node_paths=PackedStringArray("WhereInputNodes") instance=ExtResource("28_mh4ky")]
 layout_mode = 2
@@ -989,7 +897,6 @@ layout_mode = 2
 text = "OK"
 
 [node name="NotesPopup" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab" unique_id=1338919422]
-visible = false
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup" unique_id=402880556]
@@ -1020,8 +927,19 @@ text = "JOURNAL_NOTES"
 
 [node name="NotesTextEdit" type="TextEdit" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=1620409572]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 225)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=1021435694]
+custom_minimum_size = Vector2(0, 125)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="ItemOccurrencesLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer" unique_id=990208335]
+unique_name_in_owner = true
+layout_mode = 2
+text = "• 2 Found in Front yard (early morning)"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab/NotesPopup/PanelContainer/Panel/MarginContainer/VBoxContainer" unique_id=377220585]
 layout_mode = 2
@@ -1035,6 +953,7 @@ text = "Close"
 
 [node name="BedroomTab" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1007219983]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 script = ExtResource("41_aw26h")
 metadata/_tab_index = 3
@@ -1051,7 +970,6 @@ text = "Too early to sleep"
 [node name="SleepButton" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab/VBoxContainer" unique_id=719614990 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "GO_TO_SLEEP"
 
 [node name="Control" type="Control" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab" unique_id=285036605]
 z_index = 1
@@ -1108,8 +1026,44 @@ horizontal_alignment = 1
 [node name="WakeUpButton" type="Button" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab/EndOfDayPopup/MarginContainer/VBoxContainer" unique_id=90271503]
 unique_name_in_owner = true
 layout_mode = 2
-text = "WAKE_UP
-"
+text = "WAKE_UP"
+
+[node name="ExploreTab" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=175429108]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("44_hjerm")
+metadata/_tab_index = 4
+metadata/_tab_name = "EXPLORE_TAB"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/ExploreTab" unique_id=587978765]
+layout_mode = 2
+
+[node name="ExploreButton" parent="CanvasLayer/HomeUi/TabContainer/ExploreTab/VBoxContainer" unique_id=29069885 node_paths=PackedStringArray("StartSound", "FinishSound") instance=ExtResource("11_im64q")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+StartSound = NodePath("StartExplore")
+FinishSound = NodePath("EndExplore")
+Text = "EXPLORE"
+Costs = Dictionary[String, int]({
+"focus": 1,
+"time": 1
+})
+
+[node name="StartExplore" type="AudioStreamPlayer" parent="CanvasLayer/HomeUi/TabContainer/ExploreTab/VBoxContainer/ExploreButton" unique_id=113435608]
+stream = ExtResource("46_kajva")
+
+[node name="EndExplore" type="AudioStreamPlayer" parent="CanvasLayer/HomeUi/TabContainer/ExploreTab/VBoxContainer/ExploreButton" unique_id=1194497122]
+stream = ExtResource("47_rvcyw")
+
+[node name="ExploreDescription" type="Label" parent="CanvasLayer/HomeUi/TabContainer/ExploreTab/VBoxContainer" unique_id=1354186142]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+text = "lorem ipsum dolor sit amit borgovia amgarvia farganastic blugavaric denganartic secondline."
+horizontal_alignment = 1
+autowrap_mode = 1
 
 [node name="CloseButton" type="TextureButton" parent="CanvasLayer/HomeUi" unique_id=1149335718]
 layout_mode = 1
@@ -1296,12 +1250,12 @@ offset_top = -47.0
 offset_right = -50.0
 offset_bottom = -31.0
 texture_normal = ExtResource("45_vjpxa")
+texture_hover = ExtResource("53_66ob2")
 stretch_mode = 0
 flip_h = true
 
 [node name="LoadGameMenu" type="Control" parent="CanvasLayer/MainMenu/CenterContainer" unique_id=2050388818]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu" unique_id=1252886491]
@@ -1317,12 +1271,6 @@ offset_right = 60.0
 offset_bottom = 59.5
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="LoadGameBackButton" type="TextureButton" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer" unique_id=487920357]
-unique_name_in_owner = true
-layout_mode = 2
-texture_normal = ExtResource("45_vjpxa")
-flip_h = true
 
 [node name="LoadGameList" type="VBoxContainer" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer" unique_id=624102241]
 unique_name_in_owner = true
@@ -1341,8 +1289,18 @@ layout_mode = 2
 layout_mode = 2
 text = "Profile 2"
 
+[node name="LoadGameBackButton" type="TextureButton" parent="CanvasLayer/MainMenu/CenterContainer/LoadGameMenu/PanelContainer" unique_id=487920357]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture_normal = ExtResource("45_vjpxa")
+texture_hover = ExtResource("53_66ob2")
+flip_h = true
+
 [node name="DeleteGameMenu" type="PanelContainer" parent="CanvasLayer/MainMenu/CenterContainer" unique_id=1848711332]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu" unique_id=11137970]
@@ -1361,7 +1319,6 @@ alignment = 1
 [node name="DeleteGameButton" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu/VBoxContainer/HBoxContainer" unique_id=1170755638 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "DELETE"
 
 [node name="CancelDeleteGameButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu/VBoxContainer/HBoxContainer" unique_id=750474363]
 unique_name_in_owner = true

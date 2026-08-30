@@ -102,12 +102,6 @@ public partial class JournalEntryUi : Panel {
 		if (where_option == null || when_option == null || rarity_option == null) {
 			return;
 		}
-		where_option.Selected = where_option.GetItemIndex(entry.LocationGuess == null ? UNSELECTED_ID : region_to_option_id[entry.LocationGuess]);
-		when_option.Selected = when_option.GetItemIndex(entry.ConditionGuess == null ? UNSELECTED_ID : (int)entry.ConditionGuess);
-		rarity_option.Selected = rarity_option.GetItemIndex(entry.RarityGuess == null ? UNSELECTED_ID : (int)entry.RarityGuess);
-		where_option.Disabled = entry.Confirmed;
-		when_option.Disabled = entry.Confirmed;
-		rarity_option.Disabled = entry.Confirmed;
 		
 		where_option.Clear();
 		where_option.AddItem("???", UNSELECTED_ID);
@@ -122,6 +116,13 @@ public partial class JournalEntryUi : Panel {
 		foreach (var condition in GetItemFindConditions()) {
 			when_option.AddItem(Tr(condition.TrString()), (int)condition);
 		}
+		
+		where_option.Selected = where_option.GetItemIndex(entry.LocationGuess == null ? UNSELECTED_ID : region_to_option_id[entry.LocationGuess]);
+		when_option.Selected = when_option.GetItemIndex(entry.ConditionGuess == null ? UNSELECTED_ID : (int)entry.ConditionGuess);
+		rarity_option.Selected = rarity_option.GetItemIndex(entry.RarityGuess == null ? UNSELECTED_ID : (int)entry.RarityGuess);
+		where_option.Disabled = entry.Confirmed;
+		when_option.Disabled = entry.Confirmed;
+		rarity_option.Disabled = entry.Confirmed;
 	}
 	
 	private static readonly ItemFindCondition[] FirstEstival = [None, Morning, Afternoon, AfterRaining];

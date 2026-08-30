@@ -1,9 +1,11 @@
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Godot;
-using Serde;
 
 namespace Apothecary;
 
-[GenerateSerde(With = typeof(RegionModelSerdeObj))]
+[JsonConverter(typeof(RegionModelConverter))]
 public partial class RegionModel(string id, int max_forage, double forage_recovery, UnlockRequirement unlock_requirement) : RefCounted {
 	public string Id { get; } = id;
 	public int MaxForage { get; } = max_forage;
@@ -13,18 +15,12 @@ public partial class RegionModel(string id, int max_forage, double forage_recove
 	public static readonly RegionModel UnknownRegionModel = new("unknown", 0, 0, UnlockRequirement.None);
 }
 
-public class RegionModelSerdeObj : ISerde<RegionModel?> {
-	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("RegionModel");
-
-	public void Serialize(RegionModel? region, ISerializer serializer) {
-		if (region == null) {
-			serializer.WriteNull();
-		} else {
-			serializer.WriteString(region.Id);
-		}
+public class RegionModelConverter : JsonConverter<RegionModel?> {
+	public override RegionModel? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+		var id = reader.GetString();
+		return id == null ? null : Game.Instance.World.GetRegionModel(id);
 	}
-
-	public RegionModel? Deserialize(IDeserializer deserializer) {
-		return deserializer.TryReadNull() ? null : Game.Instance.World.GetRegionModel(deserializer.ReadString());
+	public override void Write(Utf8JsonWriter writer, RegionModel? region, JsonSerializerOptions options) {
+		writer.WriteStringValue(region?.Id);
 	}
 }

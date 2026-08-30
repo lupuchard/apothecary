@@ -11,6 +11,6 @@
     <None Include="script_templates\empty.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Serde" Version="0.17.1" />
+    <PackageReference Include="TupleAsJsonArray.Redux" Version="1.1.0" />
   </ItemGroup>
 </Project>

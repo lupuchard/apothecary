@@ -31,7 +31,7 @@ public partial class ForagingUi : BaseUi {
 		
 		forage_button = GetNode<SlowButton>("%ForageButton");
 		forage_button.Show();
-		forage_button.PressFinished += OnPressForage;
+		forage_button.Pressed += OnPressForage;
 	}
 
 	public void Update() {
@@ -59,9 +59,9 @@ public partial class ForagingUi : BaseUi {
 			var end_of_day = Game.Instance.TimeOfDay >= Game.END_OF_DAY;
 			forage_button.Disabled = Region.Remaining <= 0 || end_of_day;
 			if (forage_button.Disabled) {
-				forage_button.Text = Tr(end_of_day ? "FORAGE_BUTTON_END_OF_DAY" : "FORAGE_BUTTON_UNAVAILABLE");
+				forage_button.Text = end_of_day ? "FORAGE_BUTTON_END_OF_DAY" : "FORAGE_BUTTON_UNAVAILABLE";
 			} else {
-				forage_button.Text = Tr("FORAGE_BUTTON_AVAILABLE");
+				forage_button.Text = "FORAGE_BUTTON_AVAILABLE";
 			}
 		} else if (results_remaining) {
 			forage_button?.Hide();

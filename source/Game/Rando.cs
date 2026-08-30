@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Numerics;
-using Serde;
 
 namespace Apothecary;
 
-[GenerateSerde(With = typeof(RandoSerdeObj))]
-public partial struct Rando {
+public struct Rando {
 	private ulong s0;
 	private ulong s1;
 	private ulong s2;
@@ -94,7 +92,7 @@ public partial struct Rando {
 	}
 }
 
-public class RandoSerdeObj : ISerde<Rando> {
+/*public class RandoSerdeObj : ISerde<Rando> {
 	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("Rando");
 	
 	public void Serialize(Rando rando, ISerializer serializer) {
@@ -116,4 +114,4 @@ public class RandoSerdeObj : ISerde<Rando> {
 		type_ser.End(SerdeInfo);
 		return new Rando(s0, s1, s2, s3);
 	}
-}
+}*/

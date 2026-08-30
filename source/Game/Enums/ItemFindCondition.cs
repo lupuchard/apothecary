@@ -1,10 +1,8 @@
 using System;
-using Serde;
 
 namespace Apothecary;
 
 [Flags]
-[GenerateSerde]
 public enum ItemFindCondition {
 	None = 0,
 		

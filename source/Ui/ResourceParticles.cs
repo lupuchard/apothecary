@@ -11,7 +11,7 @@ public partial class ResourceParticles : Node2D {
 	//private ParticleProcessMaterial? particle_material;
 	private readonly List<GpuParticles2D> particle_nodes = [];
 	private readonly List<int> unused_particles = [];
-	private readonly List<Texture2D> resource_textures = [];
+	private readonly Dictionary<Resource, Texture2D> resource_textures = [];
 
 	public override void _Ready() {
 		model = GetChild<GpuParticles2D>(0);
@@ -26,18 +26,20 @@ public partial class ResourceParticles : Node2D {
 		particle_material.InitialVelocityMin = 100.0f;
 		particle_material.InitialVelocityMax = 100.0f;*/
 
-		for (var i = 1; i < (int)Resource.COUNT; i++) {
-			resource_textures.Add(GD.Load<Texture2D>(((Resource)i).SmallSpritePath()));
+		foreach (var material in Resources.Materials) {
+			resource_textures.Add(material, GD.Load<Texture2D>(material.SmallSpritePath()));
 		}
 	}
 
 	public void OnAcquireResource(Resource resource, int amount) {
-		var particles = GetParticles();
-		particles.Texture = resource_textures[(int)resource];
-		particles.AmountRatio = Math.Min(amount, 64) / 64.0f;
-		particles.Emitting = true;
-		particles.GlobalPosition = GetViewport().GetMousePosition();
-		particles.Modulate = resource.GetColor();
+		if (resource_textures.TryGetValue(resource, out var texture)) {
+			var particles = GetParticles();
+			particles.Texture = texture;
+			particles.AmountRatio = Math.Min(amount, 64) / 64.0f;
+			particles.Emitting = true;
+			particles.GlobalPosition = GetViewport().GetMousePosition();
+			particles.Modulate = resource.GetColor();
+		}
 	}
 
 	private GpuParticles2D GetParticles() {

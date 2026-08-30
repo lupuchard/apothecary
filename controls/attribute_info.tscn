@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://dpcnccwd72ugx"]
+
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="1_3jpne"]
+[ext_resource type="Texture2D" uid="uid://cqeb8hbxgc4k4" path="res://assets/resources/focus_small.png" id="1_jkqmv"]
+[ext_resource type="Script" uid="uid://dhf0rdion8ldg" path="res://source/Ui/AttributeUi.cs" id="2_wbg7l"]
+
+[node name="AttributeInfo" type="HBoxContainer" unique_id=733819496]
+theme = ExtResource("1_3jpne")
+script = ExtResource("2_wbg7l")
+
+[node name="AmountLabel" type="Label" parent="." unique_id=1675742102]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "2/2"
+
+[node name="Sprite" type="TextureRect" parent="." unique_id=1706804764]
+layout_mode = 2
+size_flags_vertical = 8
+offset_transform_position = Vector2(0, 1)
+texture = ExtResource("1_jkqmv")
+stretch_mode = 2
+
+[node name="NameLabel" type="Label" parent="." unique_id=1931436428]
+layout_mode = 2
+theme_type_variation = &"LabelSmall"
+text = "Focus"

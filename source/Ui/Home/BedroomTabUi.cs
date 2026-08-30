@@ -3,7 +3,7 @@ using Godot;
 
 namespace Apothecary;
 
-public partial class BedroomTabUi : CenterContainer {
+public partial class BedroomTabUi : TabBaseUi {
 	private Label? sleep_label;
 	private SlowButton? sleep_button;
 	private ColorRect? end_of_day_fade;
@@ -20,7 +20,7 @@ public partial class BedroomTabUi : CenterContainer {
 		base._Ready();
 		sleep_label = GetNode<Label>("%SleepLabel");
 		sleep_button = GetNode<SlowButton>("%SleepButton");
-		sleep_button.PressFinished += OnEndDay;
+		sleep_button.Pressed += OnEndDay;
 		
 		end_of_day_fade = GetNode<ColorRect>("%EndOfDayFade");
 		end_of_day_popup = GetNode<Control>("%EndOfDayPopup");
@@ -35,7 +35,7 @@ public partial class BedroomTabUi : CenterContainer {
 		Update();
 	}
 
-	public void Update() {
+	public override void Update() {
 		if (Game.Instance.IsItDaytime()) {
 			sleep_label?.Text = Tr("TOO_EARLY_TO_SLEEP");
 			sleep_button?.Hide();
@@ -46,6 +46,10 @@ public partial class BedroomTabUi : CenterContainer {
 			sleep_label?.Text = Tr("TIME_TO_SLEEP");
 			sleep_button?.Show();
 		}
+	}
+
+	public override bool IsUnlocked() {
+		return Game.Instance.IsUnlocked(Feature.Bedroom);
 	}
 
 	private void OnEndDay() {

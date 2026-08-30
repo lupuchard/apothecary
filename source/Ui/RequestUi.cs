@@ -29,7 +29,7 @@ public partial class RequestUi : PanelContainer {
 		give_button = GetNode<SlowButton>("%GiveButton");
 
 		destination_slot.ItemUpdated += OnItemUpdated;
-		give_button.PressFinished += OnGive;
+		give_button.Pressed += OnGive;
 	}
 
 	public void Update(Visitor new_visitor) {

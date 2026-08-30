@@ -38,8 +38,8 @@ public partial class InventoryUi : PanelContainer {
 		hover_info_aspects = GetNode<AspectListUi>("%AspectList");
 		hover_info.Hide();
 
-		while (container.GetChildCount() > 0) {
-			container.RemoveChild(container.GetChild(0));
+		foreach (var child in container.GetChildren()) {
+			child.QueueFree();
 		}
 
 		var first_row = new HBoxContainer();

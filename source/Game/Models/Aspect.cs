@@ -1,11 +1,12 @@
 using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Godot;
-using Serde;
 
 namespace Apothecary;
 
-[GenerateSerde(With = typeof(AspectSerdeObj))]
-public partial class Aspect {
+[JsonConverter(typeof(AspectConverter))]
+public class Aspect {
 	public static readonly Color Orange = new(1, 0.5f, 0);
 	public static readonly Color Chartreuse = new(0.5f, 1, 0);
 	public static readonly Color SpringGreen = new(0, 1, 0.5f);
@@ -30,18 +31,12 @@ public partial class Aspect {
 	}
 }
 
-public class AspectSerdeObj : ISerde<Aspect?> {
-	public ISerdeInfo SerdeInfo { get; } = StringProxy.SerdeInfo.WithName("Aspect");
-
-	public void Serialize(Aspect? aspect, ISerializer serializer) {
-		if (aspect == null) {
-			serializer.WriteNull();
-		} else {
-			serializer.WriteString(aspect.Id);
-		}
+public class AspectConverter : JsonConverter<Aspect?> {
+	public override Aspect? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
+		var id = reader.GetString();
+		return id == null ? null : Game.Instance.World.GetAspect(id);
 	}
-
-	public Aspect? Deserialize(IDeserializer deserializer) {
-		return deserializer.TryReadNull() ? null : Game.Instance.World.GetAspect(deserializer.ReadString());
+	public override void Write(Utf8JsonWriter writer, Aspect? aspect, JsonSerializerOptions options) {
+		writer.WriteStringValue(aspect?.Id);
 	}
 }

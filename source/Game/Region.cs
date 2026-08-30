@@ -1,10 +1,8 @@
 using System;
-using Serde;
 
 namespace Apothecary;
 
-[GenerateSerde]
-public partial class Region(RegionModel Model) {
+public class Region(RegionModel Model) {
 	public RegionModel Model { get; } = Model; 
 	public int Remaining { get; set; } = Model.MaxForage;
 	public bool Unlocked { get; set; }

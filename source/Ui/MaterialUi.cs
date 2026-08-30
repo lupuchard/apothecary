@@ -1,7 +1,7 @@
 using Godot;
 namespace Apothecary;
 
-public partial class ResourceUi : HBoxContainer {
+public partial class MaterialUi : HBoxContainer {
 	public Resource? Resource {
 		get;
 		set {

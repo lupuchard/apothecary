@@ -4,8 +4,8 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 using Godot;
-using Serde;
 
 namespace Apothecary;
 
@@ -16,6 +16,7 @@ public partial class Game : RefCounted {
 	[Signal] public delegate void RegionUnlockedEventHandler(string region_id);
 	[Signal] public delegate void ResourceUpdatedEventHandler(Resource resource, int amount);
 	[Signal] public delegate void JournalConfirmationEventHandler(Godot.Collections.Array<string> items);
+	[Signal] public delegate void FeatureUnlockedEventHandler(Feature feature);
 	
 	private const int MAX_FORAGE_RESULTS = 3;
 	public const int END_OF_DAY = 6;
@@ -24,24 +25,27 @@ public partial class Game : RefCounted {
 
 	public readonly World World = CreateWorld();
 
-	[GenerateSerde]
-	public partial class GameState(Journal journal) {
-		public Rando rando = new (seed: 2);
-		public int day = 0;
-		public Season season = Season.Estival;
-		public int time_of_day = 0;
-		public int year = 0;
+	public class GameState(Journal journal) {
+		[JsonInclude] public Rando rando = new (seed: 2);
+		[JsonInclude] public int day = 0;
+		[JsonInclude] public Season season = Season.Estival;
+		[JsonInclude] public int time_of_day = 0;
+		[JsonInclude] public int year = 0;
 
-		public List<Region> regions = [];
-		public Dictionary<Item, int> inventory = [];
+		[JsonInclude] public List<Region> regions = [];
 
-		public Visitor? visitor_at_door = null;
-		public List<Visitor> current_requests = [];
+		[JsonConverter(typeof(DictionaryToListConverter<Item, int>))]
+		[JsonInclude] public Dictionary<Item, int> inventory = [];
 
-		public Journal journal = journal;
+		[JsonInclude] public Visitor? visitor_at_door = null;
+		[JsonInclude] public List<Visitor> current_requests = [];
+
+		[JsonInclude] public Journal journal = journal;
 		
-		public List<int> resources = [];
-		public List<int> daily_resource_summary = [];
+		[JsonInclude] public List<int> resources = [];
+		[JsonInclude] public List<int> daily_resource_summary = [];
+
+		[JsonInclude] public HashSet<Feature> unlocked_features = [];
 	}
 
 	public GameState state { get; private set; }
@@ -67,10 +71,11 @@ public partial class Game : RefCounted {
 
 	public Journal Journal => state.journal;
 	private readonly Dictionary<UnlockRequirementType, List<RegionModel>> region_unlocks = [];
+	
 
 	public Game() {
 		state = new GameState(new Journal() { OnConfirmation = OnJournalConfirmation });
-			
+		
 		for (var i = 1; i < (int)UnlockRequirementType.COUNT; i++) {
 			region_unlocks.Add((UnlockRequirementType)i, []);
 		}
@@ -78,7 +83,6 @@ public partial class Game : RefCounted {
 		foreach (var region in World.Regions) {
 			var new_region = new Region(region);
 			state.regions.Add(new_region);
-			region_lookup.Add(region.Id, new_region);
 
 			if (region.UnlockRequirement.Type == UnlockRequirementType.None) {
 				new_region.Unlocked = true;
@@ -91,24 +95,52 @@ public partial class Game : RefCounted {
 			var type = (UnlockRequirementType)i;
 			region_unlocks[type] = [..region_unlocks[type].OrderBy(x => x.UnlockRequirement.Amount)];
 		}
-
-		/*for (var i = 0; i < (int)Resource.COUNT; i++) {
-			state.resources.Add(0);
-			state.daily_resource_summary.Add(0);
-		}*/
+		
+		SetState(state);
 		
 		MakeNewVisitor(World.GetRequest("pain"));
+
+		ModifyResource(Resource.FocusMax, 2);
+		ModifyResource(Resource.Focus, 2);
 	}
 
 	public void LoadGame(GameState new_state) {
-		state = new_state;
+		SetState(new_state);
 	}
 
 	public void NewGame() {
-		state = new GameState(new Journal() { OnConfirmation = OnJournalConfirmation });
+		SetState(new GameState(new Journal() { OnConfirmation = OnJournalConfirmation }));
+	}
+
+	private void SetState(GameState new_state) {
+		state = new_state;
+		sorted_inventory = null;
+
+		region_lookup.Clear();
+		foreach (var region in state.regions) {
+			region_lookup.Add(region.Model.Id, region);
+		}
+		
+		EmitSignalTimeChanged();
+		
+		for (var i = 1; i < (int)Resource.COUNT; i++) {
+			if (i < state.resources.Count) {
+				EmitSignalResourceUpdated((Resource)i, state.resources[i]);
+			}
+		}
+	}
+
+	public bool IsUnlocked(Feature feature) {
+		return state.unlocked_features.Contains(feature);
+	}
+
+	public void UnlockFeature(Feature feature) {
+		state.unlocked_features.Add(feature);
+		EmitSignalFeatureUnlocked(feature);
 	}
 
 	public int GetResource(Resource resource) {
+		if (resource == Resource.Time) return END_OF_DAY - TimeOfDay;
 		return (int)resource >= state.resources.Count ? 0 : state.resources[(int)resource];
 	}
 
@@ -129,18 +161,13 @@ public partial class Game : RefCounted {
 
 	public void GetReward(Reward reward) {
 		foreach (var (resource, amount) in reward.Rewards) {
-			var old_amount = GetResource(resource);
+			//var old_amount = GetResource(resource);
 			ModifyResource(resource, amount);
 			
-			// TODO a bit ugly
-			var unlocked = GetUnlocksWith(UnlockRequirement.ResourceAcquired(resource, amount), old_amount);
-			foreach (var region_model in unlocked) {
-				if (region_model.UnlockRequirement.Resource == resource) {
-					var region = region_lookup[region_model.Id];
-					if (!region.Unlocked) {
-						region.Unlocked = true;
-						EmitSignalRegionUnlocked(region_model.Id);
-					}
+			var unlocked = GetUnlocksWith(UnlockRequirementType.ResourceAcquired, amount);
+			foreach (var region in unlocked) {
+				if (region.UnlockRequirement.Resource == resource) {
+					Unlock(region);
 				}
 			}
 		}
@@ -169,6 +196,10 @@ public partial class Game : RefCounted {
 			location.DailyRecovery(ref state.rando);
 		}
 
+		foreach (var region in GetUnlocksWith(UnlockRequirementType.Day, state.day)) {
+			Unlock(region);
+		}
+
 		state.daily_resource_summary.Clear();
 		UpdateVisitors();
 		EmitSignalTimeChanged();
@@ -188,6 +219,10 @@ public partial class Game : RefCounted {
 		if (region?.Remaining > 0) {
 			region.ConsumeForage();
 			current_foraging_results = [..GetForagingResults(location).Cast<ItemModel?>()];
+			foreach (var result in current_foraging_results.Where(x => x != null).GroupBy(x => x!)) {
+				var obs = new ItemObservation(region.Model, result.Count(), Season, TimeOfDay, 0); // TODO: add weather
+				Journal.AddObservation(result.Key, obs);
+			}
 		}
 
 		PassTime();
@@ -305,7 +340,7 @@ public partial class Game : RefCounted {
 
 	public bool IsItDaytime() {
 		return state.season switch {
-			Season.Estival => true,
+			Season.Estival => TimeOfDay < 6,
 			Season.Vernal or Season.Serotinal => TimeOfDay < 5,
 			Season.Prevernal or Season.Autumnal => TimeOfDay < 4,
 			Season.Hibernal => TimeOfDay < 3,
@@ -386,20 +421,25 @@ public partial class Game : RefCounted {
 		state.visitor_at_door = null;
 	}
 
-	public List<RegionModel> GetUnlocksWith(UnlockRequirement requirement, int from) {
-		return region_unlocks[requirement.Type].Where(
-			region => region.UnlockRequirement.Amount <= requirement.Amount && region.UnlockRequirement.Amount >= from
-		).ToList();
+	public List<RegionModel> GetUnlocksWith(UnlockRequirementType requirement, int amount) {
+		return region_unlocks[requirement].Where(region => region.UnlockRequirement.Amount <= amount).ToList();
 	}
 
 	private void OnJournalConfirmation(IEnumerable<ItemModel> items) {
-		var unlocked = GetUnlocksWith(UnlockRequirement.ConfirmedJournalEntries(Journal.TotalConfirmed), Journal.TotalConfirmed - 2);
+		var unlocked = GetUnlocksWith(UnlockRequirementType.ConfirmedJournalEntries, Journal.TotalConfirmed);
 		foreach (var region in unlocked) {
-			region_lookup[region.Id].Unlocked = true;
-			EmitSignalRegionUnlocked(region.Id);
+			Unlock(region);
 		}
 		
 		EmitSignalJournalConfirmation([..items.Select(i => i.Id)]);
+	}
+
+	private void Unlock(RegionModel region_model) {
+		var region = region_lookup[region_model.Id];
+		if (!region.Unlocked) {
+			region.Unlocked = true;
+			EmitSignalRegionUnlocked(region_model.Id);
+		}
 	}
 
 	private static World CreateWorld() {
@@ -411,13 +451,13 @@ public partial class Game : RefCounted {
 		umber = new Aspect("umber", Aspect.Violet, () => gelus!);
 		gelus = new Aspect("gelus", Aspect.Azure, () => bloom!);
 
-		var frontYard = new RegionModel("front_yard", 2, 0.25, UnlockRequirement.None);
-		var backyard = new RegionModel("backyard", 2, 0.25, UnlockRequirement.ResourceAcquired(Resource.Reputation, 1));
-		var road = new RegionModel("road", 3, 0.5, UnlockRequirement.ResourceAcquired(Resource.Reputation, 1));
-		var meadow = new RegionModel("meadow", 5, 0.5, UnlockRequirement.ResourceAcquired(Resource.Reputation, 1));
-		var eastWoods = new RegionModel("east_woods", 5, 0.5, UnlockRequirement.ConfirmedJournalEntries(3));
-		var westWoods = new RegionModel("west_woods", 5, 0.5, UnlockRequirement.ConfirmedJournalEntries(6));
-		var creek = new RegionModel("creek", 4, 0.5, UnlockRequirement.ConfirmedJournalEntries(9));
+		var frontYard = new RegionModel("front_yard", 1, 0.25, UnlockRequirement.None);
+		var backyard = new RegionModel("backyard", 1, 0.25, UnlockRequirement.ResourceAcquired(Resource.Reputation, 1));
+		var road = new RegionModel("road", 2, 0.5, UnlockRequirement.ResourceAcquired(Resource.Reputation, 1));
+		var meadow = new RegionModel("meadow", 4, 0.5, UnlockRequirement.Day(1));
+		var eastWoods = new RegionModel("east_woods", 4, 0.5, UnlockRequirement.Day(2));
+		var westWoods = new RegionModel("west_woods", 4, 0.5, UnlockRequirement.ConfirmedJournalEntries(3));
+		var creek = new RegionModel("creek", 3, 0.5, UnlockRequirement.ConfirmedJournalEntries(6));
 
 		var adjacencies = new Dictionary<RegionModel, HashSet<RegionModel>> {
 			{ frontYard, [road, meadow, eastWoods, backyard] },

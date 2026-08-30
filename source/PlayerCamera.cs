@@ -7,7 +7,7 @@ public partial class PlayerCamera : Camera2D {
 	private readonly Vector2 ZOOM_MIN = new(0.5f, 0.5f);
 	private const float PAN_SPEED = 6.0f;
 
-	public bool CanPan { get; set; }= true;
+	public bool CanPan { get; set; } = true;
 	private bool panning = false;
 
 	[Export] public Sprite2D? Map { get; set; }
@@ -27,7 +27,6 @@ public partial class PlayerCamera : Camera2D {
 	}
 
 	public override void _Input(InputEvent inputEvent) {
-		if (!CanPan) return;
 		base._Input(inputEvent);
 		
 		if (inputEvent.IsActionPressed("pan")) {
@@ -40,6 +39,7 @@ public partial class PlayerCamera : Camera2D {
 			Position = GetTargetPosition() - motionEvent.Relative;
 		}
 
+		if (!CanPan) return;
 		if (inputEvent.IsActionPressed("zoom_in")) {
 			Zoom = (Zoom + new Vector2(0.1f, 0.1f)).Min(ZOOM_MAX);
 		} else if (inputEvent.IsActionPressed("zoom_out")) {
@@ -48,6 +48,7 @@ public partial class PlayerCamera : Camera2D {
 	}
 
 	public override void _Process(double delta) {
+		if (!CanPan) return;
 		var Motion = Vector2.Zero;
 		if (Input.IsActionPressed("pan_left")) {
 			Motion += new Vector2(-PAN_SPEED, 0.0f);
