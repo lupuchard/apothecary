@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bfbxwbbjvq1n8"]
 
 [ext_resource type="Texture2D" uid="uid://c0wuwku0nlslj" path="res://assets/item/feverfew.png" id="1_4p7s2"]
-[ext_resource type="Script" uid="uid://b3sm13l1iaxti" path="res://source/Ui/InventorySlot.cs" id="1_rq8q5"]
+[ext_resource type="Script" uid="uid://b3sm13l1iaxti" path="res://source/Ui/Inventory/InventorySlot.cs" id="1_rq8q5"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="2_3xeia"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cs1hs"]

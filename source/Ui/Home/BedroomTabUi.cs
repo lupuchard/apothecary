@@ -59,10 +59,9 @@ public partial class BedroomTabUi : TabBaseUi {
 		tween.TweenProperty(end_of_day_fade, "color", EIGENGRAU, 2.0);
 		tween.Finished += () => {
 			var game = Game.Instance;
-			var resources = game.state.daily_resource_summary;
-			game.NextDay();
-
-			end_of_day_summary?.Text = Tr("END_OF_DAY_SUMMARY\n  ") + string.Join("\n  ",
+			
+			var resources = game.DailyResourceSummary;
+			end_of_day_summary?.Text = Tr("END_OF_DAY_SUMMARY") + "\n  " + string.Join("\n  ",
 				resources.Select((amount, resource) => (amount, (Resource)resource))
 					.Where(x => x.amount != 0)
 					.Select(x => string.Format(
@@ -71,8 +70,9 @@ public partial class BedroomTabUi : TabBaseUi {
 						BbCodeUtil.Img(x.Item2.SmallSpritePath(), x.Item2.GetColor())
 					))
 			);
-			next_day_label?.Text = string.Format(Tr("IT_IS_NOW_DAY"), game.Day, Tr(game.Season.TrString()));
 			
+			game.NextDay();
+			next_day_label?.Text = string.Format(Tr("IT_IS_NOW_DAY"), game.Day, Tr(game.Season.TrString()));
 			end_of_day_popup?.Show();
 		};
 	}

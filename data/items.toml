@@ -1,0 +1,30 @@
+[Items]
+
+[Items.meadowsweet]
+aspects = ["bloom", "vigor"]
+where = "creek"
+
+[Items.wild_laceroot]
+aspects = ["caust", "spice", "umber"]
+where = "east_woods"
+when = "afternoon"
+
+[Items.mintflower]
+aspects = ["bloom", "gelus", "spice"]
+where = "east_woods"
+
+[Items.feverfew]
+aspects = ["2 bloom", "gelus"]
+where = "backyard"
+rarity = "rare"
+
+[Items.white_coneflower]
+aspects = ["bloom", "gelus"]
+where = "meadow"
+when = "morning"
+
+[Items.chamomile]
+aspects = ["2 umber", "gelus", "bloom"]
+where = "meadow"
+rarity = "rare"
+

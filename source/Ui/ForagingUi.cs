@@ -15,7 +15,7 @@ public partial class ForagingUi : BaseUi {
 	}
 
 	private Label? title_label;
-	public ImmutableArray<ForagingResult> ForagingResultsControls { get; private set; } = [];
+	public ImmutableArray<ForagingResultUi> ForagingResultsControls { get; private set; } = [];
 	private SlowButton? forage_button;
 	private Label? forages_remaining_label;
 
@@ -23,7 +23,7 @@ public partial class ForagingUi : BaseUi {
 		base._Ready();
 		
 		title_label = GetNode<Label>("%TitleLabel");
-		ForagingResultsControls = [..GetNode<Control>("%ForagingResults").GetChildren().OfType<ForagingResult>()];
+		ForagingResultsControls = [..GetNode<Control>("%ForagingResults").GetChildren().OfType<ForagingResultUi>()];
 		foreach (var control in ForagingResultsControls) {
 			control.Pressed += Update;
 		}
@@ -41,20 +41,18 @@ public partial class ForagingUi : BaseUi {
 			return;
 		}
 
-		var results_remaining = false;
-		var current_foraging_results = Game.Instance.CurrentForagingResults();
-		foreach (var control in ForagingResultsControls) {
-			if (control.Empty) {
-				results_remaining = true;
-			} else if (control.Index < current_foraging_results.Count && current_foraging_results[control.Index] != null) {
-				control.Enable(current_foraging_results[control.Index]);
-				results_remaining = true;
+		var current_foraging_results = Game.Instance.CurrentPickupResults;
+		foreach (var control in ForagingResultsControls.Where(control => !control.Empty)) {
+			if (control.Index < current_foraging_results.Count && current_foraging_results[control.Index] != null) {
+				control.Enable(current_foraging_results[control.Index]!);
 			} else {
 				control.Disable();
 			}
 		}
 
-		if (!results_remaining && forage_button != null) {
+		if (ForagingResultsControls.Any(x => x.Child?.Visible == true)) {
+			forage_button?.Hide();
+		} else if (forage_button != null) {
 			forage_button.Show();
 			var end_of_day = Game.Instance.TimeOfDay >= Game.END_OF_DAY;
 			forage_button.Disabled = Region.Remaining <= 0 || end_of_day;
@@ -63,10 +61,7 @@ public partial class ForagingUi : BaseUi {
 			} else {
 				forage_button.Text = "FORAGE_BUTTON_AVAILABLE";
 			}
-		} else if (results_remaining) {
-			forage_button?.Hide();
 		}
-		
 
 		title_label?.Text = Tr(Region.Model.Id.ToUpperInvariant());
 		forages_remaining_label?.Text = string.Format(Tr("FORAGES_REMAINING_LABEL"), Region.Remaining, Region.Model.MaxForage);
@@ -91,10 +86,10 @@ public partial class ForagingUi : BaseUi {
 		forage_button?.Hide();
 		
 		Game.Instance.DoForaging(Region.Model);
-		var foraging_results = Game.Instance.CurrentForagingResults();
-		Update();
+		var foraging_results = Game.Instance.CurrentPickupResults;
 		if (foraging_results.Count == 0) {
-			ForagingResultsControls[1].Enable(null);
+			ForagingResultsControls[1].Enable(Pickup.Empty);
 		}
+		Update();
 	}
 }

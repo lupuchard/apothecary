@@ -1,0 +1,97 @@
+{
+	"rando": {},
+	"day": 0,
+	"season": 2,
+	"time_of_day": 2,
+	"year": 0,
+	"regions": [
+		{
+			"Model": "front_yard",
+			"Remaining": 0,
+			"Unlocked": true,
+			"Known": true
+		},
+		{
+			"Model": "backyard",
+			"Remaining": 2,
+			"Unlocked": false,
+			"Known": true
+		},
+		{
+			"Model": "road",
+			"Remaining": 3,
+			"Unlocked": false,
+			"Known": true
+		},
+		{
+			"Model": "meadow",
+			"Remaining": 5,
+			"Unlocked": false,
+			"Known": true
+		},
+		{
+			"Model": "east_woods",
+			"Remaining": 5,
+			"Unlocked": false,
+			"Known": true
+		},
+		{
+			"Model": "west_woods",
+			"Remaining": 5,
+			"Unlocked": false,
+			"Known": true
+		},
+		{
+			"Model": "creek",
+			"Remaining": 4,
+			"Unlocked": false,
+			"Known": true
+		}
+	],
+	"inventory": [
+		{
+			"Key": {
+				"Raw": [
+					"white_coneflower"
+				],
+				"Aspects": [
+					{},
+					{}
+				],
+				"Type": 1
+			},
+			"Value": 2
+		},
+		{
+			"Key": {
+				"Raw": [
+					"mintflower"
+				],
+				"Aspects": [
+					{},
+					{},
+					{}
+				],
+				"Type": 1
+			},
+			"Value": 1
+		}
+	],
+	"visitor_at_door": {
+		"RemainingDays": 3,
+		"Request": "pain",
+		"RequestText": "Do you have something for leg pain?",
+		"Name": "Catherine Aldebourne"
+	},
+	"current_requests": [],
+	"journal": {
+		"Entries": [
+			{},
+			{}
+		],
+		"Solved": [],
+		"TotalConfirmed": 0
+	},
+	"resources": [],
+	"daily_resource_summary": []
+}

@@ -69,7 +69,7 @@ public class SaveManager {
 		profile ??= cur_profile;
 		if (profile == null) return;
 		Directory.CreateDirectory(SAVES_DIRECTORY);
-		var json = JsonSerializer.Serialize(game.state, json_options);
+		var json = JsonSerializer.Serialize(game.State, json_options);
 		File.WriteAllText(profile.Filename, json);
 		profile.LastLoaded = DateTimeOffset.Now;
 		SaveMeta();

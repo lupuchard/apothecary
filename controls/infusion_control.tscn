@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://jfem1aph6dkc"]
 
-[ext_resource type="Script" uid="uid://btnxykkj54aa4" path="res://source/Ui/InfusionUi.cs" id="1_ejjsd"]
+[ext_resource type="Script" uid="uid://btnxykkj54aa4" path="res://source/Ui/Home/Kitchen/InfusionUi.cs" id="1_ejjsd"]
 [ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="2_mgs4x"]
 [ext_resource type="AudioStream" uid="uid://b0a5xe3k5p0uo" path="res://assets/sound/infuse_start.mp3" id="3_7xuuk"]
 [ext_resource type="AudioStream" uid="uid://chg5ks5tcj2bj" path="res://assets/sound/infuse_end.mp3" id="4_qdgkc"]
@@ -88,6 +88,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
 
 [node name="Label2" type="Label" parent="InputAspects" unique_id=800509463]
 layout_mode = 2
+size_flags_vertical = 1
 theme_override_fonts/font = ExtResource("10_iik5m")
 text = "0"
 

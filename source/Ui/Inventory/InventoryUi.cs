@@ -1,6 +1,5 @@
 using Godot;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Apothecary;
 
@@ -115,6 +114,9 @@ public partial class InventoryUi : PanelContainer {
 			return;
 		}
 		if (slot.ItemType != null && (dragging?.Item?.Type & slot.ItemType) == 0) {
+			return;
+		}
+		if (slot.Amount > dragging?.Amount + 1) {
 			return;
 		}
 		

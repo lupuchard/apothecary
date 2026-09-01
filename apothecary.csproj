@@ -11,6 +11,7 @@
     <None Include="script_templates\empty.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Tomlyn" Version="2.10.1" />
     <PackageReference Include="TupleAsJsonArray.Redux" Version="1.1.0" />
   </ItemGroup>
 </Project>

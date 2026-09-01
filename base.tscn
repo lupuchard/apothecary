@@ -36,7 +36,7 @@
 [ext_resource type="Script" uid="uid://co53vm3ckuw8f" path="res://source/Ui/RequestListUi.cs" id="26_x13uo"]
 [ext_resource type="PackedScene" uid="uid://5e63ly4cxv6m" path="res://controls/visitor_request.tscn" id="27_3vupj"]
 [ext_resource type="PackedScene" uid="uid://4ln4d4xohp61" path="res://controls/inventory.tscn" id="28_mh4ky"]
-[ext_resource type="Script" uid="uid://bwm46sdoi0m4f" path="res://source/Ui/Home/KitchenTabUi.cs" id="29_d5d72"]
+[ext_resource type="Script" uid="uid://bwm46sdoi0m4f" path="res://source/Ui/Home/Kitchen/KitchenTabUi.cs" id="29_d5d72"]
 [ext_resource type="Texture2D" uid="uid://cqylvjhpjdsig" path="res://assets/arrow.png" id="30_3vupj"]
 [ext_resource type="PackedScene" uid="uid://dq1res6vuuu0s" path="res://controls/journal_entry.tscn" id="34_aggb6"]
 [ext_resource type="Script" uid="uid://dt7allqwblld8" path="res://source/Ui/Home/JournalTabUi.cs" id="34_f7hpq"]
@@ -46,7 +46,7 @@
 [ext_resource type="Script" uid="uid://bgg5oc2br6nw" path="res://source/Ui/HomeIconUi.cs" id="38_1dlgw"]
 [ext_resource type="Texture2D" uid="uid://jtxsnhd2a25m" path="res://assets/resources/reputation.png" id="38_fe1od"]
 [ext_resource type="PackedScene" uid="uid://jfem1aph6dkc" path="res://controls/infusion_control.tscn" id="38_p3pq8"]
-[ext_resource type="PackedScene" uid="uid://d0n2fhv3mb5w" path="res://grinder_control.tscn" id="39_kajva"]
+[ext_resource type="PackedScene" uid="uid://d0n2fhv3mb5w" path="res://controls/grinder_control.tscn" id="39_kajva"]
 [ext_resource type="Script" uid="uid://kibpep7iy6dq" path="res://source/Ui/Home/BedroomTabUi.cs" id="41_aw26h"]
 [ext_resource type="Script" uid="uid://ds4yp1r0vlu5l" path="res://source/Ui/ResourceParticles.cs" id="42_fe1od"]
 [ext_resource type="Texture2D" uid="uid://56a2448o3l0x" path="res://assets/resources/coins_small.png" id="43_fq8n2"]
@@ -970,6 +970,7 @@ text = "Too early to sleep"
 [node name="SleepButton" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab/VBoxContainer" unique_id=719614990 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
 layout_mode = 2
+Text = "GO_TO_SLEEP"
 
 [node name="Control" type="Control" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab" unique_id=285036605]
 z_index = 1

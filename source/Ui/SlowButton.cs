@@ -9,6 +9,7 @@ public partial class SlowButton : PanelContainer {
 	[Export] public double Duration { get; set; } = 0.5;
 	[Export] public AudioStreamPlayer? StartSound { get; set; }
 	[Export] public AudioStreamPlayer? FinishSound { get; set; }
+	[Export] public bool Small { get; set; } = false;
 
 	private StyleBox? normal_style;
 	private StyleBox? hover_style;
@@ -73,6 +74,10 @@ public partial class SlowButton : PanelContainer {
 		progress_bar = GetNode<ProgressBar>("%ProgressBar");
 		progress_bar.Value = 0;
 		Update();
+
+		if (Small) {
+			label.AddThemeFontOverride("font", ResourceLoader.Load<Font>("res://assets/theme/m5x7.ttf"));
+		}
 	}
 
 	private void OnPressed() {

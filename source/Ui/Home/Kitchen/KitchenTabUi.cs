@@ -15,6 +15,8 @@ public partial class KitchenTabUi : TabBaseUi {
 		foreach (var ui in processes) {
 			ui.OutputCreated += Update;
 		}
+
+		Game.Instance.FeatureUnlocked += OnFeatureUnlocked;
 	}
 
 	private void OnAccept() {
@@ -31,6 +33,16 @@ public partial class KitchenTabUi : TabBaseUi {
 		inventory?.Update();
 		foreach (var ui in processes) {
 			ui.Update();
+			ui.Visible = ui.IsUnlocked();
+		}
+	}
+
+	private void OnFeatureUnlocked(Feature feature) {
+		foreach (var ui in processes) {
+			if (ui.Visible != ui.IsUnlocked()) {
+				ui.Visible = ui.IsUnlocked();
+				Alert = true;
+			}
 		}
 	}
 

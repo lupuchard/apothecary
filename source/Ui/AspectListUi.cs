@@ -61,6 +61,7 @@ public partial class AspectListUi : HBoxContainer {
 		var new_label = new Label { ThemeTypeVariation = "LabelSmall" };
 		amount_labels.Add(new_label);
 		AddChild(new_label);
+		new_label.SizeFlagsVertical = SizeFlags.Fill;
 
 		var new_sprite = new TextureRect { StretchMode = TextureRect.StretchModeEnum.Keep };
 		sprites.Add(new_sprite);

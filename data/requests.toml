@@ -1,0 +1,27 @@
+[Requests]
+
+[Requests.pain]
+visitor = "villager"
+text = """
+[I'd like something to help with my {0}.|I have {0}.|Do you have something for {0}? % arthritis|leg pain|cramping]
+[I stubbed my toe.][I think I've sprained something.]
+"""
+aspects = ["1 bloom", "0 umber"]
+reward = 1
+
+[Requests.migraine]
+visitor = "villager"
+text = """
+[Migraine.][My headache hasn't gone away.]
+[I've been having {0} migraines. % terrible|awful]
+"""
+aspects = ["1 bloom", "0 spice"]
+reward = 1
+
+[Requests.food_poisoning]
+visitor = "villager"
+text = """
+[I shouldn't have eaten {0}. % that raw shellfish|those leftovers|that salami off the floor]
+"""
+aspects = ["1 spice", "0 gelum"]
+reward = 1

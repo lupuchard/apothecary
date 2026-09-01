@@ -1,0 +1,50 @@
+[Regions]
+
+[Regions.front_yard]
+max_forage = 1
+forage_recovery = 0.25
+adjacent = ["road", "meadow", "east_woods", "backyard"]
+
+[Regions.backyard]
+max_forage = 1
+forage_recovery = 0.25
+unlock_requirement = "reputation"
+unlock_requirement_amount = 1
+adjacent = ["front_yard", "east_woods", "creek", "west_woods"]
+
+[Regions.road]
+max_forage = 2
+forage_recovery = 0.5
+unlock_requirement = "reputation"
+unlock_requirement_amount = 1
+adjacent = ["front_yard", "meadow", "west_woods"]
+
+[Regions.meadow]
+max_forage = 5
+forage_recovery = 0.75
+unlock_requirement = "day"
+unlock_requirement_amount = 1
+adjacent = ["front_yard", "road", "east_woods"]
+
+[Regions.east_woods]
+max_forage = 5
+woodcutting = true
+forage_recovery = 0.75
+unlock_requirement = "day"
+unlock_requirement_amount = 2
+adjacent = ["front_yard", "meadow", "creek", "backyard"]
+
+[Regions.west_woods]
+max_forage = 5
+woodcutting = true
+forage_recovery = 0.75
+unlock_requirement = "journal"
+unlock_requirement_amount = 3
+adjacent = ["backyard", "creek", "road"]
+
+[Regions.creek]
+max_forage = 3
+forage_recovery = 0.5
+unlock_requirement = "journal"
+unlock_requirement_amount = 6
+adjacent = ["backyard", "east_woods", "west_woods"]

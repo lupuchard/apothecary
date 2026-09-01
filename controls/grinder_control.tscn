@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d0n2fhv3mb5w"]
 
-[ext_resource type="Script" uid="uid://cbbj58g24orhn" path="res://source/Ui/GrinderUi.cs" id="1_agnle"]
+[ext_resource type="Script" uid="uid://cbbj58g24orhn" path="res://source/Ui/Home/Kitchen/GrinderUi.cs" id="1_agnle"]
 [ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="2_2rfnf"]
 [ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="3_3g062"]
 [ext_resource type="Texture2D" uid="uid://cqylvjhpjdsig" path="res://assets/arrow.png" id="4_w17r1"]
@@ -23,7 +23,9 @@ offset_right = 208.0
 StartSound = NodePath("StartGrind")
 FinishSound = NodePath("EndGrind")
 Text = "GRIND"
-Costs = Dictionary[String, int]({})
+Costs = Dictionary[String, int]({
+"time": 1
+})
 
 [node name="StartGrind" type="AudioStreamPlayer" parent="HoldButton" unique_id=1217599095]
 

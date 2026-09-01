@@ -18,16 +18,21 @@ public class Aspect {
 	public Texture2D Sprite { get; }
 	public Color Color { get; }
 
-	private readonly Func<Aspect> mutates_into;
-	public Aspect MutatesInto => mutates_into();
+	private readonly Func<Aspect> mutates_into_func;
+	public Aspect MutatesInto {
+		get {
+			field ??= mutates_into_func();
+			return field;
+		}
+	}
 
-	private static readonly Aspect UnknownAspect = new("unknown", Colors.Black, () => UnknownAspect!);
+	public static readonly Aspect UnknownAspect = new("unknown", Colors.Black, () => UnknownAspect!);
 
 	public Aspect(string id, Color color, Func<Aspect> mutates_into) {
 		Id = id;
 		Color = color;
 		Sprite = ResourceLoader.Load<Texture2D>($"res://assets/aspect/{id}.png");
-		this.mutates_into = mutates_into;
+		mutates_into_func = mutates_into;
 	}
 }
 

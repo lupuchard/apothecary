@@ -35,6 +35,8 @@ NO_VISITOR_TEXT,No visitors
 EXPLORE,Explore house
 INFUSION,Infusion
 INFUSE,Infuse
+GROUND,Ground {0}
+GRIND,Grind
 ONE_DAY,1 day
 X_DAYS,{0} days
 ONE_DAY_LEFT,1 day left

@@ -32,6 +32,7 @@ bbcode_enabled = true
 text = "Hello"
 fit_content = true
 autowrap_mode = 0
+horizontal_alignment = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=271070724]
 layout_mode = 2

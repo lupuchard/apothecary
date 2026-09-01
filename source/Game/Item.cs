@@ -66,11 +66,20 @@ public readonly struct Item : IEquatable<Item> {
 	}
 
 	public string GetName() {
-		return Is(ItemType.Infusion) ? "INFUSION" : Raw[0].Id.ToUpperInvariant();
+		var name = TranslationServer.Translate(Raw[0].Id.ToUpperInvariant());
+		if (Is(ItemType.Ground)) {
+			return string.Format(TranslationServer.Translate("GROUND"), name);
+		} else if (Is(ItemType.Infusion)) {
+			return TranslationServer.Translate("INFUSION");
+		} else {
+			return name;
+		}
 	}
 
 	public Texture2D GetSprite() {
-		if (Is(ItemType.Infusion)) {
+		if (Is(ItemType.Ground)) {
+			return ResourceLoader.Load<Texture2D>("res://assets/item/ground.png");
+		} else if (Is(ItemType.Infusion)) {
 			return ResourceLoader.Load<Texture2D>("res://assets/item/infusion.png");
 		} else {
 			return Raw[0].Sprite;

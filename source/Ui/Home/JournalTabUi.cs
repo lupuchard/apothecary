@@ -73,8 +73,8 @@ public partial class JournalTabUi : TabBaseUi {
 			var region_name = Tr(x.Region.Id.ToUpper());
 			var time_of_day = Tr(x.Season.TrTimeOfDay(x.TimeOfDay));
 			return x.Amount > 1
-				? string.Format(Tr("STRING_OBSERVATION"), region_name, time_of_day) 
-				: string.Format(Tr("STRING_OBSERVATION_MULTIPLE"), region_name, time_of_day, x.Amount);
+				? string.Format(Tr("ITEM_OBSERVATION"), region_name, time_of_day) 
+				: string.Format(Tr("ITEM_OBSERVATION_MULTIPLE"), region_name, time_of_day, x.Amount);
 		}) ?? []);
 		notes_text_edit?.Text = open_notes?.Notes ?? "";
 	}

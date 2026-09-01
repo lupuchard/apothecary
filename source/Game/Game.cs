@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.Json.Serialization;
 using Godot;
 
@@ -25,7 +27,7 @@ public partial class Game : RefCounted {
 
 	public readonly World World = CreateWorld();
 
-	public class GameState(Journal journal) {
+	public record GameState(Journal journal) {
 		[JsonInclude] public Rando rando = new (seed: 2);
 		[JsonInclude] public int day = 0;
 		[JsonInclude] public Season season = Season.Estival;
@@ -36,6 +38,7 @@ public partial class Game : RefCounted {
 
 		[JsonConverter(typeof(DictionaryToListConverter<Item, int>))]
 		[JsonInclude] public Dictionary<Item, int> inventory = [];
+		[JsonInclude] public List<Pickup?> current_pickup_results = [];
 
 		[JsonInclude] public Visitor? visitor_at_door = null;
 		[JsonInclude] public List<Visitor> current_requests = [];
@@ -48,7 +51,8 @@ public partial class Game : RefCounted {
 		[JsonInclude] public HashSet<Feature> unlocked_features = [];
 	}
 
-	public GameState state { get; private set; }
+	private GameState state;
+	public GameState State => state with { };
 
 	public int TimeOfDay => state.time_of_day;
 	public int Day => state.day;
@@ -56,7 +60,7 @@ public partial class Game : RefCounted {
 	public int Year => state.year;
 
 	private readonly Dictionary<(long, RegionModel), List<ItemModel>> foraging_possibilities_cache = [];
-	private List<ItemModel?> current_foraging_results = [];
+	public IReadOnlyList<Pickup?> CurrentPickupResults => state.current_pickup_results;
 
 	private readonly Dictionary<string, Region> region_lookup = [];
 
@@ -71,6 +75,8 @@ public partial class Game : RefCounted {
 
 	public Journal Journal => state.journal;
 	private readonly Dictionary<UnlockRequirementType, List<RegionModel>> region_unlocks = [];
+
+	public IReadOnlyList<int> DailyResourceSummary => state.daily_resource_summary;
 	
 
 	public Game() {
@@ -100,8 +106,8 @@ public partial class Game : RefCounted {
 		
 		MakeNewVisitor(World.GetRequest("pain"));
 
-		ModifyResource(Resource.FocusMax, 2);
-		ModifyResource(Resource.Focus, 2);
+		SetResource(Resource.FocusMax, 2);
+		SetResource(Resource.Focus, 2);
 	}
 
 	public void LoadGame(GameState new_state) {
@@ -153,9 +159,16 @@ public partial class Game : RefCounted {
 		EmitSignalResourceUpdated(resource, Math.Max(amount, 0));
 	}
 
+	public void SetResource(Resource resource, int amount) {
+		EnsureListSize(state.resources, (int)resource);
+		EnsureListSize(state.daily_resource_summary, (int)resource);
+		state.resources[(int)resource] = amount;
+		EmitSignalResourceUpdated(resource, Math.Max(amount, 0));
+	}
+
 	private static void EnsureListSize<T>(List<T> list, int min_index) where T : struct {
 		while (list.Count <= min_index) {
-			list.Add(default(T));
+			list.Add(default);
 		}
 	}
 
@@ -200,13 +213,12 @@ public partial class Game : RefCounted {
 			Unlock(region);
 		}
 
+		state.resources[(int)Resource.Focus] = state.resources[(int)Resource.FocusMax];
+		state.resources[(int)Resource.Stamina] = state.resources[(int)Resource.StaminaMax];
+
 		state.daily_resource_summary.Clear();
 		UpdateVisitors();
 		EmitSignalTimeChanged();
-	}
-
-	public IReadOnlyList<ItemModel?> CurrentForagingResults() {
-		return current_foraging_results;
 	}
 
 	public void DoForaging(RegionModel location) {
@@ -218,21 +230,26 @@ public partial class Game : RefCounted {
 		var region = GetRegion(location.Id);
 		if (region?.Remaining > 0) {
 			region.ConsumeForage();
-			current_foraging_results = [..GetForagingResults(location).Cast<ItemModel?>()];
-			foreach (var result in current_foraging_results.Where(x => x != null).GroupBy(x => x!)) {
+			state.current_pickup_results = [..GetForagingResults(location).Select(Pickup.ItemModel)];
+			foreach (var result in CurrentPickupResults.Where(x => x != null).GroupBy(x => x!)) {
 				var obs = new ItemObservation(region.Model, result.Count(), Season, TimeOfDay, 0); // TODO: add weather
-				Journal.AddObservation(result.Key, obs);
+				Journal.AddObservation(result.Key.Item!, obs);
 			}
 		}
 
 		PassTime();
 	}
 
-	public void AcquireForagingResult(int index) {
-		if (index < current_foraging_results.Count && current_foraging_results[index] is { } item_model) {
-			var item = new Item(item_model);
-			AcquireItem(item);
-			current_foraging_results[index] = null;
+	public void AcquirePickupResult(int index) {
+		if (index < CurrentPickupResults.Count && CurrentPickupResults[index] is { } pickup) {
+			switch (pickup.Type) {
+				case PickupType.Empty: break;
+				case PickupType.ItemModel: AcquireItem(new Item(pickup.Item!)); break;
+				case PickupType.Material: ModifyResource(pickup.Resource!.Value, 1); break;
+				default: throw new ArgumentOutOfRangeException();
+			}
+			
+			state.current_pickup_results[index] = null;
 		}
 	}
 
@@ -443,7 +460,11 @@ public partial class Game : RefCounted {
 	}
 
 	private static World CreateWorld() {
-		Aspect? bloom, caust = null, spice = null, vigor = null, umber = null, gelus = null;
+		var directory = ProjectSettings.GlobalizePath("res://data");
+		var data = string.Join("\n", Directory.GetFiles(directory).Select(File.ReadAllText));
+		return new World(data);
+
+		/*Aspect? bloom, caust = null, spice = null, vigor = null, umber = null, gelus = null;
 		bloom = new Aspect("bloom", Aspect.SpringGreen, () => caust!);
 		caust = new Aspect("caust", Aspect.Chartreuse, () => spice!);
 		spice = new Aspect("spice", Aspect.Orange, () => vigor!);
@@ -508,8 +529,9 @@ public partial class Game : RefCounted {
 			adjacencies.AsReadOnly(),
 			[bloom, caust, spice, vigor, umber, gelus],
 			items,
+			[villager],
 			[painRequest, migraineRequest, foodPoisoningRequest]
-		);
+		);*/
 	}
 
 	private void Serialize() {

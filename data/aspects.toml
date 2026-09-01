@@ -1,0 +1,25 @@
+[Aspects]
+
+[Aspects.bloom]
+color = [0.0, 1.0, 0.5]  # Spring Green
+mutates_into = "caust"
+
+[Aspects.caust]
+color = [0.5, 1.0, 0.0]  # Chartreuse
+mutates_into = "spice"
+
+[Aspects.spice]
+color = [1.0, 0.5, 0.0]  # Orange
+mutates_into = "vigor"
+
+[Aspects.vigor]
+color = [1.0, 0.0, 0.5]  # Rose
+mutates_into = "umber"
+
+[Aspects.umber]
+color = [0.5, 0.0, 1.0]  # Violet
+mutates_into = "gelus"
+
+[Aspects.gelus]
+color = [0.0, 0.5, 1.0]  # Azure
+mutates_into = "bloom"
