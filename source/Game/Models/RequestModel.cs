@@ -16,15 +16,17 @@ public class RequestModel {
 
 	public string Id { get; }
 	public VisitorType Type { get; }
+	public int Tier { get; }
 	private readonly List<TextGen> text_gens = [];
 	public ImmutableArray<(Aspect, int)> Aspects { get; }
 	public int Reward { get; }
 	
-	private static readonly RequestModel UnknownRequestModel = new("unknown", VisitorType.UnknownVisitorType, "", [], 0);
+	private static readonly RequestModel UnknownRequestModel = new("unknown", VisitorType.UnknownVisitorType, 0, "", [], 0);
 
-	public RequestModel(string id, VisitorType type, string text_gen, ImmutableArray<(Aspect, int)> aspects, int reward) {
+	public RequestModel(string id, VisitorType type, int tier, string text_gen, ImmutableArray<(Aspect, int)> aspects, int reward) {
 		Id = id;
 		Type = type;
+		Tier = tier;
 		ParseTextGen(text_gen);
 		Aspects = aspects;
 		Reward = reward;

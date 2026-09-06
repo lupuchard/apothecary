@@ -13,4 +13,8 @@ public partial class BaseUi : Control {
 	
 	public virtual void OpenUi() { }
 	public virtual void CloseUi() { }
+
+	public virtual bool ClosePopup() {
+		return false;
+	}
 }

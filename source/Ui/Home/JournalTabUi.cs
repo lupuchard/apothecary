@@ -42,6 +42,7 @@ public partial class JournalTabUi : TabBaseUi {
 		verified_popup = GetNode<Control>("VerifiedPopup");
 		verified_popup_label = GetNode<Label>("%VerifiedPopupLabel");
 		verified_popup_button = GetNode<Button>("%VerifiedPopupButton");
+		verified_popup_button.Pressed += () => verified_popup.Hide();
 		verified_popup.Hide();
 		
 		notes_popup = GetNode<Control>("NotesPopup");
@@ -58,7 +59,6 @@ public partial class JournalTabUi : TabBaseUi {
 		next_page_button.Pressed += ToNextPage;
 
 		Game.Instance.JournalConfirmation += ShowPopup;
-		verified_popup_button.Pressed += () => verified_popup.Hide();
 	}
 
 	private void OnNotesOpened(JournalEntryUi entry) {
@@ -72,7 +72,7 @@ public partial class JournalTabUi : TabBaseUi {
 		item_occurrences_label?.Text = string.Join("\n", open_notes?.Observations.Select(x => {
 			var region_name = Tr(x.Region.Id.ToUpper());
 			var time_of_day = Tr(x.Season.TrTimeOfDay(x.TimeOfDay));
-			return x.Amount > 1
+			return x.Amount == 1
 				? string.Format(Tr("ITEM_OBSERVATION"), region_name, time_of_day) 
 				: string.Format(Tr("ITEM_OBSERVATION_MULTIPLE"), region_name, time_of_day, x.Amount);
 		}) ?? []);
@@ -82,6 +82,7 @@ public partial class JournalTabUi : TabBaseUi {
 	private void OnNotesClosed() {
 		if (open_notes == null) return;
 		Game.Instance.Journal.UpdateNotes(open_notes, notes_text_edit?.Text);
+		open_notes = null;
 		notes_popup?.Hide();
 		Update();
 	}
@@ -100,11 +101,17 @@ public partial class JournalTabUi : TabBaseUi {
 		verified_popup!.Show();
 		verified_popup_label!.Text = string.Format(
 			Tr("VERIFIED_POPUP_TEXT"), 
-			confirmed_items.Select(x => "- " + Tr(x.ToUpper()) + "\n"),
+			string.Join("", confirmed_items.Select(x => "- " + Tr(x.ToUpper()) + "\n")),
 			""
 		);
 
 		Update();
+	}
+
+	public override void _GuiInput(InputEvent input_event) {
+		if (input_event is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: true }) {
+			ClosePopup();
+		}
 	}
 
 	public override void Update() {
@@ -124,5 +131,17 @@ public partial class JournalTabUi : TabBaseUi {
 
 	public override bool IsUnlocked() {
 		return Game.Instance.IsUnlocked(Feature.Journal);
+	}
+
+	public override bool ClosePopup() {
+		if (verified_popup?.Visible == true) {
+			verified_popup.Hide();
+			return true;
+		} else if (notes_popup?.Visible == true) {
+			OnNotesClosed();
+			return true;
+		}
+
+		return false;
 	}
 }

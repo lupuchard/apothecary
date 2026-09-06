@@ -9,6 +9,7 @@ namespace Apothecary;
 public enum Resource {
 	None,
 	Time,
+	ReputationLevel,
 	Reputation,
 	Coins,
 	Firewood,
@@ -21,6 +22,7 @@ public enum Resource {
 
 public static class Resources {
 	public static readonly ImmutableArray<Resource> Materials = [
+		Resource.ReputationLevel,
 		Resource.Reputation, 
 		Resource.Coins, 
 		Resource.Firewood
@@ -37,17 +39,28 @@ public static class Resources {
 	}
 	
 	extension(Resource resource) {
-		public string TrString(bool plural = false) {
+		public string TrString(bool plural = true) {
 			return resource switch {
 				Resource.Time => "TIME",
+				Resource.ReputationLevel => "REPUTATION_LEVEL",
 				Resource.Reputation => "REPUTATION",
-				Resource.Coins => plural ? "COIN" : "COINS",
+				Resource.Coins => plural ? "COINS" : "COIN",
 				Resource.Firewood => "FIREWOOD",
 				Resource.Stamina => "STAMINA",
 				Resource.StaminaMax => "STAMINA_MAX",
 				Resource.Focus => "FOCUS",
 				Resource.FocusMax => "FOCUS_MAX",
 				_ => "NONE",
+			};
+		}
+
+		public bool IsTracked() {
+			return resource switch {
+				Resource.ReputationLevel => true,
+				Resource.Reputation => true,
+				Resource.Coins => true,
+				Resource.Firewood => true,
+				_ => false
 			};
 		}
 
@@ -69,6 +82,7 @@ public static class Resources {
 		public Color GetColor() {
 			return resource switch {
 				Resource.Reputation => Colors.CornflowerBlue,
+				Resource.ReputationLevel => Colors.CornflowerBlue.Lightened(0.5f),
 				Resource.Coins => Colors.Yellow,
 				Resource.Firewood => Colors.DarkOrange,
 				Resource.Stamina => Colors.LightGreen,

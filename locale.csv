@@ -20,11 +20,18 @@ MINTFLOWER,Mintflower
 FEVERFEW,Feverfew
 WHITE_CONEFLOWER,White coneflower
 CHAMOMILE,Chamomile
+YARROW,Yarrow
+WILD_GARLIC,Wild garlic
+RASPBERRY,Raspberry
+MARSH_MALLOW,Marsh mallow
+LICQUORICE_ROOT,Licquorice root
+NETTLE,Wet nettle
 FORAGES_REMAINING_LABEL,{0}/{1} Remaining
 NO_FORAGE_FOUND,Nothing found
 FORAGE_BUTTON_UNAVAILABLE,No more forage
 FORAGE_BUTTON_AVAILABLE,Forage
 FORAGE_BUTTON_END_OF_DAY,It's getting late...
+CHOP_WOOD_BUTTON,Chop wood
 VISITORS_TAB,Visitors
 KITCHEN_TAB,Kitchen
 JOURNAL_TAB,Journal
@@ -94,6 +101,8 @@ GO_TO_SLEEP,Go to sleep
 IT_IS_NOW_DAY,It is now day {0} of {1}.
 WAKE_UP,Wake up
 END_OF_DAY_SUMMARY,End of day summary:
+FAILED_REQUESTS,Requests:
+FAILED_REQUEST,Failed {0}'s request.
 GAINED,Gained {0} {1}
 EARNED,Earned {0} {1}
 LOST,Lost {0} {1}
@@ -112,3 +121,8 @@ FOCUS,Focus
 STAMINA,Stamina
 ITEM_OBSERVATION,Found in {0} ({1}).
 ITEM_OBSERVATION_MULTIPLE,{2} found in {0} ({1}).
+UNLOCKED_ON_DAY,Unlocked on day {0}.
+UNLOCKED_ON_RESOURCE,Unlocked with {0} {1} (currently {2}/{0}).
+UNLOCKED_ON_JOURNAL,Unlocked with {0} confirmed journal entries (currently {1}/{0}).
+PAYMENT,Payment: {0}
+TIP,Tip: {0}

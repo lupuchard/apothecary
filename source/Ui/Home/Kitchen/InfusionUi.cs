@@ -19,7 +19,7 @@ public partial class InfusionUi : KitchenProcessBaseUi {
 		output_slot = GetNode<OutputSlot>("HBoxContainer/OutputSlot");
 
 		foreach (var slot in input_slots) {
-			slot.ItemUpdated += Update;
+			slot.ItemUpdated += () => Update(slot);
 		}
 
 		input_aspects = GetNode<AspectListUi>("InputAspects");
@@ -28,12 +28,21 @@ public partial class InfusionUi : KitchenProcessBaseUi {
 		button.Pressed += DoInfusion;
 	}
 
-	public override void Update() {
+	public void Update(InputSlot? slot_updated) {
 		foreach (var slot in input_slots) {
 			slot.Update();
 		}
 		output_slot?.Update();
-
+		
+		if (slot_updated is { Item: not null }) {
+			// Validate that the updated slot didn't add a duplicate raw item
+			foreach (var slot in input_slots.Where(slot => slot != slot_updated)) {
+				if (slot.Item != null && slot.Item.Value.Raw.Intersect(slot_updated.Item.Value.Raw).Any()) {
+					slot.Referencing = null;
+				}
+			}
+		}
+		
 		var inputs = input_slots.Where(slot => slot.Item != null).Select(slot => slot.Item!.Value).ToList();
 		if (inputs.Count == 0) {
 			input_aspects?.Update([]);
@@ -49,6 +58,10 @@ public partial class InfusionUi : KitchenProcessBaseUi {
 			output_aspects?.Update(Game.Instance.Journal.GetShownAspects(output.Raw, output.Aspects));
 			button?.Disabled = output.Aspects.Count == 0;
 		}
+	}
+
+	public override void Update() {
+		Update(null);
 	}
 
 	private void DoInfusion() {

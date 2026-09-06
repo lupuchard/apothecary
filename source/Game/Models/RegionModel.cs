@@ -6,13 +6,14 @@ using Godot;
 namespace Apothecary;
 
 [JsonConverter(typeof(RegionModelConverter))]
-public partial class RegionModel(string id, int max_forage, double forage_recovery, UnlockRequirement unlock_requirement) : RefCounted {
+public partial class RegionModel(string id, int max_forage, double forage_recovery, bool woodcutting, UnlockRequirement unlock_requirement) : RefCounted {
 	public string Id { get; } = id;
 	public int MaxForage { get; } = max_forage;
 	public double ForageRecovery { get; } = forage_recovery;
+	public bool Woodcutting { get; } = woodcutting;
 	public UnlockRequirement UnlockRequirement { get; } = unlock_requirement;
 
-	public static readonly RegionModel UnknownRegionModel = new("unknown", 0, 0, UnlockRequirement.None);
+	public static readonly RegionModel UnknownRegionModel = new("unknown", 0, 0, false, UnlockRequirement.None);
 }
 
 public class RegionModelConverter : JsonConverter<RegionModel?> {

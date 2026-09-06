@@ -85,7 +85,7 @@ public class World {
 
 	private record VisitorData(string[] first_names, string[] last_names, string[] reward, string[] tip);
 
-	private record RequestData(string visitor, string text, string[] aspects, int reward);
+	private record RequestData(string visitor, int tier, string text, string[] aspects, int reward);
 
 	private record WorldData(
 		Dictionary<string, AspectData> aspects, 
@@ -115,6 +115,7 @@ public class World {
 			region.Key,
 			region.Value.max_forage,
 			region.Value.forage_recovery,
+			region.Value.woodcutting,
 			ParseUnlockRequirement(region.Value.unlock_requirement, region.Value.unlock_requirement_amount)
 		))];
 		RegionIdMap = Regions.ToDictionary(x => x.Id).AsReadOnly();
@@ -172,7 +173,7 @@ public class World {
 				continue;
 			}
 			var request_aspects = request.aspects.Select(aspect => ParseAspect(aspect, AspectIdMap)).ToImmutableArray();
-			requests.Add(new RequestModel(id, visitor, request.text, request_aspects, request.reward));
+			requests.Add(new RequestModel(id, visitor, request.tier, request.text, request_aspects, request.reward));
 		}
 		Requests = [..requests];
 		RequestIdMap = Requests.ToDictionary(x => x.Id).AsReadOnly();

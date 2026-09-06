@@ -30,9 +30,7 @@ public partial class RegionSelect : Area2D {
 			return;
 		}
 
-		if (region_id == "home") {
-			type = Type.Home;
-		}
+		
 
 		var region_labels = GetNode<Control>("%RegionLabels");
 		region_label = (RegionLabel?)region_labels.FindChild(Name, recursive: false);
@@ -42,8 +40,14 @@ public partial class RegionSelect : Area2D {
 		}
 
 		region_label.Follows = this;
-		region_label.Text = Tr(region_id.ToUpperInvariant());
 		region_label.Modulate = Colors.Transparent;
+		
+		if (region_id == "home") {
+			type = Type.Home;
+			region_label.Text = Tr(region_id.ToUpperInvariant());
+		} else {
+			region_label.Region = Game.Instance.GetRegion(region_id);
+		}
 
 		MouseEntered += OnMouseEntered;
 		MouseExited += OnMouseExited;
@@ -115,7 +119,7 @@ public partial class RegionSelect : Area2D {
 				fog_shown = true;
 			}
 
-			region_label?.Text = Tr(region.TrString());
+			region_label?.Update();
 		}
 	}
 

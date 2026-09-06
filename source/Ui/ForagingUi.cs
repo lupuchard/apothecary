@@ -16,7 +16,9 @@ public partial class ForagingUi : BaseUi {
 
 	private Label? title_label;
 	public ImmutableArray<ForagingResultUi> ForagingResultsControls { get; private set; } = [];
+	private Container? actions;
 	private SlowButton? forage_button;
+	private SlowButton? chop_wood_button;
 	private Label? forages_remaining_label;
 
 	public override void _Ready() {
@@ -32,6 +34,12 @@ public partial class ForagingUi : BaseUi {
 		forage_button = GetNode<SlowButton>("%ForageButton");
 		forage_button.Show();
 		forage_button.Pressed += OnPressForage;
+		
+		chop_wood_button = GetNode<SlowButton>("%ChopWoodButton");
+		chop_wood_button.Pressed += OnPressChopWood;
+		
+		actions = GetNode<Container>("%ActionButtons");
+		actions.Show();
 	}
 
 	public void Update() {
@@ -40,6 +48,8 @@ public partial class ForagingUi : BaseUi {
 			forages_remaining_label?.Text = "Error";
 			return;
 		}
+
+		chop_wood_button?.Visible = Region.Model.Woodcutting && Game.Instance.IsUnlocked(Feature.Firewood);
 
 		var current_foraging_results = Game.Instance.CurrentPickupResults;
 		foreach (var control in ForagingResultsControls.Where(control => !control.Empty)) {
@@ -51,9 +61,9 @@ public partial class ForagingUi : BaseUi {
 		}
 
 		if (ForagingResultsControls.Any(x => x.Child?.Visible == true)) {
-			forage_button?.Hide();
+			actions?.Hide();
 		} else if (forage_button != null) {
-			forage_button.Show();
+			actions?.Show();
 			var end_of_day = Game.Instance.TimeOfDay >= Game.END_OF_DAY;
 			forage_button.Disabled = Region.Remaining <= 0 || end_of_day;
 			if (forage_button.Disabled) {
@@ -63,6 +73,7 @@ public partial class ForagingUi : BaseUi {
 			}
 		}
 
+		chop_wood_button?.Update();
 		title_label?.Text = Tr(Region.Model.Id.ToUpperInvariant());
 		forages_remaining_label?.Text = string.Format(Tr("FORAGES_REMAINING_LABEL"), Region.Remaining, Region.Model.MaxForage);
 	}
@@ -83,13 +94,23 @@ public partial class ForagingUi : BaseUi {
 		if (Region == null) {
 			return;
 		}
-		forage_button?.Hide();
+		actions?.Hide();
 		
 		Game.Instance.DoForaging(Region.Model);
 		var foraging_results = Game.Instance.CurrentPickupResults;
 		if (foraging_results.Count == 0) {
 			ForagingResultsControls[1].Enable(Pickup.Empty);
 		}
+		Update();
+	}
+
+	public void OnPressChopWood() {
+		if (Region == null) {
+			return;
+		}
+		actions?.Hide();
+
+		Game.Instance.DoWoodcutting(Region.Model);
 		Update();
 	}
 }

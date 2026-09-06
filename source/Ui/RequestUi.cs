@@ -73,8 +73,23 @@ public partial class RequestUi : PanelContainer {
 
 	private void OnGive() {
 		if (destination_slot?.Item is Item item && visitor != null) {
-			Game.Instance.GiveVisitor(visitor, item);
-			EmitSignalGiven();
+			var (payment, tip) = Game.Instance.GiveVisitor(visitor, item);
+			if (payment != null || tip != null) {
+				var text = "";
+				if (payment != null) {
+					text += string.Format(Tr("PAYMENT"), payment.Value.ToBbCodeString());
+				}
+				if (tip != null) {
+					text += string.Format(Tr("PAYMENT"), tip.Value.ToBbCodeString());
+				}
+
+				if (!string.IsNullOrEmpty(text)) {
+					FloatingNotifications.Instance?.Create(text, give_button!.GlobalPosition);
+				}
+				
+				destination_slot.Referencing = null;
+				EmitSignalGiven();
+			}
 		}
 	}
 }

@@ -19,4 +19,8 @@ public partial class TabBaseUi : Container {
 	public virtual bool IsUnlocked() {
 		return true;
 	}
+
+	public virtual bool ClosePopup() {
+		return false;
+	}
 }

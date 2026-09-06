@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text;
 using Godot;
 
 namespace Apothecary;
@@ -36,6 +37,7 @@ public partial class BedroomTabUi : TabBaseUi {
 	}
 
 	public override void Update() {
+		sleep_button?.Disabled = false;
 		if (Game.Instance.IsItDaytime()) {
 			sleep_label?.Text = Tr("TOO_EARLY_TO_SLEEP");
 			sleep_button?.Hide();
@@ -54,24 +56,32 @@ public partial class BedroomTabUi : TabBaseUi {
 
 	private void OnEndDay() {
 		if (end_of_day_fade == null) return;
+		sleep_button?.Disabled = true;
 		end_of_day_fade.Show();
 		var tween = CreateTween();
 		tween.TweenProperty(end_of_day_fade, "color", EIGENGRAU, 2.0);
 		tween.Finished += () => {
 			var game = Game.Instance;
 			
-			var resources = game.DailyResourceSummary;
-			end_of_day_summary?.Text = Tr("END_OF_DAY_SUMMARY") + "\n  " + string.Join("\n  ",
-				resources.Select((amount, resource) => (amount, (Resource)resource))
-					.Where(x => x.amount != 0)
-					.Select(x => string.Format(
-						Tr(x.amount > 0 ? x.Item2.GainTrString() : x.Item2.LostTrString()), 
-						x.amount, 
-						BbCodeUtil.Img(x.Item2.SmallSpritePath(), x.Item2.GetColor())
-					))
-			);
+			var report = game.NextDay();
+			var summary_text = new StringBuilder();
+			if (report.FailedRequests.Count > 0) {
+				summary_text.Append(Tr("FAILED_REQUESTS")).Append("\n  ");
+				summary_text.AppendJoin("\n  ", report.FailedRequests.Select(request => string.Format(
+					Tr("FAILED_REQUEST"),
+					request.Name
+				)) + new Reward([(Resource.Reputation, -1)]).ToBbCodeString());
+			}
+
+			if (report.ResourceSummary.Length > 0) {
+				summary_text.Append(Tr("END_OF_DAY_SUMMARY")).Append("\n  ");
+				summary_text.AppendJoin("\n  ", report.ResourceSummary.Select(x => string.Format(
+					Tr(x.amount > 0 ? x.resource.GainTrString() : x.resource.LostTrString()),
+					x.amount,
+					BbCodeUtil.Img(x.resource.SmallSpritePath(), x.resource.GetColor())
+				)));
+			}
 			
-			game.NextDay();
 			next_day_label?.Text = string.Format(Tr("IT_IS_NOW_DAY"), game.Day, Tr(game.Season.TrString()));
 			end_of_day_popup?.Show();
 		};
@@ -82,7 +92,14 @@ public partial class BedroomTabUi : TabBaseUi {
 		end_of_day_popup?.Hide();
 		end_of_day_fade?.Color = TRANSPARENT_EIGENGRAU;
 		end_of_day_fade?.Hide();
-		
-		
+	}
+	
+	public override bool ClosePopup() {
+		if (end_of_day_popup?.Visible == true) {
+			OnWakeUp();
+			return true;
+		}
+
+		return false;
 	}
 }

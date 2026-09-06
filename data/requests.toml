@@ -1,13 +1,18 @@
 [Requests]
 
+#
+# Tier 0 Requests - Bloom, Spice, Vigor
+#
+
 [Requests.pain]
 visitor = "villager"
 text = """
-[I'd like something to help with my {0}.|I have {0}.|Do you have something for {0}? % arthritis|leg pain|cramping]
+[I'd like something to help with my {0}.|I have {0}.|Do you have something for {0}? % arthritis|leg pain]
 [I stubbed my toe.][I think I've sprained something.]
 """
 aspects = ["1 bloom", "0 umber"]
 reward = 1
+tier = 0
 
 [Requests.migraine]
 visitor = "villager"
@@ -17,11 +22,94 @@ text = """
 """
 aspects = ["1 bloom", "0 spice"]
 reward = 1
+tier = 0
 
 [Requests.food_poisoning]
 visitor = "villager"
 text = """
 [I shouldn't have eaten {0}. % that raw shellfish|those leftovers|that salami off the floor]
 """
-aspects = ["1 spice", "0 gelum"]
+aspects = ["1 spice", "0 gelus"]
 reward = 1
+tier = 0
+
+[Requests.sinus_cough]
+visitor = "villager"
+text = """
+[I've been congested all week.|Can you do something about my cough?]
+"""
+aspects = ["1 vigor", "0 gelus"]
+reward = 1
+tier = 0
+
+[Requests.burn]
+visitor = "villager"
+text = """
+[I burnt myself {0}. {1} % on the stove|cooking % Still hurts.||Do you have something for this?]
+"""
+aspects = ["1 bloom", "0 caust"]
+reward = 1
+tier = 0
+
+#
+# Tier 1 Requests - Add Gelus & Caust, add severe Bloom
+#
+
+[Requests.pinkeye]
+visitor = "villager"
+text = """
+[I got pink eye.][I think I have an eye infection.]
+"""
+aspects = ["1 gelus", "0 caust"]
+reward = 1
+tier = 1
+
+[Requests.anemia]
+visitor = "villager"
+text = """
+[I just feel tired all the time.][Am I ill? I feel pale.]
+"""
+aspects = ["1 caust", "0 umber"]
+reward = 1
+tier = 1
+
+[Requests.ear_infection]
+visitor = "villager"
+text = """
+[My ear hurts.][My kid keeps {0} {1} ear {2} % touching|tugging % his|her % .| and there's fluid leaking out.| and has trouble hearing.]
+"""
+aspects = ["1 gelus"] # 0 perception
+reward = 1
+tier = 1
+
+[Requests.severe_pain]
+visitor = "villager"
+text = """
+[I need something to help with my {0}.|I have {0}.|Do you have something for {0}? % back pain|cramping]
+[I've definately sprained something.]
+"""
+aspects = ["2 bloom", "1 umber"]
+reward = 5
+tier = 1
+
+#
+# Tier 2 Requests - Add Umber & ???, add severe Vigor
+#
+
+[Requests.insomnia]
+visitor = "villager"
+text = """
+[I've been having trouble sleeping.][What do you have for insomnia?]
+"""
+aspects = ["1 umber", "0 caust"]
+reward = 1
+tier = 2
+
+[Requests.allergies]
+visitor = "villager"
+text = """
+[My allergies have been acting up.][I think I'm allergic to {0}. % my dog|my cat|my parent's house]
+"""
+aspects = ["2 vigor"] # 1 reason
+reward = 4
+tier = 2

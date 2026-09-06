@@ -9,6 +9,9 @@ public partial class PlayerCamera : Camera2D {
 
 	public bool CanPan { get; set; } = true;
 	private bool panning = false;
+	
+	//public Area2D? Extent { get; private set; }
+	//private RectangleShape2D ExtentShape = new();
 
 	[Export] public Sprite2D? Map { get; set; }
 
@@ -24,6 +27,14 @@ public partial class PlayerCamera : Camera2D {
 			LimitTop = (int)rect.Position.Y;
 			LimitBottom = (int)rect.End.Y;
 		}
+
+		/*Extent = new Area2D();
+		AddChild(Extent);
+		
+		var shape = new CollisionShape2D();
+		shape.Shape = ExtentShape;
+		Extent.AddChild(shape);
+		ExtentShape.Size = Rect().Size;*/
 	}
 
 	public override void _Input(InputEvent inputEvent) {
@@ -42,8 +53,10 @@ public partial class PlayerCamera : Camera2D {
 		if (!CanPan) return;
 		if (inputEvent.IsActionPressed("zoom_in")) {
 			Zoom = (Zoom + new Vector2(0.1f, 0.1f)).Min(ZOOM_MAX);
+			//ExtentShape.Size = Rect().Size;
 		} else if (inputEvent.IsActionPressed("zoom_out")) {
 			Zoom = (Zoom - new Vector2(0.1f, 0.1f)).Max(ZOOM_MIN);
+			//ExtentShape.Size = Rect().Size;
 		}
 	}
 
@@ -64,5 +77,9 @@ public partial class PlayerCamera : Camera2D {
 		if (Motion != Vector2.Zero) {
 			Position = GetTargetPosition() + Motion;
 		}
+	}
+
+	public Rect2 Rect() {
+		return GetViewportRect() * GetCanvasTransform();
 	}
 }

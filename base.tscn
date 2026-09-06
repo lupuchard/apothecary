@@ -11,6 +11,7 @@
 [ext_resource type="FontFile" uid="uid://qrqyo004juy3" path="res://assets/theme/Font_Fantasy.ttf" id="6_56f15"]
 [ext_resource type="StyleBox" uid="uid://bmoaasi4rrv6x" path="res://assets/theme/EditPanel.tres" id="6_tpea4"]
 [ext_resource type="Script" uid="uid://d21n6c1vn0w5x" path="res://source/Ui/ForagingUi.cs" id="7_dlkme"]
+[ext_resource type="Script" uid="uid://dgpsnbo467df5" path="res://source/Ui/FloatingNotifications.cs" id="7_rnjy8"]
 [ext_resource type="PackedScene" uid="uid://btdsoh5fj6pxl" path="res://controls/foraging_result.tscn" id="8_56f15"]
 [ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="11_im64q"]
 [ext_resource type="Script" uid="uid://cxwoeswknlk61" path="res://source/Ui/ClockUi.cs" id="12_k3d1t"]
@@ -24,7 +25,9 @@
 [ext_resource type="AudioStream" uid="uid://dslnovtsnx0if" path="res://assets/sound/forage_end.mp3" id="16_66ob2"]
 [ext_resource type="StyleBox" uid="uid://cl5k7bvj2roem" path="res://assets/theme/TabPanel.tres" id="16_v7taj"]
 [ext_resource type="Texture2D" uid="uid://bxsdd6eo4joxe" path="res://assets/theme/ornate.png" id="17_jym3p"]
+[ext_resource type="AudioStream" uid="uid://n3hgm4mswudp" path="res://assets/sound/chop_start.mp3" id="18_rvcyw"]
 [ext_resource type="Script" uid="uid://dmt26pnee1ajo" path="res://source/Ui/Home/VisitorsTabUi.cs" id="19_1uwki"]
+[ext_resource type="AudioStream" uid="uid://d1edr3mw1c227" path="res://assets/sound/chop_end.mp3" id="19_rnjy8"]
 [ext_resource type="Script" uid="uid://bx5fmbtwmaqyg" path="res://source/Ui/CurrentVisitorUi.cs" id="20_7m1qc"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="20_wudxj"]
 [ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="21_2btif"]
@@ -75,6 +78,14 @@ shader_parameter/white_cutoff = 0.8650000410875
 shader_parameter/velocity = Vector2(0.003, 0.003)
 shader_parameter/fog_color = Vector4(0.4, 0.4, 0.5, 1)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_k3d1t"]
+atlas = ExtResource("12_ytyno")
+region = Rect2(0, 0, 128, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sgv64"]
+atlas = ExtResource("12_ytyno")
+region = Rect2(0, 64, 128, 64)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k3d1t"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sgv64"]
@@ -97,14 +108,6 @@ streams_count = 3
 stream_0/stream = ExtResource("13_q1yh3")
 stream_1/stream = ExtResource("14_aw26h")
 stream_2/stream = ExtResource("15_3c4kj")
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_k3d1t"]
-atlas = ExtResource("12_ytyno")
-region = Rect2(0, 0, 128, 64)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sgv64"]
-atlas = ExtResource("12_ytyno")
-region = Rect2(0, 64, 128, 64)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_50rgw"]
 content_margin_top = 0.0
@@ -336,19 +339,17 @@ Map = NodePath("../Map")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2129669713]
 
-[node name="BackgroundExitButton" type="Button" parent="CanvasLayer" unique_id=180720526]
-unique_name_in_owner = true
-visible = false
+[node name="FloatingNotifications" type="Control" parent="CanvasLayer" unique_id=1327210315]
+z_index = 2
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_k3d1t")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_sgv64")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_gaoim")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_n73o2")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_cs1hs")
+mouse_filter = 2
+theme = ExtResource("2_8rhti")
+script = ExtResource("7_rnjy8")
 
 [node name="RegionLabels" type="Control" parent="CanvasLayer" unique_id=1856545341]
 unique_name_in_owner = true
@@ -379,6 +380,81 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("5_tpea4")
 Follows = NodePath("../../../Map/FrontYard/Polygon")
+
+[node name="Clock" type="Control" parent="CanvasLayer" unique_id=472514533]
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("12_k3d1t")
+
+[node name="DialTexture" type="TextureRect" parent="CanvasLayer/Clock" unique_id=193524298]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("AtlasTexture_k3d1t")
+
+[node name="StepTexture" type="TextureRect" parent="CanvasLayer/Clock" unique_id=1477882730]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("AtlasTexture_sgv64")
+
+[node name="Attributes" type="VBoxContainer" parent="CanvasLayer/Clock" unique_id=1591172430]
+layout_mode = 0
+offset_left = -139.0
+offset_top = -11.0
+offset_right = -54.0
+offset_bottom = 35.0
+theme = ExtResource("2_8rhti")
+alignment = 1
+
+[node name="Focus" parent="CanvasLayer/Clock/Attributes" unique_id=733819496 instance=ExtResource("22_hjerm")]
+layout_mode = 2
+resource_name = "focus"
+resource_max_name = "focus_max"
+
+[node name="Stamina" parent="CanvasLayer/Clock/Attributes" unique_id=31550263 instance=ExtResource("22_hjerm")]
+layout_mode = 2
+resource_name = "stamina"
+resource_max_name = "stamina_max"
+
+[node name="BackgroundExitButton" type="Button" parent="CanvasLayer" unique_id=180720526]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_k3d1t")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_sgv64")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_gaoim")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_n73o2")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_cs1hs")
 
 [node name="ForagingUi" type="PanelContainer" parent="CanvasLayer" unique_id=782267389]
 unique_name_in_owner = true
@@ -443,7 +519,12 @@ Index = 1
 layout_mode = 2
 Index = 2
 
-[node name="ForageButton" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer" unique_id=648291464 node_paths=PackedStringArray("StartSound", "FinishSound") instance=ExtResource("11_im64q")]
+[node name="ActionButtons" type="VBoxContainer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer" unique_id=32507774]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+
+[node name="ForageButton" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ActionButtons" unique_id=648291464 node_paths=PackedStringArray("StartSound", "FinishSound") instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -455,12 +536,33 @@ Costs = Dictionary[String, int]({
 "time": 1
 })
 
-[node name="StartForage" type="AudioStreamPlayer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ForageButton" unique_id=1902984513]
+[node name="StartForage" type="AudioStreamPlayer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ActionButtons/ForageButton" unique_id=1902984513]
 stream = SubResource("AudioStreamRandomizer_q1yh3")
 volume_db = -5.0
 
-[node name="EndForage" type="AudioStreamPlayer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ForageButton" unique_id=782228027]
+[node name="EndForage" type="AudioStreamPlayer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ActionButtons/ForageButton" unique_id=782228027]
 stream = ExtResource("16_66ob2")
+
+[node name="ChopWoodButton" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ActionButtons" unique_id=528430593 node_paths=PackedStringArray("StartSound", "FinishSound") instance=ExtResource("11_im64q")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+StartSound = NodePath("StartChop")
+FinishSound = NodePath("EndChop")
+Text = "CHOP_WOOD_BUTTON"
+Costs = Dictionary[String, int]({
+"stamina": 1,
+"time": 1
+})
+
+[node name="StartChop" type="AudioStreamPlayer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ActionButtons/ChopWoodButton" unique_id=1925845518]
+stream = ExtResource("18_rvcyw")
+volume_db = -5.0
+
+[node name="EndChop" type="AudioStreamPlayer" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer/PanelContainer/ActionButtons/ChopWoodButton" unique_id=34228967]
+stream = ExtResource("19_rnjy8")
 
 [node name="ForagesRemainingLabel" type="Label" parent="CanvasLayer/ForagingUi/Panel/MarginContainer/VBoxContainer" unique_id=2126031370]
 unique_name_in_owner = true
@@ -484,69 +586,9 @@ grow_vertical = 2
 texture_normal = ExtResource("12_sgv64")
 texture_hover = ExtResource("13_gaoim")
 
-[node name="Clock" type="Control" parent="CanvasLayer" unique_id=472514533]
-layout_mode = 3
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
-grow_horizontal = 2
-grow_vertical = 0
-script = ExtResource("12_k3d1t")
-
-[node name="DialTexture" type="TextureRect" parent="CanvasLayer/Clock" unique_id=193524298]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -64.0
-offset_top = -64.0
-offset_right = 64.0
-grow_horizontal = 2
-grow_vertical = 0
-texture = SubResource("AtlasTexture_k3d1t")
-
-[node name="StepTexture" type="TextureRect" parent="CanvasLayer/Clock" unique_id=1477882730]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -64.0
-offset_top = -64.0
-offset_right = 64.0
-grow_horizontal = 2
-grow_vertical = 0
-texture = SubResource("AtlasTexture_sgv64")
-
-[node name="Attributes" type="VBoxContainer" parent="CanvasLayer/Clock" unique_id=1591172430]
-layout_mode = 0
-offset_left = -139.0
-offset_top = -11.0
-offset_right = -54.0
-offset_bottom = 35.0
-theme = ExtResource("2_8rhti")
-alignment = 1
-
-[node name="Focus" parent="CanvasLayer/Clock/Attributes" unique_id=733819496 instance=ExtResource("22_hjerm")]
-layout_mode = 2
-resource_name = "focus"
-resource_max_name = "focus_max"
-
-[node name="Stamina" parent="CanvasLayer/Clock/Attributes" unique_id=31550263 instance=ExtResource("22_hjerm")]
-layout_mode = 2
-resource_name = "stamina"
-resource_max_name = "stamina_max"
-
 [node name="HomeUi" type="Control" parent="CanvasLayer" unique_id=369692100]
 unique_name_in_owner = true
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -572,7 +614,7 @@ size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("16_v7taj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_50rgw")
 theme_override_styles/tab_selected = SubResource("StyleBoxTexture_4a7sh")
-current_tab = 1
+current_tab = 2
 tab_0/title = "VISITORS_TAB"
 tab_1/title = "KITCHEN_TAB"
 tab_2/title = "JOURNAL_TAB"
@@ -751,6 +793,7 @@ WhereInputNodes = NodePath("../..")
 
 [node name="KitchenTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=360496213]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 script = ExtResource("29_d5d72")
 metadata/_tab_index = 1
@@ -777,7 +820,6 @@ WhereInputNodes = NodePath("../..")
 
 [node name="JournalTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1911984868]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 script = ExtResource("34_f7hpq")
 metadata/_tab_index = 2
@@ -1320,6 +1362,7 @@ alignment = 1
 [node name="DeleteGameButton" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu/VBoxContainer/HBoxContainer" unique_id=1170755638 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
 layout_mode = 2
+Text = "DELETE"
 
 [node name="CancelDeleteGameButton" type="Button" parent="CanvasLayer/MainMenu/CenterContainer/DeleteGameMenu/VBoxContainer/HBoxContainer" unique_id=750474363]
 unique_name_in_owner = true

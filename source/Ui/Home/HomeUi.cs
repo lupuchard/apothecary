@@ -5,7 +5,7 @@ namespace Apothecary;
 
 public partial class HomeUi : BaseUi {
 	private TabContainer? tab_container;
-	private List<TabBaseUi> tabs = [];
+	private readonly List<TabBaseUi> tabs = [];
 
 	private Container? material_list;
 	private PackedScene? material_info_scene;
@@ -71,5 +71,10 @@ public partial class HomeUi : BaseUi {
 	public override void CloseUi() {
 		if (tab_container == null) return;
 		tabs[tab_container.GetCurrentTab()].CloseUi();
+	}
+
+	public override bool ClosePopup() {
+		if (tab_container == null) return false;
+		return tabs[tab_container.GetCurrentTab()].ClosePopup();
 	}
 }

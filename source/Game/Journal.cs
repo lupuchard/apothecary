@@ -52,7 +52,7 @@ public class Journal(
 
 	public void UpdateGuess(JournalEntry entry) {
 		var existingEntry = entries.GetValueOrDefault(entry.Item.Id);
-		if (existingEntry == null || existingEntry.Confirmed) return;
+		if (existingEntry?.Confirmed == true) return;
 		entries[entry.Item.Id] = CheckGuess(entry);
 	}
 
@@ -83,6 +83,16 @@ public class Journal(
 
 		return entry;
 	}
+
+	/*public List<ItemModel> CheckAll() {
+		foreach (var solved_entry in solved) {
+			entries[solved_entry.Item.Id] = solved_entry with { Confirmed = true };
+			TotalConfirmed += 1;
+		}
+		var items = solved.Select(x => x.Item).ToList();
+		solved.Clear();
+		return items;
+	}*/
 	
 	public ImmutableList<(Aspect?, int)> GetShownAspects(IList<ItemModel> items, IList<(Aspect, int)> aspects) {
 		if (aspects.Count == 0) return [];

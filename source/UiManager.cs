@@ -61,7 +61,9 @@ public partial class UiManager : Node2D {
 	public override void _Input(InputEvent input_event) {
 		if (input_event.IsActionPressed("ui_close_dialog")) {
 			if (current_ui != null) {
-				CloseUi();
+				if (!current_ui.ClosePopup()) {
+					CloseUi();
+				}
 			} else {
 				main_menu?.Open();
 			}

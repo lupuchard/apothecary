@@ -12,11 +12,13 @@ when = "afternoon"
 [Items.mintflower]
 aspects = ["bloom", "gelus", "spice"]
 where = "east_woods"
+when = "morning"
 
 [Items.feverfew]
 aspects = ["2 bloom", "gelus"]
 where = "backyard"
 rarity = "rare"
+when = "afternoon"
 
 [Items.white_coneflower]
 aspects = ["bloom", "gelus"]
@@ -28,3 +30,27 @@ aspects = ["2 umber", "gelus", "bloom"]
 where = "meadow"
 rarity = "rare"
 
+[Items.yarrow]
+aspects = ["bloom", "spice"]
+where = "meadow"
+
+# Spring, Summer
+[Items.wild_garlic]
+aspects = ["2 caust"]
+where = "west_woods"
+rarity = "rare"
+
+[Items.raspberry]
+aspects = ["vigor"]
+where = "meadow"
+rarity = "rare"
+
+[Items.marsh_mallow]
+aspects = ["2 vigor", "bloom"]
+where = "creek"
+rarity = "rare"
+
+[Items.nettle]
+aspects = ["2 vigor", "caust"]
+where = "creek"
+when = "after_raining"

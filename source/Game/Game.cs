@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,9 @@ public partial class Game : RefCounted {
 	private const int MAX_FORAGE_RESULTS = 3;
 	public const int END_OF_DAY = 6;
 	private const int DAYS_IN_SEASON = 36;
-	private const float VISITOR_CHANCE = 0.4f;
+	private const float VISITOR_CHANCE = 1.0f;
+	private const int REP_LEVEL_1_REQUIREMENT = 10;
+	private const int REP_LEVEL_REQUIREMENT_FACTOR = 2;
 
 	public readonly World World = CreateWorld();
 
@@ -59,6 +62,7 @@ public partial class Game : RefCounted {
 	public Season Season => state.season;
 	public int Year => state.year;
 
+	private readonly ReadOnlyDictionary<int, List<RequestModel>> requests_by_tier;
 	private readonly Dictionary<(long, RegionModel), List<ItemModel>> foraging_possibilities_cache = [];
 	public IReadOnlyList<Pickup?> CurrentPickupResults => state.current_pickup_results;
 
@@ -76,11 +80,10 @@ public partial class Game : RefCounted {
 	public Journal Journal => state.journal;
 	private readonly Dictionary<UnlockRequirementType, List<RegionModel>> region_unlocks = [];
 
-	public IReadOnlyList<int> DailyResourceSummary => state.daily_resource_summary;
-	
-
 	public Game() {
-		state = new GameState(new Journal() { OnConfirmation = OnJournalConfirmation });
+		state = new GameState(new Journal());
+
+		requests_by_tier = World.Requests.GroupBy(r => r.Tier).ToDictionary(g => g.Key, g => g.ToList()).AsReadOnly();
 		
 		for (var i = 1; i < (int)UnlockRequirementType.COUNT; i++) {
 			region_unlocks.Add((UnlockRequirementType)i, []);
@@ -115,11 +118,12 @@ public partial class Game : RefCounted {
 	}
 
 	public void NewGame() {
-		SetState(new GameState(new Journal() { OnConfirmation = OnJournalConfirmation }));
+		SetState(new GameState(new Journal()));
 	}
 
 	private void SetState(GameState new_state) {
 		state = new_state;
+		state.journal.OnConfirmation = OnJournalConfirmation;
 		sorted_inventory = null;
 
 		region_lookup.Clear();
@@ -154,9 +158,17 @@ public partial class Game : RefCounted {
 		EnsureListSize(state.resources, (int)resource);
 		EnsureListSize(state.daily_resource_summary, (int)resource);
 		
+		var unlocked = GetUnlocksWith(UnlockRequirementType.ResourceAcquired, amount);
+		foreach (var region in unlocked) {
+			if (region.UnlockRequirement.Resource == resource) {
+				Unlock(region);
+			}
+		}
+		
 		state.resources[(int)resource] += amount;
-		state.daily_resource_summary[(int)resource] += amount;
+		if (resource.IsTracked()) state.daily_resource_summary[(int)resource] += amount;
 		EmitSignalResourceUpdated(resource, Math.Max(amount, 0));
+		if (resource == Resource.Reputation) CheckReputationLevel();
 	}
 
 	public void SetResource(Resource resource, int amount) {
@@ -164,6 +176,7 @@ public partial class Game : RefCounted {
 		EnsureListSize(state.daily_resource_summary, (int)resource);
 		state.resources[(int)resource] = amount;
 		EmitSignalResourceUpdated(resource, Math.Max(amount, 0));
+		if (resource == Resource.Reputation) CheckReputationLevel();
 	}
 
 	private static void EnsureListSize<T>(List<T> list, int min_index) where T : struct {
@@ -174,15 +187,23 @@ public partial class Game : RefCounted {
 
 	public void GetReward(Reward reward) {
 		foreach (var (resource, amount) in reward.Rewards) {
-			//var old_amount = GetResource(resource);
 			ModifyResource(resource, amount);
-			
-			var unlocked = GetUnlocksWith(UnlockRequirementType.ResourceAcquired, amount);
-			foreach (var region in unlocked) {
-				if (region.UnlockRequirement.Resource == resource) {
-					Unlock(region);
-				}
-			}
+		}
+	}
+
+	public int GetNextReputationLevelRequirement() {
+		return (int)Math.Pow(REP_LEVEL_REQUIREMENT_FACTOR, GetResource(Resource.ReputationLevel)) * REP_LEVEL_1_REQUIREMENT;
+	}
+
+	private void CheckReputationLevel() {
+		var rep = GetResource(Resource.Reputation);
+		var req = GetNextReputationLevelRequirement();
+		if (rep >= req) {
+			state.resources[(int)Resource.Reputation] -= req;
+			ModifyResource(Resource.ReputationLevel, 1);
+		} else if (rep < 0 && GetResource(Resource.ReputationLevel) > 0) {
+			ModifyResource(Resource.ReputationLevel, -1);
+			state.resources[(int)Resource.Reputation] += GetNextReputationLevelRequirement();
 		}
 	}
 	
@@ -193,7 +214,7 @@ public partial class Game : RefCounted {
 		}
 	}
 
-	public void NextDay() {
+	public EndOfDayReport NextDay() {
 		state.day += 1;
 		state.time_of_day = 0;
 		if (state.day >= DAYS_IN_SEASON) {
@@ -216,9 +237,15 @@ public partial class Game : RefCounted {
 		state.resources[(int)Resource.Focus] = state.resources[(int)Resource.FocusMax];
 		state.resources[(int)Resource.Stamina] = state.resources[(int)Resource.StaminaMax];
 
+		var failed_requests = UpdateVisitors();
+		var report = new EndOfDayReport() {
+			FailedRequests = failed_requests,
+			ResourceSummary = [..state.daily_resource_summary.Select((amount, resource) => ((Resource)resource, amount))]
+		};
 		state.daily_resource_summary.Clear();
-		UpdateVisitors();
+		
 		EmitSignalTimeChanged();
+		return report;
 	}
 
 	public void DoForaging(RegionModel location) {
@@ -237,6 +264,26 @@ public partial class Game : RefCounted {
 			}
 		}
 
+		PassTime();
+	}
+
+	public void DoWoodcutting(RegionModel location) {
+		if (TimeOfDay >= END_OF_DAY) {
+			GD.PushError("Can't chop wood at end of day.");
+			return;
+		}
+		
+		var region = GetRegion(location.Id);
+		if (region?.Model.Woodcutting != true) {
+			GD.PushError("Can't chop le wood here.");
+			return;
+		}
+
+		state.current_pickup_results.Clear();
+		for (var i = 0; i < (state.rando.RandBool() ? 2 : 3); i++) {
+			state.current_pickup_results.Add(Pickup.Material(Resource.Firewood));
+		}
+		
 		PassTime();
 	}
 
@@ -383,35 +430,64 @@ public partial class Game : RefCounted {
 		};
 	}
 
-	private void UpdateVisitors() {
+	private List<Visitor> UpdateVisitors() {
 		foreach (var visitor in state.current_requests) {
 			visitor.RemainingDays -= 1;
 		}
-		state.current_requests = [.. state.current_requests.Where(v => v.RemainingDays <= 0)];
+
+		var failed_requests = state.current_requests.Where(v => v.RemainingDays <= 0).ToList();
+		ModifyResource(Resource.Reputation, -failed_requests.Count);
+		state.current_requests = [.. state.current_requests.Where(v => v.RemainingDays > 0)];
 		state.visitor_at_door = null;
 
 		if (state.rando.RandDouble() < VISITOR_CHANCE) {
 			MakeNewVisitor();
 		}
+
+		return failed_requests;
 	}
 
 	private void MakeNewVisitor(RequestModel? request_type = null) {
-		var model = request_type ?? state.rando.Pick(World.Requests);
+		var tier = GetResource(Resource.ReputationLevel);
+		var random_val = state.rando.RandDouble();
+		tier += random_val switch {
+			< 0.01 => 2,   //  1%
+			< 0.10 => 1,   //  9%
+			< 0.40 => 0,   // 30%
+			< 0.60 => -1,  // 20%
+			< 0.80 => -2,  // 20%
+			< 0.90 => -3,  // 10%
+			< 0.95 => -4,  //  5%
+			_ => -5,       //  5%
+		};
+
+		if (tier < 0) {
+			tier = 0;
+		}
+
+		List<RequestModel>? request_list;
+		while (!requests_by_tier.TryGetValue(tier, out request_list)) {
+			tier -= 1;
+			if (tier < 0) throw new Exception("No requests found for tier 0!");
+		}
+		
+		var model = request_type ?? state.rando.Pick(request_list);
 		state.visitor_at_door = new Visitor(model, ref state.rando);
 	}
 
-	public Reward? GiveVisitor(Visitor visitor, Item treatment) {
-		if (!state.inventory.ContainsKey(treatment)) return null;
-		if (!treatment.Is(ItemType.Infusion)) return null;
+	public (Reward?, Reward?) GiveVisitor(Visitor visitor, Item treatment) {
+		if (!state.inventory.ContainsKey(treatment) || !treatment.Is(ItemType.Infusion)) return (null, null);
 
 		var quality = CalculateTreatmentQuality(visitor, treatment.Aspects);
-		var rewards = visitor.Request.Type.Reward.Select(res => (res, visitor.Request.Reward));
-		var tip = visitor.Request.Type.Tip.Select(res => (res, quality));
-		var reward = new Reward(rewards.Concat(tip));
-		GetReward(reward);
+		var payment = new Reward(visitor.Request.Type.Reward.Select(res => (res, visitor.Request.Reward)));
+		Reward? tip = quality > 0 ? new Reward(visitor.Request.Type.Tip.Select(res => (res, quality))) : null;
+		GetReward(payment);
+		if (tip != null) GetReward(tip.Value);
+		
 		state.current_requests.Remove(visitor);
 		RemoveItem(treatment);
-		return reward;
+		
+		return (payment, tip);
 	}
 
 	public static int CalculateTreatmentQuality(Visitor visitor, IList<(Aspect, int)> aspects) {
