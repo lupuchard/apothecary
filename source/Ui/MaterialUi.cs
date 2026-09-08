@@ -32,7 +32,11 @@ public partial class MaterialUi : HBoxContainer {
 		}
 		Show();
 
-		count_label?.Text = count.ToString();
+		if (Resource == Apothecary.Resource.ReputationLevel) {
+			count_label?.Text = count + "/" + Game.Instance.GetNextReputationLevelRequirement();
+		} else {
+			count_label?.Text = count.ToString();
+		}
 	}
 
 	private void UpdateResource() {

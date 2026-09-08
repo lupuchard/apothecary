@@ -59,5 +59,17 @@ public static class SeasonExtensions {
 				_ => throw new ArgumentOutOfRangeException(nameof(season), season, null)
 			};
 		}
+
+		public double RainChance() {
+			return season switch {
+				Season.Prevernal => 0.1,
+				Season.Vernal => 0.2,
+				Season.Estival => 0.15,
+				Season.Serotinal => 0.1,
+				Season.Autumnal => 0.05,
+				Season.Hibernal => 0,
+				_ => throw new ArgumentOutOfRangeException(nameof(season), season, null)
+			};
+		}
 	}
 }

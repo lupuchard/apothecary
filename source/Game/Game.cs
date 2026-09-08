@@ -36,6 +36,8 @@ public partial class Game : RefCounted {
 		[JsonInclude] public Season season = Season.Estival;
 		[JsonInclude] public int time_of_day = 0;
 		[JsonInclude] public int year = 0;
+		[JsonInclude] public bool is_raining = false;
+		[JsonInclude] public bool rained_yesterday = false;
 
 		[JsonInclude] public List<Region> regions = [];
 
@@ -61,6 +63,7 @@ public partial class Game : RefCounted {
 	public int Day => state.day;
 	public Season Season => state.season;
 	public int Year => state.year;
+	public bool IsRaining => state.is_raining;
 
 	private readonly ReadOnlyDictionary<int, List<RequestModel>> requests_by_tier;
 	private readonly Dictionary<(long, RegionModel), List<ItemModel>> foraging_possibilities_cache = [];
@@ -237,6 +240,9 @@ public partial class Game : RefCounted {
 		state.resources[(int)Resource.Focus] = state.resources[(int)Resource.FocusMax];
 		state.resources[(int)Resource.Stamina] = state.resources[(int)Resource.StaminaMax];
 
+		state.rained_yesterday = state.is_raining;
+		state.is_raining = state.rando.RandDouble() < Season.RainChance();
+
 		var failed_requests = UpdateVisitors();
 		var report = new EndOfDayReport() {
 			FailedRequests = failed_requests,
@@ -377,6 +383,9 @@ public partial class Game : RefCounted {
 		}
 		if (IsItAfternoon()) {
 			conditions |= (long)ItemFindCondition.Afternoon;
+		}
+		if (IsRaining || state.rained_yesterday) {
+			conditions |= (long)ItemFindCondition.AfterRaining;
 		}
 
 		return conditions;

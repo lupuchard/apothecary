@@ -12,7 +12,9 @@
 [ext_resource type="StyleBox" uid="uid://bmoaasi4rrv6x" path="res://assets/theme/EditPanel.tres" id="6_tpea4"]
 [ext_resource type="Script" uid="uid://d21n6c1vn0w5x" path="res://source/Ui/ForagingUi.cs" id="7_dlkme"]
 [ext_resource type="Script" uid="uid://dgpsnbo467df5" path="res://source/Ui/FloatingNotifications.cs" id="7_rnjy8"]
+[ext_resource type="AudioStream" uid="uid://dlohlq5pxqcvs" path="res://assets/sound/rain.mp3" id="8_4q3kb"]
 [ext_resource type="PackedScene" uid="uid://btdsoh5fj6pxl" path="res://controls/foraging_result.tscn" id="8_56f15"]
+[ext_resource type="Shader" uid="uid://d2eg1hunieg8t" path="res://rain.gdshader" id="10_3bu5q"]
 [ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="11_im64q"]
 [ext_resource type="Script" uid="uid://cxwoeswknlk61" path="res://source/Ui/ClockUi.cs" id="12_k3d1t"]
 [ext_resource type="Texture2D" uid="uid://cfi71ffjc02k3" path="res://assets/close.png" id="12_sgv64"]
@@ -77,6 +79,15 @@ shader_parameter/shift = 0.0
 shader_parameter/white_cutoff = 0.8650000410875
 shader_parameter/velocity = Vector2(0.003, 0.003)
 shader_parameter/fog_color = Vector4(0.4, 0.4, 0.5, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jnsvb"]
+shader = ExtResource("10_3bu5q")
+shader_parameter/count = 150
+shader_parameter/slant = -0.07200000016012001
+shader_parameter/speed = 35.000000475
+shader_parameter/blur = 0.002
+shader_parameter/colour = Color(1, 1, 1, 1)
+shader_parameter/size = Vector2(0.005, 0.2)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k3d1t"]
 atlas = ExtResource("12_ytyno")
@@ -338,6 +349,18 @@ script = ExtResource("2_3vi8l")
 Map = NodePath("../Map")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2129669713]
+
+[node name="Rain" type="ColorRect" parent="CanvasLayer" unique_id=2134373576]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_jnsvb")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RainSound" type="AudioStreamPlayer" parent="CanvasLayer/Rain" unique_id=642638228]
+stream = ExtResource("8_4q3kb")
 
 [node name="FloatingNotifications" type="Control" parent="CanvasLayer" unique_id=1327210315]
 z_index = 2

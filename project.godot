@@ -23,6 +23,10 @@ shapes/paths/geometry_color=Color(0.100000024, 1, 0.70000005, 1)
 
 project/assembly_name="apothecary"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/terrain_3d/plugin.cfg")
+
 [input]
 
 zoom_in={
@@ -80,7 +84,6 @@ locale/translations=PackedStringArray("res://locale.en.translation")
 
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
-renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true

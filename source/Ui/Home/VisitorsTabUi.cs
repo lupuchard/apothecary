@@ -13,6 +13,7 @@ public partial class VisitorsTabUi : TabBaseUi {
 		request_list = GetNode<RequestListUi>("%CurrentRequests");
 		current_visitor.AcceptButton?.Pressed += OnAccept;
 		current_visitor.RejectButton?.Pressed += OnReject;
+		request_list.Given += Update;
 	}
 
 	private void OnAccept() {

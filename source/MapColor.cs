@@ -5,7 +5,7 @@ namespace Apothecary;
 public partial class MapColor : Sprite2D {
 	private Tween? tween;
 	
-	public void SetColor(int time_of_day, Season season, double transition_time = 0.0) {
+	public void SetColor(int time_of_day, Season season, bool is_raining, double transition_time = 0.0) {
 		base._Ready();
 		
 		var sunset = GetSunset(season);
@@ -27,6 +27,10 @@ public partial class MapColor : Sprite2D {
 			light = 0.4f;
 		} else {
 			light = 1.0f;
+		}
+
+		if (is_raining) {
+			light /= 2.0f;
 		}
 
 		var color = CalcColorTemp(temp_kelvin) * light;

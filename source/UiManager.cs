@@ -5,6 +5,9 @@ namespace Apothecary;
 
 public partial class UiManager : Node2D {
 	private MapColor? map;
+	private Control? rain;
+	private AudioStreamPlayer? rain_sound;
+	
 	private Button? background_exit_button;
 	private ForagingUi? foraging_ui;
 	private HomeUi? home_ui;
@@ -36,6 +39,8 @@ public partial class UiManager : Node2D {
 		home_icon.Pressed += () => OpenUi(home_ui);
 		
 		map = GetNode<MapColor>("%Map");
+		rain = GetNode<Control>("%Rain");
+		rain_sound = GetNode<AudioStreamPlayer>("%Rain/RainSound");
 
 		foreach (var child in map.GetChildren()) {
 			if (child is RegionSelect region_select) {
@@ -72,7 +77,18 @@ public partial class UiManager : Node2D {
 
 	private void OnTimeChanged() {
 		var game = Game.Instance;
-		map?.SetColor(game.TimeOfDay, game.Season, 1.0);
+		map?.SetColor(game.TimeOfDay, game.Season, game.IsRaining, 1.0);
+
+		if (game.IsRaining && rain?.Visible == false && rain_sound != null) {
+			rain?.Show();
+			
+			rain_sound.VolumeLinear = 0;
+			rain_sound.Play();
+			var rain_tween = CreateTween();
+			rain_tween.TweenProperty(rain_sound, "volume_linear", 1.0, 1.0);
+		} else {
+			rain?.Hide();
+		}
 	}
 
 	private void OnRegionSelected(RegionSelect.Type type, RegionModel? region) {

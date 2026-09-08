@@ -3,6 +3,8 @@ using System.Collections.Generic;
 namespace Apothecary;
 
 public partial class RequestListUi : VBoxContainer {
+	[Signal] public delegate void GivenEventHandler();
+	
 	private readonly List<RequestUi> request_controls = [];
 	
 	private PackedScene? visitor_request_scene;
@@ -22,7 +24,7 @@ public partial class RequestListUi : VBoxContainer {
 			var new_control = (RequestUi)visitor_request_scene!.Instantiate();
 			request_controls.Add(new_control);
 			AddChild(new_control);
-			new_control.Given += Update;
+			new_control.Given += EmitSignalGiven;
 		}
 		
 		var i = 0;
