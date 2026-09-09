@@ -68,10 +68,16 @@ public partial class MainMenuUi : PanelContainer {
 	}
 
 	private void OnTimeChanged() {
-		save_manager.SaveGame(Game.Instance);
+		save_manager.SaveGame(Game.Instance, save_manager.CurrentProfile);
 	}
 
 	public void Open() {
+		if (save_manager.CurrentProfile == null) {
+			exit_button?.Text = Tr("EXIT_GAME");
+		} else {
+			exit_button?.Text = Tr("SAVE_AND_EXIT");
+		}
+		
 		main_main_menu?.Show();
 		new_game_menu?.Hide();
 		load_game_menu?.Hide();
@@ -154,7 +160,7 @@ public partial class MainMenuUi : PanelContainer {
 	}
 
 	private void OnExitGame() {
-		save_manager.SaveGame(Game.Instance);
+		save_manager.SaveGame(Game.Instance, save_manager.CurrentProfile);
 		//Game.Instance.NewGame();
 		GetTree().Quit();
 	}

@@ -26,6 +26,10 @@ public class Aspect {
 		}
 	}
 
+	public string TrFlavor() {
+		return Id.ToUpperInvariant() + "_FLAVOR";
+	}
+
 	public static readonly Aspect UnknownAspect = new("unknown", Colors.Black, () => UnknownAspect!);
 
 	public Aspect(string id, Color color, Func<Aspect> mutates_into) {

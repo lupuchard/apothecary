@@ -57,6 +57,7 @@
 [ext_resource type="Texture2D" uid="uid://56a2448o3l0x" path="res://assets/resources/coins_small.png" id="43_fq8n2"]
 [ext_resource type="Script" uid="uid://e3fxsbpujsyd" path="res://source/Ui/Home/ExploreTabUi.cs" id="44_hjerm"]
 [ext_resource type="Script" uid="uid://dj8kra5a42vlu" path="res://source/Ui/MainMenuUi.cs" id="44_ipkxx"]
+[ext_resource type="PackedScene" uid="uid://dcatlpk64lsbb" path="res://controls/roaster_control.tscn" id="45_mmynp"]
 [ext_resource type="Texture2D" uid="uid://b5ysw1gnltxwr" path="res://assets/background2.jpg" id="45_u7ijn"]
 [ext_resource type="Texture2D" uid="uid://de77en0s005q5" path="res://assets/arrow_small.png" id="45_vjpxa"]
 [ext_resource type="AudioStream" uid="uid://cpb01u7rcjqi6" path="res://assets/sound/explore_start.mp3" id="46_kajva"]
@@ -352,12 +353,14 @@ Map = NodePath("../Map")
 
 [node name="Rain" type="ColorRect" parent="CanvasLayer" unique_id=2134373576]
 unique_name_in_owner = true
+visible = false
 material = SubResource("ShaderMaterial_jnsvb")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
 [node name="RainSound" type="AudioStreamPlayer" parent="CanvasLayer/Rain" unique_id=642638228]
 stream = ExtResource("8_4q3kb")
@@ -611,7 +614,6 @@ texture_hover = ExtResource("13_gaoim")
 
 [node name="HomeUi" type="Control" parent="CanvasLayer" unique_id=369692100]
 unique_name_in_owner = true
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -637,13 +639,14 @@ size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("16_v7taj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxTexture_50rgw")
 theme_override_styles/tab_selected = SubResource("StyleBoxTexture_4a7sh")
-current_tab = 2
+current_tab = 4
 tab_0/title = "VISITORS_TAB"
 tab_1/title = "KITCHEN_TAB"
-tab_2/title = "JOURNAL_TAB"
-tab_3/title = "BEDROOM_TAB"
-tab_4/title = "EXPLORE_TAB"
-tab_4/icon = ExtResource("26_sqt58")
+tab_2/title = "STUDY_TAB"
+tab_3/title = "JOURNAL_TAB"
+tab_4/title = "BEDROOM_TAB"
+tab_5/title = "EXPLORE_TAB"
+tab_5/icon = ExtResource("26_sqt58")
 
 [node name="VisitorsTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1123293159]
 unique_name_in_owner = true
@@ -837,15 +840,28 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="RoasterControl" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer/VBoxContainer" unique_id=726809458 instance=ExtResource("45_mmynp")]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="Inventory" parent="CanvasLayer/HomeUi/TabContainer/KitchenTab/HBoxContainer" unique_id=1473971935 node_paths=PackedStringArray("WhereInputNodes") instance=ExtResource("28_mh4ky")]
 layout_mode = 2
 WhereInputNodes = NodePath("../..")
 
+[node name="StudyTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1219105840]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("29_d5d72")
+metadata/_tab_index = 2
+metadata/_tab_name = "STUDY_TAB"
+
 [node name="JournalTab" type="MarginContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1911984868]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 script = ExtResource("34_f7hpq")
-metadata/_tab_index = 2
+metadata/_tab_index = 3
 metadata/_tab_name = "JOURNAL_TAB"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab" unique_id=837641680]
@@ -1018,10 +1034,9 @@ text = "Close"
 
 [node name="BedroomTab" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer" unique_id=1007219983]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 script = ExtResource("41_aw26h")
-metadata/_tab_index = 3
+metadata/_tab_index = 4
 metadata/_tab_name = "BEDROOM_TAB"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab" unique_id=1783002094]
@@ -1036,6 +1051,14 @@ text = "Too early to sleep"
 unique_name_in_owner = true
 layout_mode = 2
 Text = "GO_TO_SLEEP"
+
+[node name="TidyButton" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab/VBoxContainer" unique_id=1123711421 instance=ExtResource("11_im64q")]
+unique_name_in_owner = true
+layout_mode = 2
+Text = "TIDY_UP"
+Costs = Dictionary[String, int]({
+"time": 1
+})
 
 [node name="Control" type="Control" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab" unique_id=285036605]
 z_index = 1
@@ -1054,6 +1077,7 @@ color = Color(0.0836, 0.0836, 0.11, 0)
 
 [node name="EndOfDayPopup" type="PanelContainer" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab" unique_id=64870149]
 unique_name_in_owner = true
+visible = false
 z_index = 1
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f7hpq")
@@ -1099,7 +1123,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 script = ExtResource("44_hjerm")
-metadata/_tab_index = 4
+metadata/_tab_index = 5
 metadata/_tab_name = "EXPLORE_TAB"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/ExploreTab" unique_id=587978765]

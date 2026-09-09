@@ -1,39 +1,40 @@
-[gd_scene format=3 uid="uid://d0n2fhv3mb5w"]
+[gd_scene format=3 uid="uid://dcatlpk64lsbb"]
 
-[ext_resource type="Script" uid="uid://cbbj58g24orhn" path="res://source/Ui/Home/Kitchen/GrinderUi.cs" id="1_agnle"]
-[ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="2_2rfnf"]
-[ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="3_3g062"]
-[ext_resource type="AudioStream" uid="uid://dq174yva8ssls" path="res://assets/sound/grind_start.mp3" id="3_hn0c0"]
-[ext_resource type="AudioStream" uid="uid://cf1qfc88xmvhx" path="res://assets/sound/grind_end.mp3" id="4_14vdm"]
-[ext_resource type="Texture2D" uid="uid://cqylvjhpjdsig" path="res://assets/arrow.png" id="4_w17r1"]
-[ext_resource type="PackedScene" uid="uid://bxwulsjuonadl" path="res://controls/output_slot.tscn" id="5_it1y0"]
-[ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="6_rirg2"]
-[ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="7_qx1sy"]
-[ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="8_05y2a"]
-[ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="9_luxqw"]
+[ext_resource type="Script" uid="uid://db0prionqr4q8" path="res://source/Ui/Home/Kitchen/RoasterUi.cs" id="1_i6cpv"]
+[ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="2_0txp5"]
+[ext_resource type="AudioStream" uid="uid://xdvjktksjsto" path="res://assets/sound/roast_start.mp3" id="3_nqoo6"]
+[ext_resource type="AudioStream" uid="uid://bet0qkxsq805n" path="res://assets/sound/roast_end.mp3" id="4_0txp5"]
+[ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="5_d1f46"]
+[ext_resource type="Texture2D" uid="uid://cqylvjhpjdsig" path="res://assets/arrow.png" id="6_urtm8"]
+[ext_resource type="PackedScene" uid="uid://bxwulsjuonadl" path="res://controls/output_slot.tscn" id="7_ftls1"]
+[ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="8_la6mq"]
+[ext_resource type="Texture2D" uid="uid://cklr058rssskt" path="res://assets/aspect/bloom.png" id="9_cdtah"]
+[ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="10_0g4vd"]
+[ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="11_wxwr7"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7m1qc"]
 
-[node name="GrinderControl" type="Panel" unique_id=1007315474]
+[node name="RoasterControl" type="Panel" unique_id=1007315474]
 custom_minimum_size = Vector2(0, 120)
-script = ExtResource("1_agnle")
+script = ExtResource("1_i6cpv")
 
-[node name="HoldButton" parent="." unique_id=528430593 node_paths=PackedStringArray("StartSound", "FinishSound") instance=ExtResource("2_2rfnf")]
+[node name="HoldButton" parent="." unique_id=528430593 node_paths=PackedStringArray("StartSound", "FinishSound") instance=ExtResource("2_0txp5")]
 layout_mode = 0
 offset_left = 158.0
 offset_right = 208.0
-StartSound = NodePath("StartGrind")
-FinishSound = NodePath("EndGrind")
+StartSound = NodePath("StartRoast")
+FinishSound = NodePath("EndRoast")
+Text = "ROAST"
 Costs = Dictionary[String, int]({
-"time": 1
+"firewood": 1
 })
 
-[node name="StartGrind" type="AudioStreamPlayer" parent="HoldButton" unique_id=1217599095]
-stream = ExtResource("3_hn0c0")
+[node name="StartRoast" type="AudioStreamPlayer" parent="HoldButton" unique_id=1217599095]
+stream = ExtResource("3_nqoo6")
 volume_db = -2.0
 
-[node name="EndGrind" type="AudioStreamPlayer" parent="HoldButton" unique_id=1169036057]
-stream = ExtResource("4_14vdm")
+[node name="EndRoast" type="AudioStreamPlayer" parent="HoldButton" unique_id=1169036057]
+stream = ExtResource("4_0txp5")
 volume_db = 2.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=574844938]
@@ -43,7 +44,7 @@ offset_right = 364.0
 offset_bottom = 83.0
 alignment = 1
 
-[node name="InputSlot" parent="HBoxContainer" unique_id=1316939867 instance=ExtResource("3_3g062")]
+[node name="InputSlot" parent="HBoxContainer" unique_id=1316939867 instance=ExtResource("5_d1f46")]
 unique_name_in_owner = true
 layout_mode = 2
 InputAmount = 4
@@ -51,10 +52,10 @@ InputAmount = 4
 [node name="Arrow" type="TextureRect" parent="HBoxContainer" unique_id=722106158]
 custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
-texture = ExtResource("4_w17r1")
+texture = ExtResource("6_urtm8")
 stretch_mode = 3
 
-[node name="OutputSlot" parent="HBoxContainer" unique_id=1510528001 instance=ExtResource("5_it1y0")]
+[node name="OutputSlot" parent="HBoxContainer" unique_id=1510528001 instance=ExtResource("7_ftls1")]
 unique_name_in_owner = true
 layout_mode = 2
 OutputAmount = 2
@@ -67,7 +68,7 @@ offset_right = 179.0
 offset_bottom = 113.0
 theme_override_constants/separation = 1
 alignment = 1
-script = ExtResource("6_rirg2")
+script = ExtResource("8_la6mq")
 
 [node name="Label" type="Label" parent="InputAspects" unique_id=1722462231]
 layout_mode = 2
@@ -76,7 +77,7 @@ text = "1"
 
 [node name="TextureRect" type="TextureRect" parent="InputAspects" unique_id=448157030]
 layout_mode = 2
-texture = ExtResource("7_qx1sy")
+texture = ExtResource("9_cdtah")
 stretch_mode = 2
 
 [node name="VSeparator" type="VSeparator" parent="InputAspects" unique_id=1174035531]
@@ -86,12 +87,12 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
 
 [node name="Label2" type="Label" parent="InputAspects" unique_id=1039654486]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("8_05y2a")
+theme_override_fonts/font = ExtResource("10_0g4vd")
 text = "0"
 
 [node name="TextureRect3" type="TextureRect" parent="InputAspects" unique_id=1546868813]
 layout_mode = 2
-texture = ExtResource("9_luxqw")
+texture = ExtResource("11_wxwr7")
 stretch_mode = 2
 
 [node name="OutputAspects" type="HBoxContainer" parent="." unique_id=1436683699]
@@ -102,7 +103,7 @@ offset_right = 292.0
 offset_bottom = 113.0
 theme_override_constants/separation = 1
 alignment = 1
-script = ExtResource("6_rirg2")
+script = ExtResource("8_la6mq")
 
 [node name="Label" type="Label" parent="OutputAspects" unique_id=1532733338]
 layout_mode = 2
@@ -111,7 +112,7 @@ text = "1"
 
 [node name="TextureRect" type="TextureRect" parent="OutputAspects" unique_id=521053013]
 layout_mode = 2
-texture = ExtResource("7_qx1sy")
+texture = ExtResource("9_cdtah")
 stretch_mode = 2
 
 [node name="VSeparator" type="VSeparator" parent="OutputAspects" unique_id=1511069175]
@@ -121,10 +122,10 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_7m1qc")
 
 [node name="Label2" type="Label" parent="OutputAspects" unique_id=299585105]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("8_05y2a")
+theme_override_fonts/font = ExtResource("10_0g4vd")
 text = "0"
 
 [node name="TextureRect3" type="TextureRect" parent="OutputAspects" unique_id=146563013]
 layout_mode = 2
-texture = ExtResource("9_luxqw")
+texture = ExtResource("11_wxwr7")
 stretch_mode = 2

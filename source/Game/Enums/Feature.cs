@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace Apothecary;
 
+[JsonConverter(typeof(JsonStringEnumConverter<Feature>))]
 public enum Feature {
 	None,
 	Kitchen,
@@ -8,4 +11,5 @@ public enum Feature {
 	Bedroom,
 	Journal,
 	Firewood,
+	Study
 }

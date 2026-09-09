@@ -46,7 +46,7 @@ public partial class RegionSelect : Area2D {
 			type = Type.Home;
 			region_label.Text = Tr(region_id.ToUpperInvariant());
 		} else {
-			region_label.Region = Game.Instance.GetRegion(region_id);
+			region_label.Region = Game.Instance.World.GetRegionModel(region_id);
 		}
 
 		MouseEntered += OnMouseEntered;
@@ -84,7 +84,7 @@ public partial class RegionSelect : Area2D {
 		
 		Update();
 		Game.Instance.RegionUnlocked += (id) => {
-			if (id == region_id) {
+			if (id == region_id || id == null) {
 				Update();
 			}
 		};

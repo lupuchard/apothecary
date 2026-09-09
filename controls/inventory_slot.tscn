@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://bfbxwbbjvq1n8"]
 
-[ext_resource type="Texture2D" uid="uid://c0wuwku0nlslj" path="res://assets/item/feverfew.png" id="1_4p7s2"]
 [ext_resource type="Script" uid="uid://b3sm13l1iaxti" path="res://source/Ui/Inventory/InventorySlot.cs" id="1_rq8q5"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="2_3xeia"]
+[ext_resource type="Texture2D" uid="uid://bi8hjcjs3ynxe" path="res://assets/item/ground.png" id="2_h2484"]
+[ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="4_h2484"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cs1hs"]
 corner_radius_top_left = 4
@@ -26,11 +27,11 @@ script = ExtResource("1_rq8q5")
 [node name="TextureRect" type="TextureRect" parent="." unique_id=993104]
 unique_name_in_owner = true
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-texture = ExtResource("1_4p7s2")
+offset_right = 48.0
+offset_bottom = 48.0
+texture = ExtResource("2_h2484")
 
-[node name="AmountLabel" type="Label" parent="." unique_id=735008177]
+[node name="AmountLabel" type="Label" parent="TextureRect" unique_id=735008177]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 21.0
@@ -41,3 +42,21 @@ theme_override_fonts/font = ExtResource("2_3xeia")
 text = "x2"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Corner" type="TextureRect" parent="TextureRect" unique_id=329609517]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -26.0
+offset_top = -26.0
+offset_right = -2.0
+offset_bottom = -2.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("4_h2484")
+expand_mode = 1
+stretch_mode = 3

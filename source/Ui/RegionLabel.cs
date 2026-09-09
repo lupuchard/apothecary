@@ -5,7 +5,7 @@ namespace Apothecary;
 
 public partial class RegionLabel : Label {
 	[Export] public Node2D? Follows;
-	public Region? Region { get; set; }
+	public RegionModel? Region { get; set; }
 	private Vector2 SCREEN_MARGIN = new(10, 10);
 	private Label? unlocking_label;
 
@@ -33,8 +33,8 @@ public partial class RegionLabel : Label {
 
 	public void Update() {
 		if (Region == null) return;
-		Text = Tr(Region.TrString());
-		if (Region.Unlocked) {
+		Text = Tr(Region.Id.ToUpperInvariant());
+		if (Game.Instance.GetRegion(Region.Id)?.Unlocked == true) {
 			unlocking_label?.Hide();
 		} else {
 			unlocking_label?.Show();
@@ -43,7 +43,7 @@ public partial class RegionLabel : Label {
 	}
 
 	private string GetUnlockingDescription() {
-		var req = Region?.Model.UnlockRequirement ?? UnlockRequirement.None;
+		var req = Region?.UnlockRequirement ?? UnlockRequirement.None;
 		var game = Game.Instance;
 		return req.Type switch {
 			UnlockRequirementType.None 

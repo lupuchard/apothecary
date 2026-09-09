@@ -16,7 +16,7 @@ public partial class Game : RefCounted {
 	public static Game Instance { get; private set; } = new();
 	
 	[Signal] public delegate void TimeChangedEventHandler();
-	[Signal] public delegate void RegionUnlockedEventHandler(string region_id);
+	[Signal] public delegate void RegionUnlockedEventHandler(string? region_id);
 	[Signal] public delegate void ResourceUpdatedEventHandler(Resource resource, int amount);
 	[Signal] public delegate void JournalConfirmationEventHandler(Godot.Collections.Array<string> items);
 	[Signal] public delegate void FeatureUnlockedEventHandler(Feature feature);
@@ -38,6 +38,7 @@ public partial class Game : RefCounted {
 		[JsonInclude] public int year = 0;
 		[JsonInclude] public bool is_raining = false;
 		[JsonInclude] public bool rained_yesterday = false;
+		[JsonInclude] public bool can_tidy_today = false;
 
 		[JsonInclude] public List<Region> regions = [];
 
@@ -64,6 +65,7 @@ public partial class Game : RefCounted {
 	public Season Season => state.season;
 	public int Year => state.year;
 	public bool IsRaining => state.is_raining;
+	public bool CanTidyToday => state.can_tidy_today;
 
 	private readonly ReadOnlyDictionary<int, List<RequestModel>> requests_by_tier;
 	private readonly Dictionary<(long, RegionModel), List<ItemModel>> foraging_possibilities_cache = [];
@@ -141,6 +143,8 @@ public partial class Game : RefCounted {
 				EmitSignalResourceUpdated((Resource)i, state.resources[i]);
 			}
 		}
+
+		EmitSignalRegionUnlocked(null);
 	}
 
 	public bool IsUnlocked(Feature feature) {
@@ -229,8 +233,17 @@ public partial class Game : RefCounted {
 			}
 		}
 
+		var total_forageable = 0;
 		foreach (var location in state.regions) {
 			location.DailyRecovery(ref state.rando);
+			total_forageable += location.Remaining;
+		}
+
+		while (total_forageable < 3) {
+			// Uncommon but needs to be addressed, player can't go to sleep without killing time
+			var location = state.rando.Pick([..state.regions.Where(r => r.Unlocked && r.Remaining < r.Model.MaxForage)]);
+			location.Remaining += 1;
+			total_forageable += 1;
 		}
 
 		foreach (var region in GetUnlocksWith(UnlockRequirementType.Day, state.day)) {
@@ -250,8 +263,17 @@ public partial class Game : RefCounted {
 		};
 		state.daily_resource_summary.Clear();
 		
+		if (state.is_raining || total_forageable <= 3) {
+			state.can_tidy_today = true;
+		}
+		
 		EmitSignalTimeChanged();
 		return report;
+	}
+
+	public void DoTidy() {
+		state.can_tidy_today = false;
+		PassTime();
 	}
 
 	public void DoForaging(RegionModel location) {
@@ -449,7 +471,7 @@ public partial class Game : RefCounted {
 		state.current_requests = [.. state.current_requests.Where(v => v.RemainingDays > 0)];
 		state.visitor_at_door = null;
 
-		if (state.rando.RandDouble() < VISITOR_CHANCE) {
+		if (state.rando.RandDouble() < (IsRaining ? VISITOR_CHANCE / 2 : VISITOR_CHANCE)) {
 			MakeNewVisitor();
 		}
 
@@ -548,78 +570,5 @@ public partial class Game : RefCounted {
 		var directory = ProjectSettings.GlobalizePath("res://data");
 		var data = string.Join("\n", Directory.GetFiles(directory).Select(File.ReadAllText));
 		return new World(data);
-
-		/*Aspect? bloom, caust = null, spice = null, vigor = null, umber = null, gelus = null;
-		bloom = new Aspect("bloom", Aspect.SpringGreen, () => caust!);
-		caust = new Aspect("caust", Aspect.Chartreuse, () => spice!);
-		spice = new Aspect("spice", Aspect.Orange, () => vigor!);
-		vigor = new Aspect("vigor", Aspect.Rose, () => umber!);
-		umber = new Aspect("umber", Aspect.Violet, () => gelus!);
-		gelus = new Aspect("gelus", Aspect.Azure, () => bloom!);
-
-		var frontYard = new RegionModel("front_yard", 1, 0.25, UnlockRequirement.None);
-		var backyard = new RegionModel("backyard", 1, 0.25, UnlockRequirement.ResourceAcquired(Resource.Reputation, 1));
-		var road = new RegionModel("road", 2, 0.5, UnlockRequirement.ResourceAcquired(Resource.Reputation, 1));
-		var meadow = new RegionModel("meadow", 4, 0.5, UnlockRequirement.Day(1));
-		var eastWoods = new RegionModel("east_woods", 4, 0.5, UnlockRequirement.Day(2));
-		var westWoods = new RegionModel("west_woods", 4, 0.5, UnlockRequirement.ConfirmedJournalEntries(3));
-		var creek = new RegionModel("creek", 3, 0.5, UnlockRequirement.ConfirmedJournalEntries(6));
-
-		var adjacencies = new Dictionary<RegionModel, HashSet<RegionModel>> {
-			{ frontYard, [road, meadow, eastWoods, backyard] },
-			{ backyard, [frontYard, eastWoods, creek, westWoods] },
-			{ road, [frontYard, meadow, westWoods] },
-			{ meadow, [frontYard, road, eastWoods] },
-			{ eastWoods, [frontYard, meadow, creek, backyard] },
-			{ westWoods, [backyard, creek, road] },
-			{ creek, [backyard, eastWoods, westWoods] }
-		};
-
-		ImmutableArray<ItemModel> items = [
-			new("meadowsweet", [(bloom, 1), (vigor, 1)], creek),
-			new("wild_laceroot", [(caust, 1), (spice, 1), (umber, 1)], eastWoods, ItemFindCondition.Afternoon),
-			new("mintflower", [(bloom, 1), (gelus, 1), (spice, 1)], eastWoods),
-			new("feverfew", [(bloom, 2), (gelus, 1)], backyard, rarity: Rarity.Rare),
-			new("white_coneflower", [(bloom, 1), (gelus, 1)], meadow, ItemFindCondition.Morning),
-			new("chamomile", [(umber, 2), (gelus, 1), (bloom, 1)], meadow, rarity: Rarity.Rare)
-		];
-
-		// https://www.st-george-squadron.com/sgs/wiki/index.php/18th_century_names
-		var villager = new VisitorType(
-			"villager",
-			["Abraham", "Adam", "Adrian", "Alexander", "Allen", "Ambrose", "Andrew", "Anthony", "Arthur", "Avery", "Barnaby", "Bartholomew", "Benedict", "Bernard", "Brian", "Bryan", "Caleb", "Charles", "Christopher", "Cuthbert", "Daniel", "David", "Edmund", "Edward", "Emmerson", "Frances", "Francis", "Fulke", "Geoffrey", "George", "Gerard", "Gilbert", "Giles", "Gregory", "Henry", "Hugh", "Humphrey", "Isaac", "James", "Jerome", "Johan", "John", "Jonathan", "Joseph", "Judd", "Julian", "Lancelot", "Lawrance", "Lawrence", "Leonard", "Luke", "Mark", "Martin", "Mathias", "Matthew", "Metcalfe", "Michael", "Miles", "Nathaniel", "Nicholas", "Oliver", "Oswyn", "Peter", "Philip", "Phillip", "Piers", "Raiph", "Ralph", "Reynold", "Richard", "Robert", "Roger", "Rowland", "Samuel", "Silas", "Simon", "Solomon", "Stephen", "Tamer", "Thomas", "Tobias", "Toby", "Valentine", "Walter", "William", "Addeline", "Agnes", "Alice", "Amelia", "Amy", "Ann", "Anne", "Audrey", "Augusta", "Avis", "Barbara", "Beatrice", "Blanche", "Bridget", "Carolina", "Caroline", "Catherine", "Cecily", "Charity", "Charlotte", "Christian", "Christina", "Clemence", "Constance", "Deborah", "Denise", "Dorothea", "Dorothy", "Edith", "Eleanor", "Elinor", "Eliza", "Elizabeth", "Ellen", "Ellener", "Ellin", "Elliner", "Emma", "Florence", "Fortune", "Frances", "Frideswide", "Gillian", "Grace", "Hannah", "Helen", "Isabel", "Isabell", "Jan", "Jane", "Janet", "Jennet", "Joan", "Josian", "Joyce", "Judith", "Julian", "Katherine", "Lettice", "Louisa", "Lucy", "Mabel", "Margaret", "Margery", "Maria", "Marie", "Marion", "Martha", "Mary", "Matilda", "Maud", "Mildred", "Millicent", "Parnell", "Phebe", "Philippa", "Rachel", "Rebecca", "Rose", "Ruth", "Sarah", "Sophia", "Susanna", "Sybil", "Thomasin", "Maud", "Mildred", "Millicent", "Parnell", "Phebe", "Philippa", "Rachel", "Rebecca", "Rose", "Ruth", "Sarah", "Sarah", "Sophia", "Susanna", "Susanna", "Sybil", "Thomasin", "Ursula", "Wilmot", "Winifred"],
-			["Abell", "Ackworth", "Adams", "Addicock", "Alban", "Aldebourne", "Alfray", "Alicock", "Allard", "Allen", "Allington", "Amberden", "Amcotts", "Amondsham", "Andrews", "Annesley", "Ansty", "Archer", "Ardall", "Ardern", "Argentein", "Arnold", "Arthur", "Asger", "Ashby", "Ashcombe", "Ashenhurst", "Ashton", "Askew", "Asplin", "Astley", "Atherton", "Atkinson", "Atlee", "Attilburgh", "Aubrey", "Audeley", "Audlington", "Ayde", "Ayleward", "Aylmer", "Aynesworth", "Babham", "Babington", "Badby", "Bailey", "Baker", "Balam", "Baldwin", "Ballard", "Ballett", "Bammard", "Barber", "Bardolf", "Barefoot", "Barker", "Barnes", "Barre", "Barrentine", "Barrett", "Barstaple", "Bartelot", "Barton", "Basset", "Bathurst"],
-			[Resource.Coins, Resource.Reputation],
-			[Resource.Coins, Resource.Reputation]
-		);
-
-		var painText = """
-			[I'd like something to help with my {0}.|I have {0}.|Do you have something for {0}? % arthritis|leg pain|cramping]
-			[I stubbed my toe.][I think I've sprained something.]
-		""";
-		var painRequest = new RequestModel("pain", villager, painText, [(bloom, 1), (umber, 0)], 1);
-
-		var migraineText = """
-			[Migraine.][My headache hasn't gone away.][I've been having {0} migraines. % terrible|awful]
-		""";
-		var migraineRequest = new RequestModel("migraine", villager, migraineText, [(bloom, 1), (spice, 0)], 1);
-
-		var foodPoisoningText = """
-			[I shouldn't have eaten {0}. % that raw shellfish|those leftovers|that salami off the floor]
-		""";
-		var foodPoisoningRequest = new RequestModel("food_poisoning", villager, foodPoisoningText, [(spice, 1), (gelus, 0)], 1);
-
-		return new World(
-			[frontYard, backyard, road, meadow, eastWoods, westWoods, creek],
-			adjacencies.AsReadOnly(),
-			[bloom, caust, spice, vigor, umber, gelus],
-			items,
-			[villager],
-			[painRequest, migraineRequest, foodPoisoningRequest]
-		);*/
-	}
-
-	private void Serialize() {
-		//MessagePackSerializer.Serialize(this, new MessagePackSerializerOptions())
 	}
 }

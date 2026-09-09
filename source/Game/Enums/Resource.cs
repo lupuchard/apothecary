@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Godot;
 
 namespace Apothecary;
 
+[JsonConverter(typeof(JsonStringEnumConverter<InventorySortMethod>))]
 public enum Resource {
 	None,
 	Time,
@@ -17,6 +19,7 @@ public enum Resource {
 	StaminaMax,
 	Focus,
 	FocusMax,
+	Gloom,
 	COUNT
 }
 
@@ -24,8 +27,9 @@ public static class Resources {
 	public static readonly ImmutableArray<Resource> Materials = [
 		Resource.ReputationLevel,
 		Resource.Reputation, 
-		Resource.Coins, 
-		Resource.Firewood
+		Resource.Coins,
+		Resource.Firewood,
+		Resource.Gloom,
 	];
 
 	private static readonly Dictionary<string, Resource> resource_name_map = Enumerable.Range(1, (int)Resource.COUNT - 1)
@@ -50,6 +54,7 @@ public static class Resources {
 				Resource.StaminaMax => "STAMINA_MAX",
 				Resource.Focus => "FOCUS",
 				Resource.FocusMax => "FOCUS_MAX",
+				Resource.Gloom => "GLOOM",
 				_ => "NONE",
 			};
 		}
@@ -60,6 +65,7 @@ public static class Resources {
 				Resource.Reputation => true,
 				Resource.Coins => true,
 				Resource.Firewood => true,
+				Resource.Gloom => true,
 				_ => false
 			};
 		}
@@ -87,6 +93,7 @@ public static class Resources {
 				Resource.Firewood => Colors.DarkOrange,
 				Resource.Stamina => Colors.LightGreen,
 				Resource.Focus => Colors.Cyan,
+				Resource.Gloom => Colors.DarkSlateBlue,
 				_ => Colors.White,
 			};
 		}

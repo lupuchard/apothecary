@@ -7,6 +7,7 @@ public partial class UiManager : Node2D {
 	private MapColor? map;
 	private Control? rain;
 	private AudioStreamPlayer? rain_sound;
+	private Tween? rain_tween;
 	
 	private Button? background_exit_button;
 	private ForagingUi? foraging_ui;
@@ -84,10 +85,18 @@ public partial class UiManager : Node2D {
 			
 			rain_sound.VolumeLinear = 0;
 			rain_sound.Play();
-			var rain_tween = CreateTween();
+			rain_tween?.Kill();
+			rain_tween = CreateTween();
 			rain_tween.TweenProperty(rain_sound, "volume_linear", 1.0, 1.0);
-		} else {
+		} else if (!game.IsRaining) {
 			rain?.Hide();
+
+			if (rain_sound?.IsPlaying() == true) {
+				rain_tween?.Kill();
+				rain_tween = CreateTween();
+				rain_tween.TweenProperty(rain_sound, "volume_linear", 1.0, 0.0);
+				rain_tween.Finished += () => rain_sound?.Stop();
+			}
 		}
 	}
 

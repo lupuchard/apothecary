@@ -9,7 +9,8 @@ public partial class KitchenTabUi : TabBaseUi {
 		inventory = GetNode<InventoryUi>("HBoxContainer/Inventory");
 		processes = [
 			GetNode<InfusionUi>("%InfusionControl"),
-			GetNode<GrinderUi>("%GrinderControl")
+			GetNode<GrinderUi>("%GrinderControl"),
+			GetNode<RoasterUi>("%RoasterControl")
 		];
 
 		foreach (var ui in processes) {

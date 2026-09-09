@@ -66,24 +66,35 @@ public readonly struct Item : IEquatable<Item> {
 	}
 
 	public string GetName() {
-		var name = TranslationServer.Translate(Raw[0].Id.ToUpperInvariant());
+		var name = Tr(Raw[0].Id.ToUpperInvariant());
 		if (Is(ItemType.Ground)) {
-			return string.Format(TranslationServer.Translate("GROUND"), name);
+			return string.Format(Tr("GROUND"), name);
+		} else if (Is(ItemType.Roasted)) {
+			return string.Format(Tr("ROASTED"), name);
 		} else if (Is(ItemType.Infusion)) {
-			return TranslationServer.Translate("INFUSION");
+			return string.Format(Tr("INFUSION"), Tr(GetPrimaryAspect().TrFlavor()));
 		} else {
 			return name;
 		}
 	}
 
-	public Texture2D GetSprite() {
+	public (Texture2D, Texture2D?) GetSprite() {
 		if (Is(ItemType.Ground)) {
-			return ResourceLoader.Load<Texture2D>("res://assets/item/ground.png");
+			return (ResourceLoader.Load<Texture2D>("res://assets/item/ground.png"), Raw[0].Sprite);
 		} else if (Is(ItemType.Infusion)) {
-			return ResourceLoader.Load<Texture2D>("res://assets/item/infusion.png");
+			//var main_aspect = Aspects.Count == 0 ? null : Aspects.MaxBy(x => x.Item2).Item1;
+			return (ResourceLoader.Load<Texture2D>("res://assets/item/infusion.png"), null); //main_aspect?.Sprite);
 		} else {
-			return Raw[0].Sprite;
+			return (Raw[0].Sprite, null);
 		}
+	}
+
+	private Aspect GetPrimaryAspect() {
+		return Aspects.Count == 0 ? Aspect.UnknownAspect : Aspects.MaxBy(x => x.Item2).Item1;
+	}
+
+	private static string Tr(string to_translate) {
+		return TranslationServer.Translate(to_translate);
 	}
 
 	public bool Is(ItemType type) {

@@ -7,6 +7,7 @@ namespace Apothecary;
 public partial class BedroomTabUi : TabBaseUi {
 	private Label? sleep_label;
 	private SlowButton? sleep_button;
+	private SlowButton? tidy_up_button;
 	private ColorRect? end_of_day_fade;
 	
 	private Control? end_of_day_popup;
@@ -22,6 +23,7 @@ public partial class BedroomTabUi : TabBaseUi {
 		sleep_label = GetNode<Label>("%SleepLabel");
 		sleep_button = GetNode<SlowButton>("%SleepButton");
 		sleep_button.Pressed += OnEndDay;
+		tidy_up_button.Pressed += OnTidyUp;
 		
 		end_of_day_fade = GetNode<ColorRect>("%EndOfDayFade");
 		end_of_day_popup = GetNode<Control>("%EndOfDayPopup");
@@ -48,6 +50,9 @@ public partial class BedroomTabUi : TabBaseUi {
 			sleep_label?.Text = Tr("TIME_TO_SLEEP");
 			sleep_button?.Show();
 		}
+
+		tidy_up_button?.Visible = Game.Instance.CanTidyToday;
+		tidy_up_button?.Disabled = false;
 	}
 
 	public override bool IsUnlocked() {
@@ -101,5 +106,10 @@ public partial class BedroomTabUi : TabBaseUi {
 		}
 
 		return false;
+	}
+
+	public void OnTidyUp() {
+		tidy_up_button?.Disabled = true;
+		Game.Instance.DoTidy();
 	}
 }

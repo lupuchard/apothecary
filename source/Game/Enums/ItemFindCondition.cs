@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Apothecary;
 
 [Flags]
+[JsonConverter(typeof(JsonStringEnumConverter<ItemFindCondition>))]
 public enum ItemFindCondition {
 	None = 0,
 		

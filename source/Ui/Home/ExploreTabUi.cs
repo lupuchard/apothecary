@@ -12,7 +12,8 @@ public partial class ExploreTabUi : TabBaseUi {
 		(Feature.Bedroom, "EXPLORE_BEDROOM", null),
 		(Feature.Journal, "EXPLORE_JOURNAL", null),
 		(Feature.Grinder, "EXPLORE_GRINDER", null),
-		(Feature.Firewood, "EXPLORE_FIREWOOD", new Reward([(Resource.Stamina, 2), (Resource.StaminaMax, 2)]))
+		(Feature.Firewood, "EXPLORE_FIREWOOD", new Reward([(Resource.Stamina, 2), (Resource.StaminaMax, 2)])),
+		(Feature.Study, "EXPLORE_STUDY", null)
 	];
 
 	public override void _Ready() {

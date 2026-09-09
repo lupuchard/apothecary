@@ -10,7 +10,7 @@ public partial class InventoryUi : PanelContainer {
 	private VBoxContainer? container;
 	private readonly List<HBoxContainer> rows = [];
 	private readonly List<InventorySlot> slots = [];
-	private List<InputSlot> input_slots = [];
+	//private List<InputSlot> input_slots = [];
 
 	private PackedScene? inventory_slot_scene;
 	private Area2D? drag_indicator;
@@ -102,7 +102,7 @@ public partial class InventoryUi : PanelContainer {
 		dragging?.Dragging = false;
 
 		drag_indicator?.Show();
-		drag_indicator_sprite?.Texture = inventory[slot.Index].Item1.GetSprite();
+		drag_indicator_sprite?.Texture = inventory[slot.Index].Item1.GetSprite().Item1;
 		dragging = slot;
 		dragging.Dragging = true;
 		hovering = null;
@@ -208,9 +208,9 @@ public partial class InventoryUi : PanelContainer {
 			EndDrag();
 		}
 
-		foreach (var slot in input_slots) {
+		/*foreach (var slot in input_slots) {
 			slot.Referencing?.ReferencedBy = null;
 			slot.Referencing = null;
-		}
+		}*/
 	}
 }

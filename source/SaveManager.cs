@@ -28,7 +28,7 @@ public class SaveManager {
 	private readonly string META_FILENAME = ProjectSettings.GlobalizePath("user://save_meta.json");
 	private readonly string SAVES_DIRECTORY = ProjectSettings.GlobalizePath("user://saves/");
 	private SaveMeta? meta = null;
-	private Profile? cur_profile = null;
+	public Profile? CurrentProfile { get; private set; } = null;
 
 	private readonly JsonSerializerOptions json_options = new() {
 		Converters = {
@@ -52,7 +52,7 @@ public class SaveManager {
 		GetMeta().Profiles.Add(new_profile);
 		SaveGame(new Game(), new_profile);
 		SaveMeta();
-		cur_profile = new_profile;
+		CurrentProfile = new_profile;
 		return new_profile;
 	}
 
@@ -65,8 +65,8 @@ public class SaveManager {
 		SaveMeta();
 	}
 	
-	public void SaveGame(Game game, Profile? profile = null) {
-		profile ??= cur_profile;
+	public void SaveGame(Game game, Profile? profile) {
+		profile ??= CurrentProfile;
 		if (profile == null) return;
 		Directory.CreateDirectory(SAVES_DIRECTORY);
 		var json = JsonSerializer.Serialize(game.State, json_options);
@@ -100,7 +100,7 @@ public class SaveManager {
 
 	public Game.GameState LoadGame(Profile profile) {
 		var json = File.ReadAllText(profile.Filename);
-		cur_profile = profile;
+		CurrentProfile = profile;
 		return JsonSerializer.Deserialize<Game.GameState>(json, json_options)!;
 	}
 }

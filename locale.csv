@@ -1,4 +1,17 @@
 keys,en
+BLOOM,Bloom
+BLOOM_FLAVOR,Sweet
+CAUST,Caust
+CAUST_FLAVOR,Sour
+SPICE,Spice
+SPICE_FLAVOR,Pungent
+VIGOR,Vigor
+VIGOR_FLAVOR,Hearty
+UMBER,Umber
+UMBER_FLAVOR,Bitter
+GELUS,Gelus
+GELUS_FLAVOR,Fresh
+
 HOME,Home
 FRONT_YARD,Front yard
 FRONT_YARD_UNKNOWN,Front yard
@@ -14,6 +27,16 @@ WEST_WOODS,West woods
 WEST_WOODS_UNKNOWN,Undiscovered (west)
 CREEK,By the creek
 CREEK_UNKNOWN,Undiscovered (south)
+TIME,Actions
+REPUTATION_LEVEL,Reputation level
+REPUTATION,Reputation
+COINS,Coins
+COIN,Coin
+FIREWOOD,Firewood
+FOCUS,Focus
+FOCUS_MAX,Maximum focus
+STAMINA,Stamina
+STAMINA_MAX Maximum stamina
 MEADOWSWEET,Meadowsweet
 WILD_LACEROOT,Wild laceroot
 MINTFLOWER,Mintflower
@@ -40,10 +63,12 @@ EXPLORE_TAB,Explore
 VISITOR,Visitor
 NO_VISITOR_TEXT,No visitors
 EXPLORE,Explore house
-INFUSION,Infusion
+INFUSION,{0} infusion
 INFUSE,Infuse
 GROUND,Ground {0}
 GRIND,Grind
+ROASTED,Roasted {0}
+ROAST,Roast
 ONE_DAY,1 day
 X_DAYS,{0} days
 ONE_DAY_LEFT,1 day left
@@ -91,6 +116,7 @@ NEW_GAME,New game
 CONTINUE_GAME,Continue
 LOAD_GAME,Load game
 EXIT_GAME,Exit
+SAVE_AND_EXIT,Save & Exit
 DELETE,Delete (hold)
 CANCEL,Cancel
 DELETE_CONFIRM,Confirm deletion of profile {0}
@@ -98,6 +124,7 @@ TOO_EARLY_TO_SLEEP,Too early to sleep.
 EARLY_TO_SLEEP,{0} actions left in day. Sleep anyway?
 TIME_TO_SLEEP,Time to sleep.
 GO_TO_SLEEP,Go to sleep
+TIDY_UP,Tidy up bedroom
 IT_IS_NOW_DAY,It is now day {0} of {1}.
 WAKE_UP,Wake up
 END_OF_DAY_SUMMARY,End of day summary:
@@ -117,8 +144,6 @@ MID_AFTERNOON,Midafternoon
 LATE_AFTERNOON,Late afternoon
 EVENING,Evening
 NIGHT,Night
-FOCUS,Focus
-STAMINA,Stamina
 ITEM_OBSERVATION,Found in {0} ({1}).
 ITEM_OBSERVATION_MULTIPLE,{2} found in {0} ({1}).
 UNLOCKED_ON_DAY,Unlocked on day {0}.

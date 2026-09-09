@@ -21,7 +21,7 @@ rarity = "rare"
 when = "afternoon"
 
 [Items.white_coneflower]
-aspects = ["bloom", "gelus"]
+aspects = ["gelus", "bloom"]
 where = "meadow"
 when = "morning"
 

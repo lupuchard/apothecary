@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://bdekjob1bhdby"]
 
-[ext_resource type="Script" uid="uid://dva4k56c7nbph" path="res://source/Ui/InputSlot.cs" id="1_cowh1"]
+[ext_resource type="Script" uid="uid://dva4k56c7nbph" path="res://source/Ui/Inventory/InputSlot.cs" id="1_cowh1"]
 [ext_resource type="Texture2D" uid="uid://c0wuwku0nlslj" path="res://assets/item/feverfew.png" id="2_4rjso"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="3_4kh8p"]
+[ext_resource type="Texture2D" uid="uid://ce28jhf8f7pnw" path="res://assets/item/chamomile.png" id="4_4rjso"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cs1hs"]
 corner_radius_top_left = 4
@@ -36,7 +37,7 @@ offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("2_4rjso")
 
-[node name="AmountLabel" type="Label" parent="." unique_id=735008177]
+[node name="AmountLabel" type="Label" parent="TextureRect" unique_id=735008177]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 21.0
@@ -47,6 +48,23 @@ theme_override_fonts/font = ExtResource("3_4kh8p")
 text = "x2"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Corner" type="TextureRect" parent="TextureRect" unique_id=1065912098]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -26.0
+offset_top = -26.0
+offset_right = -2.0
+offset_bottom = -2.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("4_4rjso")
+expand_mode = 1
 
 [node name="Area2D" type="Area2D" parent="." unique_id=242911804]
 collision_layer = 0
