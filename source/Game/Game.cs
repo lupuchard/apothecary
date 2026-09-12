@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Json.Serialization;
 using Godot;
 
@@ -27,6 +25,8 @@ public partial class Game : RefCounted {
 	private const float VISITOR_CHANCE = 1.0f;
 	private const int REP_LEVEL_1_REQUIREMENT = 10;
 	private const int REP_LEVEL_REQUIREMENT_FACTOR = 2;
+	private const double TIDY_REMOVE_GLOOM_CHANCE = 0.3;
+	private const int MAX_WOOD = 100;
 
 	public readonly World World = CreateWorld();
 
@@ -46,6 +46,7 @@ public partial class Game : RefCounted {
 		[JsonInclude] public Dictionary<Item, int> inventory = [];
 		[JsonInclude] public List<Pickup?> current_pickup_results = [];
 
+		[JsonInclude] public List<Visitor> queued_visitors = [];
 		[JsonInclude] public Visitor? visitor_at_door = null;
 		[JsonInclude] public List<Visitor> current_requests = [];
 
@@ -68,7 +69,7 @@ public partial class Game : RefCounted {
 	public bool CanTidyToday => state.can_tidy_today;
 
 	private readonly ReadOnlyDictionary<int, List<RequestModel>> requests_by_tier;
-	private readonly Dictionary<(long, RegionModel), List<ItemModel>> foraging_possibilities_cache = [];
+	private readonly Dictionary<(long, RegionModel), List<Pickup>> foraging_possibilities_cache = [];
 	public IReadOnlyList<Pickup?> CurrentPickupResults => state.current_pickup_results;
 
 	private readonly Dictionary<string, Region> region_lookup = [];
@@ -173,9 +174,26 @@ public partial class Game : RefCounted {
 		}
 		
 		state.resources[(int)resource] += amount;
+
+		if (resource == Resource.Reputation) {
+			CheckReputationLevel();
+		} else if (GetResourceMax(resource) is { } max && state.resources[(int)resource] > max) {
+			amount -= (max - state.resources[(int)resource]);
+			state.resources[(int)resource] = max;
+		}
+		
 		if (resource.IsTracked()) state.daily_resource_summary[(int)resource] += amount;
 		EmitSignalResourceUpdated(resource, Math.Max(amount, 0));
-		if (resource == Resource.Reputation) CheckReputationLevel();
+	}
+
+	public int? GetResourceMax(Resource resource) {
+		return resource switch {
+			Resource.Firewood => MAX_WOOD,
+			Resource.Stamina => GetResource(Resource.StaminaMax),
+			Resource.Focus => GetResource(Resource.FocusMax),
+			Resource.Reputation => GetNextReputationLevelRequirement(),
+			_ => null
+		};
 	}
 
 	public void SetResource(Resource resource, int amount) {
@@ -217,6 +235,7 @@ public partial class Game : RefCounted {
 	public void PassTime() {
 		if (TimeOfDay < END_OF_DAY) {
 			state.time_of_day += 1;
+			PullQueuedVisitor();
 			EmitSignalTimeChanged();
 		}
 	}
@@ -255,6 +274,7 @@ public partial class Game : RefCounted {
 
 		state.rained_yesterday = state.is_raining;
 		state.is_raining = state.rando.RandDouble() < Season.RainChance();
+		state.can_tidy_today = state.is_raining || total_forageable <= 3;
 
 		var failed_requests = UpdateVisitors();
 		var report = new EndOfDayReport() {
@@ -263,16 +283,15 @@ public partial class Game : RefCounted {
 		};
 		state.daily_resource_summary.Clear();
 		
-		if (state.is_raining || total_forageable <= 3) {
-			state.can_tidy_today = true;
-		}
-		
 		EmitSignalTimeChanged();
 		return report;
 	}
 
 	public void DoTidy() {
 		state.can_tidy_today = false;
+		if (GetResource(Resource.Gloom) > 0 && state.rando.RandDouble() < TIDY_REMOVE_GLOOM_CHANCE) {
+			ModifyResource(Resource.Gloom, -1);
+		}
 		PassTime();
 	}
 
@@ -285,10 +304,12 @@ public partial class Game : RefCounted {
 		var region = GetRegion(location.Id);
 		if (region?.Remaining > 0) {
 			region.ConsumeForage();
-			state.current_pickup_results = [..GetForagingResults(location).Select(Pickup.ItemModel)];
+			state.current_pickup_results = [..GetForagingResults(location)];
 			foreach (var result in CurrentPickupResults.Where(x => x != null).GroupBy(x => x!)) {
 				var obs = new ItemObservation(region.Model, result.Count(), Season, TimeOfDay, 0); // TODO: add weather
-				Journal.AddObservation(result.Key.Item!, obs);
+				if (result.Key?.Type == PickupType.ItemModel) {
+					Journal.AddObservation(result.Key.Value.Item!, obs);
+				}
 			}
 		}
 
@@ -369,14 +390,20 @@ public partial class Game : RefCounted {
 		return region_lookup.GetValueOrDefault(region_id);
 	}
 
-	private List<ItemModel> GetForagingResults(RegionModel location) {
+	private List<Pickup> GetForagingResults(RegionModel location) {
 		var forage_key = (GetCurrentConditions(), location);
 		var possibilities = GetForagingPossibilities(forage_key);
-		possibilities = state.rando.Shuffle([.. possibilities.Concat(possibilities)]);
 
-		var results = new List<ItemModel>();
+		if (IsRaining) {
+			possibilities.Add(Pickup.Material(Resource.Gloom));
+		} else {
+			possibilities.AddRange(possibilities);
+		}
+		possibilities = state.rando.Shuffle(possibilities);
+
+		var results = new List<Pickup>();
 		foreach (var item in possibilities) {
-			if (state.rando.RandDouble() < GetItemForageProbability(item)) {
+			if (state.rando.RandDouble() < GetPickupForageProbability(item)) {
 				results.Add(item);
 				if (results.Count >= MAX_FORAGE_RESULTS) {
 					break;
@@ -387,11 +414,11 @@ public partial class Game : RefCounted {
 		return results;
 	}
 
-	private static double GetItemForageProbability(ItemModel item) => item.Rarity switch {
+	private static double GetPickupForageProbability(Pickup pickup) => (pickup.Item?.Rarity ?? Rarity.Common) switch {
 		Rarity.Common => 0.8,
 		Rarity.Rare => 0.09,
 		Rarity.Scarce => 0.01,
-		_ => throw new InvalidEnumArgumentException("item", (int)item.Rarity, typeof(Rarity))
+		_ => throw new InvalidEnumArgumentException("item", (int)(pickup.Item?.Rarity ?? Rarity.Common), typeof(Rarity))
 	};
 
 	private long GetCurrentConditions() {
@@ -413,7 +440,7 @@ public partial class Game : RefCounted {
 		return conditions;
 	}
 
-	private List<ItemModel> GetForagingPossibilities((long conditions, RegionModel location) forage_key) {
+	private List<Pickup> GetForagingPossibilities((long conditions, RegionModel location) forage_key) {
 		if (foraging_possibilities_cache.TryGetValue(forage_key, out var possibilities)) {
 			return possibilities;
 		}
@@ -425,7 +452,7 @@ public partial class Game : RefCounted {
 			}
 
 			if (item.WhereFound == forage_key.location || (World.Adjacencies.GetValueOrDefault(item.WhereFound)?.Contains(forage_key.location) ?? false)) {
-				possibilities.Add(item);
+				possibilities.Add(Pickup.ItemModel(item));
 			}
 		}
 
@@ -462,19 +489,45 @@ public partial class Game : RefCounted {
 	}
 
 	private List<Visitor> UpdateVisitors() {
+		foreach (var visitor in state.queued_visitors.Concat(VisitorAtDoor == null ? [] : [VisitorAtDoor])) {
+			if (!visitor.CanReject()) {
+				// We force accept lingering required requests at the end of the day
+				state.current_requests.Add(visitor);
+			}
+		}
+		
+		state.visitor_at_door = null;
+		state.queued_visitors.Clear();
+		
 		foreach (var visitor in state.current_requests) {
 			visitor.RemainingDays -= 1;
+
+			if (visitor.RemainingDays <= 0) {
+				switch (visitor.Special) {
+					case SpecialRequest.None:
+						ModifyResource(Resource.Reputation, -1);
+						break;
+					case SpecialRequest.Bills:
+						ModifyResource(Resource.Coins, -(visitor.Amount ?? 1));
+						break;
+					default: throw new ArgumentOutOfRangeException();
+				}
+			}
 		}
 
 		var failed_requests = state.current_requests.Where(v => v.RemainingDays <= 0).ToList();
-		ModifyResource(Resource.Reputation, -failed_requests.Count);
 		state.current_requests = [.. state.current_requests.Where(v => v.RemainingDays > 0)];
-		state.visitor_at_door = null;
+		state.queued_visitors = [];
 
+		if (Day % 6 == 0) {
+			// Bills come every 6 days
+			state.queued_visitors.Add(new Visitor(SpecialRequest.Bills, 6, Tr("BILLS_DESCRIPTION"), 5));
+		}
 		if (state.rando.RandDouble() < (IsRaining ? VISITOR_CHANCE / 2 : VISITOR_CHANCE)) {
 			MakeNewVisitor();
 		}
 
+		PullQueuedVisitor();
 		return failed_requests;
 	}
 
@@ -503,11 +556,19 @@ public partial class Game : RefCounted {
 		}
 		
 		var model = request_type ?? state.rando.Pick(request_list);
-		state.visitor_at_door = new Visitor(model, ref state.rando);
+		state.queued_visitors.Add(new Visitor(model, ref state.rando));
+	}
+
+	private void PullQueuedVisitor() {
+		if (state.visitor_at_door == null && state.queued_visitors.Count > 0) {
+			state.visitor_at_door = state.queued_visitors[0];
+			state.queued_visitors.RemoveAt(0);
+		}
 	}
 
 	public (Reward?, Reward?) GiveVisitor(Visitor visitor, Item treatment) {
 		if (!state.inventory.ContainsKey(treatment) || !treatment.Is(ItemType.Infusion)) return (null, null);
+		if (visitor.Request == null) return (null, null);
 
 		var quality = CalculateTreatmentQuality(visitor, treatment.Aspects);
 		var payment = new Reward(visitor.Request.Type.Reward.Select(res => (res, visitor.Request.Reward)));
@@ -521,7 +582,15 @@ public partial class Game : RefCounted {
 		return (payment, tip);
 	}
 
+	public void PayBill(Visitor visitor) {
+		if (visitor.Special != SpecialRequest.Bills) return;
+		ModifyResource(Resource.Coins, -visitor.Amount!.Value);
+		state.current_requests.Remove(visitor);
+	}
+
 	public static int CalculateTreatmentQuality(Visitor visitor, IList<(Aspect, int)> aspects) {
+		if (visitor.Request == null) return 0;
+		
 		var prevAspect = int.MaxValue;
 		var quality = 0;
 		foreach (var (aspect, amount) in visitor.Request.Aspects) {

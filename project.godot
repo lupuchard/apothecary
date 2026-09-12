@@ -23,10 +23,6 @@ shapes/paths/geometry_color=Color(0.100000024, 1, 0.70000005, 1)
 
 project/assembly_name="apothecary"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/terrain_3d/plugin.cfg")
-
 [input]
 
 zoom_in={

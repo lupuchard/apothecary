@@ -51,7 +51,7 @@ public partial class InputSlot : ItemSlot {
 
 	public override void _GuiInput(InputEvent input_event) {
 		base._GuiInput(input_event);
-		if (input_event is InputEventMouseButton mouse_event && mouse_event.ButtonIndex == MouseButton.Right) {
+		if (input_event is InputEventMouseButton { ButtonIndex: MouseButton.Right } ) {
 			OnRightClick();
 		}
 	}

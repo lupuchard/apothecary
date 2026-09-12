@@ -54,7 +54,7 @@ public partial class ForagingUi : BaseUi {
 		var current_foraging_results = Game.Instance.CurrentPickupResults;
 		foreach (var control in ForagingResultsControls.Where(control => !control.Empty)) {
 			if (control.Index < current_foraging_results.Count && current_foraging_results[control.Index] != null) {
-				control.Enable(current_foraging_results[control.Index]!);
+				control.Enable(current_foraging_results[control.Index]!.Value);
 			} else {
 				control.Disable();
 			}

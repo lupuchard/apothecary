@@ -76,7 +76,7 @@ public partial class SlowButton : PanelContainer {
 		Update();
 
 		if (Small) {
-			label.AddThemeFontOverride("font", ResourceLoader.Load<Font>("res://assets/theme/m5x7.ttf"));
+			label.AddThemeFontOverride("normal_font", ResourceLoader.Load<Font>("res://assets/theme/m5x7.ttf"));
 		}
 	}
 

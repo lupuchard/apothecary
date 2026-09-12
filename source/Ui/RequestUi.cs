@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
@@ -16,6 +17,7 @@ public partial class RequestUi : PanelContainer {
 	private Container? complete_request_row;
 	private Label? treatment_quality_label;
 	private SlowButton? give_button;
+	private ResourceSelectSlot? resource_slot;
 
 	public override void _Ready() {
 		sprite = GetNode<TextureRect>("%Sprite");
@@ -28,18 +30,42 @@ public partial class RequestUi : PanelContainer {
 		complete_request_row = GetNode<Container>("%CompleteRequestRow");
 		treatment_quality_label = GetNode<Label>("%TreatmentQualityLabel");
 		give_button = GetNode<SlowButton>("%GiveButton");
+		resource_slot = GetNode<ResourceSelectSlot>("%ResourceSlot");
 
 		destination_slot.ItemUpdated += OnItemUpdated;
 		give_button.Pressed += OnGive;
+		give_button.Show();
 	}
 
 	public void Update(Visitor new_visitor) {
 		visitor = new_visitor;
 		name_label?.Text = visitor.Name;
-		request_label?.Text = Tr("INFUSION");
 		time_label?.Text = FormatDays(visitor.RemainingDays);
-		sprite?.Texture = visitor.Request.Type.SpriteSmall;
-		requirements_ui?.Update([..visitor.Request.Aspects.Cast<(Aspect?, int)>()]);
+
+		if (visitor.Request != null) {
+			sprite?.Texture = visitor.Request.Type.SpriteSmall;
+		} else {
+			sprite?.Texture = ResourceLoader.Load<Texture2D>(visitor.Special.SmallSpritePath());
+		}
+
+		if (visitor.Request == null) {
+			requirements_ui?.Hide();
+			destination_slot?.Hide();
+			request_label?.Text = Tr(visitor.Special.TrString());
+			resource_slot?.Show();
+			resource_slot?.Options = visitor.Special switch {
+				SpecialRequest.None => [null],
+				SpecialRequest.Bills => [(Resource.Coins, visitor.Amount ?? 1)],
+				_ => throw new ArgumentOutOfRangeException()
+			};
+		} else {
+			resource_slot?.Hide();
+			request_label?.Text = Tr("INFUSION");
+			requirements_ui?.Show();
+			requirements_ui?.Update([..visitor.Request.Aspects.Cast<(Aspect?, int)>()]);
+			destination_slot?.Show();
+		}
+		
 		OnItemUpdated();
 	}
 	
@@ -48,7 +74,10 @@ public partial class RequestUi : PanelContainer {
 	}
 
 	private void OnItemUpdated() {
-		if (destination_slot?.Item is Item item && visitor != null) {
+		if (visitor?.Request == null) {
+			complete_request_row?.Show();
+			treatment_quality_label?.Text = "";
+		} else if (destination_slot?.Item is Item item && visitor != null) {
 			complete_request_row?.Show();
 			var visible_aspects = Game.Instance.Journal.GetShownAspects(item.Raw, item.Aspects);
 			var known = visible_aspects.Where(x => x.Item1 != null).Cast<(Aspect, int)>().ToList();
@@ -90,6 +119,15 @@ public partial class RequestUi : PanelContainer {
 				
 				destination_slot.Referencing = null;
 				EmitSignalGiven();
+			}
+		} else {
+			switch (visitor?.Special) {
+				case SpecialRequest.None: break;
+				case SpecialRequest.Bills:
+					Game.Instance.PayBill(visitor);
+					EmitSignalGiven();
+					break;
+				default: throw new ArgumentOutOfRangeException();
 			}
 		}
 	}

@@ -4,12 +4,14 @@
 [ext_resource type="Texture2D" uid="uid://dpv2hwhd5ib36" path="res://assets/world.PNG" id="1_rpg24"]
 [ext_resource type="Script" uid="uid://dxge7vqrotqws" path="res://source/PlayerCamera.cs" id="2_3vi8l"]
 [ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="2_8rhti"]
-[ext_resource type="Script" uid="uid://t78t7gycprpe" path="res://source/Ui/RegionSelect.cs" id="2_21bcp"]
 [ext_resource type="Script" uid="uid://d0jr3t0vaiw0d" path="res://source/MapColor.cs" id="3_3c4kj"]
 [ext_resource type="Shader" uid="uid://byujqec7qsle4" path="res://hidden.gdshader" id="4_0xwag"]
-[ext_resource type="Script" uid="uid://clfreyal0jefa" path="res://source/Ui/RegionLabel.cs" id="5_tpea4"]
+[ext_resource type="Script" uid="uid://c0hgjfe2hjaji" path="res://source/Ui/RegionSelect/HomeLocationSelect.cs" id="4_5kx5p"]
+[ext_resource type="AudioStream" uid="uid://dt3etydudwi7k" path="res://assets/sound/knock.mp3" id="5_mmynp"]
+[ext_resource type="Script" uid="uid://cd38qx58118h6" path="res://source/Ui/KnockSound.cs" id="6_5kx5p"]
 [ext_resource type="FontFile" uid="uid://qrqyo004juy3" path="res://assets/theme/Font_Fantasy.ttf" id="6_56f15"]
 [ext_resource type="StyleBox" uid="uid://bmoaasi4rrv6x" path="res://assets/theme/EditPanel.tres" id="6_tpea4"]
+[ext_resource type="Script" uid="uid://c0jvu6k5dd3l0" path="res://source/Ui/RegionSelect/RegionLocationSelect.cs" id="7_anpix"]
 [ext_resource type="Script" uid="uid://d21n6c1vn0w5x" path="res://source/Ui/ForagingUi.cs" id="7_dlkme"]
 [ext_resource type="Script" uid="uid://dgpsnbo467df5" path="res://source/Ui/FloatingNotifications.cs" id="7_rnjy8"]
 [ext_resource type="AudioStream" uid="uid://dlohlq5pxqcvs" path="res://assets/sound/rain.mp3" id="8_4q3kb"]
@@ -53,8 +55,6 @@
 [ext_resource type="PackedScene" uid="uid://jfem1aph6dkc" path="res://controls/infusion_control.tscn" id="38_p3pq8"]
 [ext_resource type="PackedScene" uid="uid://d0n2fhv3mb5w" path="res://controls/grinder_control.tscn" id="39_kajva"]
 [ext_resource type="Script" uid="uid://kibpep7iy6dq" path="res://source/Ui/Home/BedroomTabUi.cs" id="41_aw26h"]
-[ext_resource type="Script" uid="uid://ds4yp1r0vlu5l" path="res://source/Ui/ResourceParticles.cs" id="42_fe1od"]
-[ext_resource type="Texture2D" uid="uid://56a2448o3l0x" path="res://assets/resources/coins_small.png" id="43_fq8n2"]
 [ext_resource type="Script" uid="uid://e3fxsbpujsyd" path="res://source/Ui/Home/ExploreTabUi.cs" id="44_hjerm"]
 [ext_resource type="Script" uid="uid://dj8kra5a42vlu" path="res://source/Ui/MainMenuUi.cs" id="44_ipkxx"]
 [ext_resource type="PackedScene" uid="uid://dcatlpk64lsbb" path="res://controls/roaster_control.tscn" id="45_mmynp"]
@@ -63,10 +63,13 @@
 [ext_resource type="AudioStream" uid="uid://cpb01u7rcjqi6" path="res://assets/sound/explore_start.mp3" id="46_kajva"]
 [ext_resource type="PackedScene" uid="uid://b3opkjenrrc4b" path="res://controls/profile_entry.tscn" id="47_h3qio"]
 [ext_resource type="AudioStream" uid="uid://dtipq1qk5crsu" path="res://assets/sound/explore_end.mp3" id="47_rvcyw"]
+[ext_resource type="Script" uid="uid://dhxmopawap1ke" path="res://source/Ui/Home/StudyTabUi.cs" id="48_vrqro"]
 [ext_resource type="AudioStream" uid="uid://167b1swbe2l6" path="res://assets/sound/click1.mp3" id="48_y4n4r"]
+[ext_resource type="Texture2D" uid="uid://ddcvt7chxd47g" path="res://assets/arrow2.png" id="49_3bu5q"]
 [ext_resource type="AudioStream" uid="uid://d3eokw8wwysg5" path="res://assets/sound/click2.mp3" id="49_k1vn5"]
 [ext_resource type="AudioStream" uid="uid://dfsitjvnk85gf" path="res://assets/sound/forest_ambience.mp3" id="50_8a3cd"]
 [ext_resource type="Texture2D" uid="uid://jyghk532md3j" path="res://assets/arrow_small2.png" id="53_66ob2"]
+[ext_resource type="PackedScene" uid="uid://svkr5hf00oht" path="res://controls/resource_select.tscn" id="65_3bu5q"]
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0xwag"]
 
@@ -169,21 +172,6 @@ _data = {
 }
 point_count = 3
 
-[sub_resource type="Curve" id="Curve_u7ijn"]
-_data = [Vector2(0, 1), 0.0, -0.17964005, 0, 0, Vector2(1, 0.00070512295), -2.7916088, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_h3qio"]
-curve = SubResource("Curve_u7ijn")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ipkxx"]
-particle_flag_disable_z = true
-direction = Vector3(0, -1, 0)
-initial_velocity_min = 60.0
-initial_velocity_max = 200.0
-gravity = Vector3(0, 300, 0)
-alpha_curve = SubResource("CurveTexture_h3qio")
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h3qio"]
 content_margin_left = 0.0
 content_margin_top = 0.0
@@ -207,16 +195,20 @@ script = ExtResource("3_3c4kj")
 
 [node name="Home" type="Area2D" parent="Map" unique_id=667574143]
 position = Vector2(1220, 806)
-script = ExtResource("2_21bcp")
-region_id = "home"
+script = ExtResource("4_5kx5p")
 
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/Home" unique_id=869474059]
 position = Vector2(-3.8146973e-05, 0.9999924)
 polygon = PackedVector2Array(117, -137, 119, 107, -179, 110, -180, -53, -52, -51, -49, -135)
 
+[node name="KnockSound" type="AudioStreamPlayer2D" parent="Map/Home" unique_id=1241266126]
+stream = ExtResource("5_mmynp")
+pitch_scale = 0.8
+script = ExtResource("6_5kx5p")
+
 [node name="FrontYard" type="Area2D" parent="Map" unique_id=939981965]
 position = Vector2(1185, 506)
-script = ExtResource("2_21bcp")
+script = ExtResource("7_anpix")
 region_id = "front_yard"
 
 [node name="Polygon" type="CollisionPolygon2D" parent="Map/FrontYard" unique_id=1521660909]
@@ -225,7 +217,7 @@ polygon = PackedVector2Array(219.90775, -136.33533, 219, 158, -28.092247, 162.66
 
 [node name="EastWoods" type="Area2D" parent="Map" unique_id=1894390791 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(1694, 567)
-script = ExtResource("2_21bcp")
+script = ExtResource("7_anpix")
 region_id = "east_woods"
 fog_poly = NodePath("../../SubViewportContainer/FogViewport/EastWoods")
 
@@ -235,7 +227,7 @@ polygon = PackedVector2Array(-329, -177, -84, -499, 339, -496, 419, -37, 66, 422
 
 [node name="Backyard" type="Area2D" parent="Map" unique_id=1077855696 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(1244, 1051)
-script = ExtResource("2_21bcp")
+script = ExtResource("7_anpix")
 region_id = "backyard"
 fog_poly = NodePath("../../SubViewportContainer/FogViewport/Backyard")
 
@@ -245,7 +237,7 @@ polygon = PackedVector2Array(101, -132, 101, -238, 182, -241, 188, 228, -197, 22
 
 [node name="Creek" type="Area2D" parent="Map" unique_id=166773777 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(1136, 1461)
-script = ExtResource("2_21bcp")
+script = ExtResource("7_anpix")
 region_id = "creek"
 fog_poly = NodePath("../../SubViewportContainer/FogViewport/Creek")
 
@@ -255,7 +247,7 @@ polygon = PackedVector2Array(305, -170, 314, -272, 790, -599, 876, -568, 313, 14
 
 [node name="WestWoods" type="Area2D" parent="Map" unique_id=306409951 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(577, 1070)
-script = ExtResource("2_21bcp")
+script = ExtResource("7_anpix")
 region_id = "west_woods"
 fog_poly = NodePath("../../SubViewportContainer/FogViewport/WestWoods")
 
@@ -265,7 +257,7 @@ polygon = PackedVector2Array(202.00006, -409, 391.00006, -31, 284.00006, 314, 15
 
 [node name="Road" type="Area2D" parent="Map" unique_id=1363432578 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(628, 471)
-script = ExtResource("2_21bcp")
+script = ExtResource("7_anpix")
 region_id = "road"
 fog_poly = NodePath("../../SubViewportContainer/FogViewport/Road")
 
@@ -275,7 +267,7 @@ polygon = PackedVector2Array(12.000061, -92, 338.00006, 1, 375.00006, 235, -14.9
 
 [node name="Meadow" type="Area2D" parent="Map" unique_id=1488017498 node_paths=PackedStringArray("fog_poly")]
 position = Vector2(1010, 179)
-script = ExtResource("2_21bcp")
+script = ExtResource("7_anpix")
 region_id = "meadow"
 fog_poly = NodePath("../../SubViewportContainer/FogViewport/Meadow")
 
@@ -385,28 +377,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_8rhti")
 
-[node name="FrontYard" type="Label" parent="CanvasLayer/RegionLabels" unique_id=2023242644 node_paths=PackedStringArray("Follows")]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 1118.0
-offset_top = 503.0
-offset_right = 1180.0
-offset_bottom = 524.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset_ratio = Vector2(0.5, 0.5)
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-text = "Front Yard"
-horizontal_alignment = 1
-vertical_alignment = 1
-script = ExtResource("5_tpea4")
-Follows = NodePath("../../../Map/FrontYard/Polygon")
-
 [node name="Clock" type="Control" parent="CanvasLayer" unique_id=472514533]
 layout_mode = 3
 anchors_preset = 7
@@ -484,6 +454,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_cs1hs")
 
 [node name="ForagingUi" type="PanelContainer" parent="CanvasLayer" unique_id=782267389]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(240, 240)
 anchors_preset = 8
 anchor_left = 0.5
@@ -734,19 +705,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="VisitorTimeLimitLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1376527061]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 208.0
-offset_top = 127.5
-offset_right = 351.0
-offset_bottom = 144.5
-theme_override_fonts/font = ExtResource("20_wudxj")
-text = "3 Days"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
-
 [node name="VisitorRequirementsContainer" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1692609529]
 unique_name_in_owner = true
 layout_mode = 0
@@ -783,22 +741,46 @@ layout_mode = 2
 texture = ExtResource("22_n0uqe")
 stretch_mode = 2
 
-[node name="VisitorAcceptButton" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1714227321 instance=ExtResource("11_im64q")]
+[node name="VisitorTimeLimitLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1376527061]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 195.0
-offset_top = 174.5
-offset_right = 246.0
-offset_bottom = 209.5
-Text = "ACCEPT"
+offset_left = 208.0
+offset_top = 127.5
+offset_right = 351.0
+offset_bottom = 144.5
+theme_override_fonts/font = ExtResource("20_wudxj")
+text = "3 Days"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
 
-[node name="VisitorRejectButton" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1489500017 instance=ExtResource("11_im64q")]
+[node name="VisitorResourceInfo" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1831485150 instance=ExtResource("37_5pcrg")]
 unique_name_in_owner = true
+layout_mode = 0
+offset_left = 261.0
+offset_top = 96.5
+offset_right = 303.0
+offset_bottom = 128.5
+
+[node name="VisitorButtons" type="HBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel" unique_id=1470683976]
 layout_mode = 0
 offset_left = 104.0
 offset_top = 174.5
-offset_right = 153.0
+offset_right = 246.0
 offset_bottom = 209.5
+theme_override_constants/separation = 42
+alignment = 1
+
+[node name="VisitorAcceptButton" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel/VisitorButtons" unique_id=1670490505 instance=ExtResource("11_im64q")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(49, 35)
+layout_mode = 2
+Text = "ACCEPT"
+
+[node name="VisitorRejectButton" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors/CurrentVisitor/Panel/VisitorButtons" unique_id=297650976 instance=ExtResource("11_im64q")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(51, 35)
+layout_mode = 2
 Text = "REJECT"
 
 [node name="HSeparator" type="HSeparator" parent="CanvasLayer/HomeUi/TabContainer/VisitorsTab/HBoxContainer/Visitors" unique_id=353454649]
@@ -852,7 +834,7 @@ WhereInputNodes = NodePath("../..")
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-script = ExtResource("29_d5d72")
+script = ExtResource("48_vrqro")
 metadata/_tab_index = 2
 metadata/_tab_name = "STUDY_TAB"
 
@@ -912,6 +894,7 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("30_3vupj")
+texture_hover = ExtResource("49_3bu5q")
 stretch_mode = 3
 flip_h = true
 
@@ -925,6 +908,7 @@ text = "2 of 3"
 unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("30_3vupj")
+texture_hover = ExtResource("49_3bu5q")
 stretch_mode = 3
 
 [node name="VerifiedPopup" type="CenterContainer" parent="CanvasLayer/HomeUi/TabContainer/JournalTab" unique_id=1240356482]
@@ -1041,11 +1025,13 @@ metadata/_tab_name = "BEDROOM_TAB"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab" unique_id=1783002094]
 layout_mode = 2
+alignment = 1
 
 [node name="SleepLabel" type="Label" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab/VBoxContainer" unique_id=2074200720]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Too early to sleep"
+horizontal_alignment = 1
 
 [node name="SleepButton" parent="CanvasLayer/HomeUi/TabContainer/BedroomTab/VBoxContainer" unique_id=719614990 instance=ExtResource("11_im64q")]
 unique_name_in_owner = true
@@ -1179,7 +1165,7 @@ offset_top = 87.0
 offset_right = 215.0
 offset_bottom = 582.0
 
-[node name="ResourceInfo" parent="CanvasLayer/HomeUi/ResourceList" unique_id=1831485150 instance=ExtResource("37_5pcrg")]
+[node name="ResourceInfo" parent="CanvasLayer/HomeUi/ResourceList" unique_id=1927236959 instance=ExtResource("37_5pcrg")]
 layout_mode = 2
 
 [node name="ResourceInfo2" type="HBoxContainer" parent="CanvasLayer/HomeUi/ResourceList" unique_id=226888749]
@@ -1230,17 +1216,6 @@ position = Vector2(64, 24)
 unique_name_in_owner = true
 position = Vector2(7, 17)
 curve = SubResource("Curve2D_uvlxr")
-
-[node name="ResourceParticles" type="Node2D" parent="CanvasLayer" unique_id=1140295363]
-script = ExtResource("42_fe1od")
-
-[node name="GPUParticles2D" type="GPUParticles2D" parent="CanvasLayer/ResourceParticles" unique_id=404737589]
-visible = false
-position = Vector2(547, 460)
-texture = ExtResource("43_fq8n2")
-lifetime = 0.8
-explosiveness = 1.0
-process_material = SubResource("ParticleProcessMaterial_ipkxx")
 
 [node name="MainMenu" type="PanelContainer" parent="CanvasLayer" unique_id=749046666]
 unique_name_in_owner = true
@@ -1415,6 +1390,9 @@ Text = "DELETE"
 unique_name_in_owner = true
 layout_mode = 2
 text = "CANCEL"
+
+[node name="ResourceSelect" parent="CanvasLayer" unique_id=1788750172 instance=ExtResource("65_3bu5q")]
+visible = false
 
 [node name="ClickSound1" type="AudioStreamPlayer" parent="." unique_id=173047951]
 unique_name_in_owner = true

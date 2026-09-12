@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bfbxwbbjvq1n8"]
 
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="1_e445e"]
 [ext_resource type="Script" uid="uid://b3sm13l1iaxti" path="res://source/Ui/Inventory/InventorySlot.cs" id="1_rq8q5"]
 [ext_resource type="FontFile" uid="uid://be670rmkfx2dq" path="res://assets/theme/m5x7.ttf" id="2_3xeia"]
 [ext_resource type="Texture2D" uid="uid://bi8hjcjs3ynxe" path="res://assets/item/ground.png" id="2_h2484"]
@@ -20,6 +21,7 @@ corner_radius_bottom_left = 4
 
 [node name="InventorySlot" type="Button" unique_id=1510528001]
 custom_minimum_size = Vector2(48, 48)
+theme = ExtResource("1_e445e")
 theme_override_styles/normal = SubResource("StyleBoxFlat_cs1hs")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_3xeia")
 script = ExtResource("1_rq8q5")

@@ -11,6 +11,7 @@ public partial class CurrentVisitorUi : PanelContainer {
 	private Label? none_label;
 	private TextureRect? sprite;
 	private AspectListUi? requirements_container;
+	private MaterialUi? resource_info;
 
 	public SlowButton? AcceptButton { get ; private set; }
 	public SlowButton? RejectButton { get ; private set; }
@@ -26,6 +27,7 @@ public partial class CurrentVisitorUi : PanelContainer {
 		none_label = GetNode<Label>("%VisitorNoneLabel");
 		sprite = GetNode<TextureRect>("%VisitorSprite");
 		requirements_container =  GetNode<AspectListUi>("%VisitorRequirementsContainer");
+		resource_info = GetNode<MaterialUi>("%VisitorResourceInfo");
 		
 		AcceptButton = GetNode<SlowButton>("%VisitorAcceptButton");
 		RejectButton = GetNode<SlowButton>("%VisitorRejectButton");
@@ -40,6 +42,7 @@ public partial class CurrentVisitorUi : PanelContainer {
 			request_label?.Hide();
 			time_label?.Hide();
 			requirements_container?.Hide();
+			resource_info?.Hide();
 			sprite?.Hide();
 			AcceptButton?.Hide();
 			RejectButton?.Hide();
@@ -53,15 +56,25 @@ public partial class CurrentVisitorUi : PanelContainer {
 			name_label?.Text = visitor.Name;
 			speech_label?.Show();
 			speech_label?.Text = visitor.RequestText;
-			request_label?.Show();
-			request_label?.Text = Tr("INFUSION");
 			time_label?.Show();
 			time_label?.Text = FormatDays(visitor.RemainingDays);
 			sprite?.Show();
-			sprite?.Texture = visitor.Request.Type.Sprite;
 			
-			requirements_container?.Show();
-			requirements_container?.Update([..visitor.Request.Aspects.Cast<(Aspect?, int)>()]);
+			if (visitor.Request != null) {
+				resource_info?.Hide();
+				requirements_container?.Show();
+				requirements_container?.Update([..visitor.Request.Aspects.Cast<(Aspect?, int)>()]);
+				request_label?.Show();
+				request_label?.Text = Tr("INFUSION");
+				sprite?.Texture = visitor.Request.Type.Sprite;
+			} else if (visitor.Special == SpecialRequest.Bills) {
+				resource_info?.Show();
+				resource_info?.Resource = Resource.Coins;
+				resource_info?.Amount = visitor.Amount;
+				requirements_container?.Hide();
+				request_label?.Hide();
+				sprite?.Texture = ResourceLoader.Load<Texture2D>(visitor.Special.SpritePath());
+			}
 			
 			AcceptButton?.Show();
 			RejectButton?.Show();

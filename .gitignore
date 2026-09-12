@@ -3,3 +3,8 @@
 /android/
 src/.build/
 .idea/
+
+assets/map/
+addons/
+demo/
+terrain/

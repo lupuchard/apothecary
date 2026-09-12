@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://svkr5hf00oht"]
+
+[ext_resource type="Theme" uid="uid://chlnkbertyww3" path="res://assets/theme/ornate-theme.tres" id="1_m73ig"]
+[ext_resource type="Texture2D" uid="uid://ck4ivn8gnsuu0" path="res://assets/resources/coins.png" id="1_o4mcx"]
+[ext_resource type="Script" uid="uid://cfq74h8hpbybn" path="res://source/Ui/ResourceSelectUi.cs" id="2_sndhy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qge8e"]
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wfpdq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0o0w7"]
+bg_color = Color(0.82, 0.82, 0.82, 0.31764707)
+
+[node name="ResourceSelect" type="PanelContainer" unique_id=1788750172]
+custom_minimum_size = Vector2(48, 0)
+theme = ExtResource("1_m73ig")
+theme_override_styles/panel = SubResource("StyleBoxFlat_qge8e")
+script = ExtResource("2_sndhy")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1709067055]
+layout_mode = 2
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_bottom = 3
+
+[node name="ButtonList" type="VBoxContainer" parent="MarginContainer" unique_id=2054876958]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Button" type="Button" parent="MarginContainer/ButtonList" unique_id=1961523030]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_wfpdq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_0o0w7")
+icon_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/ButtonList/Button" unique_id=1212899000]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_o4mcx")
+stretch_mode = 3

@@ -23,6 +23,7 @@ public partial class BedroomTabUi : TabBaseUi {
 		sleep_label = GetNode<Label>("%SleepLabel");
 		sleep_button = GetNode<SlowButton>("%SleepButton");
 		sleep_button.Pressed += OnEndDay;
+		tidy_up_button = GetNode<SlowButton>("%TidyButton");
 		tidy_up_button.Pressed += OnTidyUp;
 		
 		end_of_day_fade = GetNode<ColorRect>("%EndOfDayFade");
@@ -70,12 +71,18 @@ public partial class BedroomTabUi : TabBaseUi {
 			
 			var report = game.NextDay();
 			var summary_text = new StringBuilder();
-			if (report.FailedRequests.Count > 0) {
+
+			var failed_requests = report.FailedRequests.Where(x => x.Request != null).ToList();
+			if (failed_requests.Count > 0) {
 				summary_text.Append(Tr("FAILED_REQUESTS")).Append("\n  ");
-				summary_text.AppendJoin("\n  ", report.FailedRequests.Select(request => string.Format(
+				summary_text.AppendJoin("\n  ", failed_requests.Select(request => string.Format(
 					Tr("FAILED_REQUEST"),
 					request.Name
 				)) + new Reward([(Resource.Reputation, -1)]).ToBbCodeString());
+			}
+
+			if (report.FailedRequests.Any(x => x.Special == SpecialRequest.Bills)) {
+				summary_text.Append(Tr("FAILED_BILL")).Append('\n');
 			}
 
 			if (report.ResourceSummary.Length > 0) {

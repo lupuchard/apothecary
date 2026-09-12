@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bvrmgxewkk0ix" path="res://assets/aspect/spice.png" id="5_bl1kf"]
 [ext_resource type="Script" uid="uid://b7boy6xi4bamt" path="res://source/Ui/AspectListUi.cs" id="6_7q0y6"]
 [ext_resource type="PackedScene" uid="uid://bdekjob1bhdby" path="res://controls/input_slot.tscn" id="9_7q0y6"]
+[ext_resource type="PackedScene" uid="uid://bjhr4v2kkfftw" path="res://controls/resource_select_slot.tscn" id="10_7l2k1"]
 [ext_resource type="PackedScene" uid="uid://bibma3tmul8et" path="res://controls/hold_button.tscn" id="10_bl1kf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mh4ky"]
@@ -17,6 +18,8 @@ atlas = ExtResource("2_nuyv0")
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7m1qc"]
 
 [node name="VisitorRequest" type="PanelContainer" unique_id=1703583314]
+offset_right = 353.0
+offset_bottom = 79.0
 theme = ExtResource("1_mjb0w")
 theme_override_styles/panel = ExtResource("1_xk3xw")
 script = ExtResource("2_mjb0w")
@@ -98,6 +101,11 @@ text = "2 days left"
 
 [node name="DestinationSlot" parent="VBoxContainer/InfoRow" unique_id=1510528001 instance=ExtResource("9_7q0y6")]
 unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="ResourceSlot" parent="VBoxContainer/InfoRow" unique_id=1316939867 instance=ExtResource("10_7l2k1")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [node name="CompleteRequestRow" type="HBoxContainer" parent="VBoxContainer" unique_id=219364510]
@@ -116,6 +124,8 @@ size_flags_horizontal = 3
 
 [node name="GiveButton" parent="VBoxContainer/CompleteRequestRow" unique_id=648291464 instance=ExtResource("10_bl1kf")]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
+Small = true
 Text = "GIVE"

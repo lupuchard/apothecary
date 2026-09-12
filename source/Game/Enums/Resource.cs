@@ -7,8 +7,8 @@ using Godot;
 
 namespace Apothecary;
 
-[JsonConverter(typeof(JsonStringEnumConverter<InventorySortMethod>))]
-public enum Resource {
+[JsonConverter(typeof(JsonStringEnumConverter<Resource>))]
+public enum Resource: ushort {
 	None,
 	Time,
 	ReputationLevel,

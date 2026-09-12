@@ -16,7 +16,7 @@ public partial class UiManager : Node2D {
 	
 	private MainMenuUi? main_menu;
 
-	private readonly List<RegionSelect> region_selects = [];
+	private readonly List<LocationSelect> region_selects = [];
 	private BaseUi? current_ui;
 
 	private PlayerCamera? player_camera;
@@ -44,8 +44,8 @@ public partial class UiManager : Node2D {
 		rain_sound = GetNode<AudioStreamPlayer>("%Rain/RainSound");
 
 		foreach (var child in map.GetChildren()) {
-			if (child is RegionSelect region_select) {
-				region_select.Selected += OnRegionSelected;
+			if (child is LocationSelect region_select) {
+				region_select.Selected += () => OnRegionSelected(region_select);
 				region_selects.Add(region_select);
 			}
 		}
@@ -100,13 +100,13 @@ public partial class UiManager : Node2D {
 		}
 	}
 
-	private void OnRegionSelected(RegionSelect.Type type, RegionModel? region) {
+	private void OnRegionSelected(LocationSelect location_select) {
 		if (current_ui != null) return;
-		
-		if (type == RegionSelect.Type.Region && region != null && foraging_ui != null) {
-			foraging_ui.Region = Game.Instance.GetRegion(region.Id);
+
+		if (location_select is RegionLocationSelect region_select && foraging_ui != null) {
+			foraging_ui.Region = Game.Instance.GetRegion(region_select.region_id);
 			OpenUi(foraging_ui);
-		} else if (type == RegionSelect.Type.Home && home_ui != null) {
+		} else if (location_select is HomeLocationSelect && home_ui != null) {
 			home_ui.Update(false);
 			OpenUi(home_ui);
 		}

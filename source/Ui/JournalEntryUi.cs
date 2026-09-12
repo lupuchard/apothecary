@@ -26,15 +26,6 @@ public partial class JournalEntryUi : Panel {
 
 	private static readonly Dictionary<RegionModel, int> region_to_option_id = [];
 	private static readonly Dictionary<int, RegionModel> option_id_to_region = [];
-	
-	/*private readonly ItemFindCondition[] item_find_conditions = [
-		None,
-		Morning, 
-		Afternoon, 
-		ItemFindCondition.Night, 
-		ItemFindCondition.AfterRaining, 
-		ItemFindCondition.InMoonlight
-	];*/
 
 	private static void InitializeRegionOptionIds() {
 		foreach (var region in Game.Instance.World.Regions) {

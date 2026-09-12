@@ -10,6 +10,14 @@ public partial class MaterialUi : HBoxContainer {
 		}
 	}
 
+	public int? Amount {
+		get;
+		set {
+			field = value;
+			Update();
+		}
+	}
+
 	private Label? count_label;
 	private TextureRect? sprite;
 
@@ -25,15 +33,16 @@ public partial class MaterialUi : HBoxContainer {
 	}
 
 	public void Update() {
-		var count = Resource == null ? 0 : Game.Instance.GetResource(Resource.Value);
+		var count = Resource == null ? 0 : (Amount ?? Game.Instance.GetResource(Resource.Value));
 		if (count == 0) {
 			Hide();
 			return;
 		}
 		Show();
 
-		if (Resource == Apothecary.Resource.ReputationLevel) {
-			count_label?.Text = count + "/" + Game.Instance.GetNextReputationLevelRequirement();
+		var max = Game.Instance.GetResourceMax(Resource!.Value);
+		if (max != null) {
+			count_label?.Text = count + "/" + max;
 		} else {
 			count_label?.Text = count.ToString();
 		}

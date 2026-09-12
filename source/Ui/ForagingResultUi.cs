@@ -41,18 +41,21 @@ public partial class ForagingResultUi : Button {
 			case PickupType.Empty: 
 				Label?.Text = Tr("NO_FORAGE_FOUND");
 				TextureRect?.Texture = ResourceLoader.Load<Texture2D>("res://assets/item/nothing.png");
+				TextureRect?.Modulate = Colors.White;
 				Empty = true;
 				break;
 			case PickupType.ItemModel:
 				var item = pickup.Item!;
 				Label?.Text = Tr(item.Id.ToUpper());
 				TextureRect?.Texture = item.Sprite;
+				TextureRect?.Modulate = Colors.White;
 				Empty = false;
 				break;
 			case PickupType.Material:
 				var material = pickup.Resource!.Value;
 				Label?.Text = Tr(material.TrString());
 				TextureRect?.Texture = ResourceLoader.Load<Texture2D>(material.SpritePath());
+				TextureRect?.Modulate = material.GetColor();
 				Empty = false;
 				break;
 			default: 

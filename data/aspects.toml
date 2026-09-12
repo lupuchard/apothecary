@@ -23,3 +23,27 @@ mutates_into = "gelus"
 [Aspects.gelus]
 color = [0.0, 0.5, 1.0]  # Azure
 mutates_into = "bloom"
+
+[Aspects.fingo]
+color = [0.25, 1.0, 1.0]   # Light cyan
+mutates_into = "sense"
+
+[Aspects.sense]
+color = [0.25, 1.0, 0.25]  # Light green
+mutates_into = "heart"
+
+[Aspects.heart]
+color = [1.0, 1.0, 0.25]   # Light yellow
+mutates_into = "cogni"
+
+[Aspects.cogni]
+color = [1.0, 0.25, 0.25]  # Light red
+mutates_into = "volit"
+
+[Aspects.volit]
+color = [1.0, 0.25, 1.0]   # Light magenta
+mutates_into = "memen"
+
+[Aspects.memen]
+color = [0.25, 0.25, 1.0]  # Light blue
+mutates_into = "fingo"

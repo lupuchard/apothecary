@@ -1,8 +1,6 @@
-using System.Text.Json.Serialization;
-
 namespace Apothecary;
 
-public enum PickupType {
+public enum PickupType: ushort {
 	Empty,
 	ItemModel,
 	Material

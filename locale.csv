@@ -1,153 +1,169 @@
-keys,en
-BLOOM,Bloom
-BLOOM_FLAVOR,Sweet
-CAUST,Caust
-CAUST_FLAVOR,Sour
-SPICE,Spice
-SPICE_FLAVOR,Pungent
-VIGOR,Vigor
-VIGOR_FLAVOR,Hearty
-UMBER,Umber
-UMBER_FLAVOR,Bitter
-GELUS,Gelus
-GELUS_FLAVOR,Fresh
-
-HOME,Home
-FRONT_YARD,Front yard
-FRONT_YARD_UNKNOWN,Front yard
-BACKYARD,Backyard
-BACKYARD_UNKNOWN,Backyard
-ROAD,Road
-ROAD_UNKNOWN,Road
-MEADOW,Meadow
-MEADOW_UNKNOWN,Meadow
-EAST_WOODS,East woods
-EAST_WOODS_UNKNOWN,Undiscovered (east)
-WEST_WOODS,West woods
-WEST_WOODS_UNKNOWN,Undiscovered (west)
-CREEK,By the creek
-CREEK_UNKNOWN,Undiscovered (south)
-TIME,Actions
-REPUTATION_LEVEL,Reputation level
-REPUTATION,Reputation
-COINS,Coins
-COIN,Coin
-FIREWOOD,Firewood
-FOCUS,Focus
-FOCUS_MAX,Maximum focus
-STAMINA,Stamina
+keys;en
+BLOOM;Bloom
+BLOOM_FLAVOR;Sweet
+CAUST;Caust
+CAUST_FLAVOR;Sour
+SPICE;Spice
+SPICE_FLAVOR;Pungent
+VIGOR;Vigor
+VIGOR_FLAVOR;Hearty
+UMBER;Umber
+UMBER_FLAVOR;Bitter
+GELUS;Gelus
+GELUS_FLAVOR;Fresh
+FINGO;Fingo
+FINGO_FLAVOR;Vibrant
+SENSE;Sense
+SENSE_FLAVOR;Rich
+HEART;Heart
+HEART_FLAVOR;Lively
+COGNI;Cogni
+COGNI_FLAVOR;Clever
+VOLIT;Volit
+VOLIT_FLAVOR;Cool
+MEMEN;Memen
+MEMEN_FLAVOR;Misty
+HOME;Home
+FRONT_YARD;Front yard
+FRONT_YARD_UNKNOWN;Front yard
+BACKYARD;Backyard
+BACKYARD_UNKNOWN;Backyard
+ROAD;Road
+ROAD_UNKNOWN;Road
+MEADOW;Meadow
+MEADOW_UNKNOWN;Meadow
+EAST_WOODS;East woods
+EAST_WOODS_UNKNOWN;Undiscovered (east)
+WEST_WOODS;West woods
+WEST_WOODS_UNKNOWN;Undiscovered (west)
+CREEK;By the creek
+CREEK_UNKNOWN;Undiscovered (south)
+TIME;Actions
+REPUTATION_LEVEL;Reputation level
+REPUTATION;Reputation
+COINS;Coins
+COIN;Coin
+FIREWOOD;Firewood
+FOCUS;Focus
+FOCUS_MAX;Maximum focus
+STAMINA;Stamina
 STAMINA_MAX Maximum stamina
-MEADOWSWEET,Meadowsweet
-WILD_LACEROOT,Wild laceroot
-MINTFLOWER,Mintflower
-FEVERFEW,Feverfew
-WHITE_CONEFLOWER,White coneflower
-CHAMOMILE,Chamomile
-YARROW,Yarrow
-WILD_GARLIC,Wild garlic
-RASPBERRY,Raspberry
-MARSH_MALLOW,Marsh mallow
-LICQUORICE_ROOT,Licquorice root
-NETTLE,Wet nettle
-FORAGES_REMAINING_LABEL,{0}/{1} Remaining
-NO_FORAGE_FOUND,Nothing found
-FORAGE_BUTTON_UNAVAILABLE,No more forage
-FORAGE_BUTTON_AVAILABLE,Forage
-FORAGE_BUTTON_END_OF_DAY,It's getting late...
-CHOP_WOOD_BUTTON,Chop wood
-VISITORS_TAB,Visitors
-KITCHEN_TAB,Kitchen
-JOURNAL_TAB,Journal
-BEDROOM_TAB,Bedroom
-EXPLORE_TAB,Explore
-VISITOR,Visitor
-NO_VISITOR_TEXT,No visitors
-EXPLORE,Explore house
-INFUSION,{0} infusion
-INFUSE,Infuse
-GROUND,Ground {0}
-GRIND,Grind
-ROASTED,Roasted {0}
-ROAST,Roast
-ONE_DAY,1 day
-X_DAYS,{0} days
-ONE_DAY_LEFT,1 day left
-X_DAYS_LEFT,{0} days left
-ACCEPT,Accept
-REJECT,Reject
-GIVE,Give
-WHERE,Where
-WHEN,When
-RARITY,Rarity
-UNDISCOVERED_ITEM,Undiscovered item
-X_OF_Y,{0} of {1}
-COMMON,Common
-RARE,Rare
-SCARCE,Scarce
-ANY_TIME,Any time
-MORNING,Morning
-AFTERNOON,Afternoon
-NIGHT,Night
-AFTER_RAINING,After rain
-IN_MOONLIGHT,In moonlight
-PREVERNAL,Prevernal
-VERNAL,Vernal
-ESTIVAL,Estival
-SEROTINAL,Serotinal
-AUTUMNAL,Autumnal
-HIBERNAL,Hibernal
-JOURNAL,Journal
-JOURNAL_NOTES,Notes - {0}
-EUREKA,Eureka!
-OK,Ok
-VERIFIED_POPUP_TEXT,Locked in:\n{0}\nAll aspects will now be shown for these ingredients. {1}
-ACCESS_UNLOCK,You can now access the {0}.
-INADEQUATE_TREATMENT,This is an inadequate treatment.
-AT_LEAST_INADEQUATE_TREATMENT,This might not be an adequate treatment.
-ADEQUATE_TREATMENT,This is an adequate treatment.
-AT_LEAST_ADEQUATE_TREATMENT,This is at least an adequate treatment.
-GOOD_TREATMENT,This is a good treatment.
-AT_LEAST_GOOD_TREATMENT,This is a good or better treatment.
-VERY_GOOD_TREATMENT,This is a very good treatment.
-AT_LEAST_VERY_GOOD_TREATMENT,This is a very good or excellent treatment.
-EXCELLENT_TREATMENT,This is an excellent treatment.
-DEFAULT_PROFILE_NAME,Profile {0}
-NEW_GAME,New game
-CONTINUE_GAME,Continue
-LOAD_GAME,Load game
-EXIT_GAME,Exit
-SAVE_AND_EXIT,Save & Exit
-DELETE,Delete (hold)
-CANCEL,Cancel
-DELETE_CONFIRM,Confirm deletion of profile {0}
-TOO_EARLY_TO_SLEEP,Too early to sleep.
-EARLY_TO_SLEEP,{0} actions left in day. Sleep anyway?
-TIME_TO_SLEEP,Time to sleep.
-GO_TO_SLEEP,Go to sleep
-TIDY_UP,Tidy up bedroom
-IT_IS_NOW_DAY,It is now day {0} of {1}.
-WAKE_UP,Wake up
-END_OF_DAY_SUMMARY,End of day summary:
-FAILED_REQUESTS,Requests:
-FAILED_REQUEST,Failed {0}'s request.
-GAINED,Gained {0} {1}
-EARNED,Earned {0} {1}
-LOST,Lost {0} {1}
-MORNING,Morning
-EARLY_MORNING,Early morning
-MID_MORNING,Midmorning
-LATE_MORNING,Late morning
-MIDDAY,Midday
-NOON,Noon
-EARLY_AFTERNOON,Early afternoon
-MID_AFTERNOON,Midafternoon
-LATE_AFTERNOON,Late afternoon
-EVENING,Evening
-NIGHT,Night
-ITEM_OBSERVATION,Found in {0} ({1}).
-ITEM_OBSERVATION_MULTIPLE,{2} found in {0} ({1}).
-UNLOCKED_ON_DAY,Unlocked on day {0}.
-UNLOCKED_ON_RESOURCE,Unlocked with {0} {1} (currently {2}/{0}).
-UNLOCKED_ON_JOURNAL,Unlocked with {0} confirmed journal entries (currently {1}/{0}).
-PAYMENT,Payment: {0}
-TIP,Tip: {0}
+GLOOM;Gloom
+MEADOWSWEET;Meadowsweet
+WILD_LACEROOT;Wild laceroot
+MINTFLOWER;Mintflower
+FEVERFEW;Feverfew
+WHITE_CONEFLOWER;White coneflower
+CHAMOMILE;Chamomile
+YARROW;Yarrow
+WILD_GARLIC;Wild garlic
+RASPBERRY;Raspberry
+MARSH_MALLOW;Marsh mallow
+LICQUORICE_ROOT;Licquorice root
+NETTLE;Wet nettle
+ANTIQUE_AMBELIC;Antique alembic
+FORAGES_REMAINING_LABEL;{0}/{1} Remaining
+NO_FORAGE_FOUND;Nothing found
+FORAGE_BUTTON_UNAVAILABLE;No more forage
+FORAGE_BUTTON_AVAILABLE;Forage
+FORAGE_BUTTON_END_OF_DAY;It's getting late...
+CHOP_WOOD_BUTTON;Chop wood
+VISITORS_TAB;Visitors
+KITCHEN_TAB;Kitchen
+JOURNAL_TAB;Journal
+BEDROOM_TAB;Bedroom
+EXPLORE_TAB;Explore
+VISITOR;Visitor
+NO_VISITOR_TEXT;No visitors
+BILLS;Bills
+BILLS_DESCRIPTION;Food, supplies, stationery, taxes...
+FAILED_BILL;The debt collectors have taken what they are owed.
+EXPLORE;Explore house
+INFUSION;{0} infusion
+INFUSE;Infuse
+GROUND;Ground {0}
+GRIND;Grind
+ROASTED;Roasted {0}
+ROAST;Roast
+ONE_DAY;1 day
+X_DAYS;{0} days
+ONE_DAY_LEFT;1 day left
+X_DAYS_LEFT;{0} days left
+ACCEPT;Accept
+REJECT;Reject
+GIVE;Give
+WHERE;Where
+WHEN;When
+RARITY;Rarity
+UNDISCOVERED_ITEM;Undiscovered item
+X_OF_Y;{0} of {1}
+COMMON;Common
+RARE;Rare
+SCARCE;Scarce
+ANY_TIME;Any time
+MORNING;Morning
+AFTERNOON;Afternoon
+NIGHT;Night
+AFTER_RAINING;After rain
+IN_MOONLIGHT;In moonlight
+PREVERNAL;Prevernal
+VERNAL;Vernal
+ESTIVAL;Estival
+SEROTINAL;Serotinal
+AUTUMNAL;Autumnal
+HIBERNAL;Hibernal
+JOURNAL;Journal
+JOURNAL_NOTES;Notes - {0}
+EUREKA;Eureka!
+OK;Ok
+VERIFIED_POPUP_TEXT;Locked in:\n{0}\nAll aspects will now be shown for these ingredients. {1}
+ACCESS_UNLOCK;You can now access the {0}.
+INADEQUATE_TREATMENT;This is an inadequate treatment.
+AT_LEAST_INADEQUATE_TREATMENT;This might not be an adequate treatment.
+ADEQUATE_TREATMENT;This is an adequate treatment.
+AT_LEAST_ADEQUATE_TREATMENT;This is at least an adequate treatment.
+GOOD_TREATMENT;This is a good treatment.
+AT_LEAST_GOOD_TREATMENT;This is a good or better treatment.
+VERY_GOOD_TREATMENT;This is a very good treatment.
+AT_LEAST_VERY_GOOD_TREATMENT;This is a very good or excellent treatment.
+EXCELLENT_TREATMENT;This is an excellent treatment.
+DEFAULT_PROFILE_NAME;Profile {0}
+NEW_GAME;New game
+CONTINUE_GAME;Continue
+LOAD_GAME;Load game
+EXIT_GAME;Exit
+SAVE_AND_EXIT;Save & Exit
+DELETE;Delete (hold)
+CANCEL;Cancel
+DELETE_CONFIRM;Confirm deletion of profile {0}
+TOO_EARLY_TO_SLEEP;Too early to sleep.
+EARLY_TO_SLEEP;{0} actions left in day. Sleep anyway?
+TIME_TO_SLEEP;Time to sleep.
+GO_TO_SLEEP;Go to sleep
+TIDY_UP;Tidy up bedroom
+IT_IS_NOW_DAY;It is now day {0} of {1}.
+WAKE_UP;Wake up
+END_OF_DAY_SUMMARY;End of day summary:
+FAILED_REQUESTS;Requests:
+FAILED_REQUEST;Failed {0}'s request.
+GAINED;Gained {0} {1}
+EARNED;Earned {0} {1}
+LOST;Lost {0} {1}
+MORNING;Morning
+EARLY_MORNING;Early morning
+MID_MORNING;Midmorning
+LATE_MORNING;Late morning
+MIDDAY;Midday
+NOON;Noon
+EARLY_AFTERNOON;Early afternoon
+MID_AFTERNOON;Midafternoon
+LATE_AFTERNOON;Late afternoon
+EVENING;Evening
+NIGHT;Night
+ITEM_OBSERVATION;Found in {0} ({1}).
+ITEM_OBSERVATION_MULTIPLE;{2} found in {0} ({1}).
+UNLOCKED_ON_DAY;Unlocked on day {0}.
+UNLOCKED_ON_RESOURCE;Unlocked with {0} {1} (currently {2}/{0}).
+UNLOCKED_ON_JOURNAL;Unlocked with {0} confirmed journal entries (currently {1}/{0}).
+PAYMENT;Payment: {0}
+TIP;Tip: {0}
